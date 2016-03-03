@@ -9,10 +9,11 @@
 	   		
 	<context:property-placeholder location="classpath:datasource.properties" />
 	   		
-	<bean id="dataSource" class="oracle.jdbc.pool.OracleDataSource" destroy-method="close">
-		<property name="connectionCachingEnabled" value="true" />
-		<property name="URL" value="${url}" />
-		<property name="user" value="${username}" />
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<!--<property name="connectionCachingEnabled" value="true" />-->
+		<property name="driverClassName" value="${driverClassName}" />
+		<property name="url" value="${url}" />
+		<property name="username" value="${username}" />
 		<property name="password" value="${password}" />
 	</bean>	   		
 	
@@ -21,7 +22,7 @@
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
 				<property name="showSql" value="true" />
 				<property name="generateDdl" value="true" />
-				<property name="databasePlatform" value="org.hibernate.dialect.Oracle10gDialect" />
+				<property name="databasePlatform" value="${dialect}" />
 			</bean>
 		</property>
 		
