@@ -12,7 +12,7 @@
 	<bean id="dataSource" class="oracle.jdbc.pool.OracleDataSource" destroy-method="close">
 		<property name="connectionCachingEnabled" value="true" />
 		<property name="URL" value="${url}" />
-		<property name="user" value="${user}" />
+		<property name="user" value="${username}" />
 		<property name="password" value="${password}" />
 	</bean>	   		
 	
