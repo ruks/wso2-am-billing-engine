@@ -7,11 +7,26 @@
 	<secured attributes="ROLE_USER"/>
 
 	<var name="uiUtils" class="com.example.j2eeapp.ui.utils.UIUtils"/>
+	<var name="plan" class="com.example.j2eeapp.domain.PlanEntity"/>
+
 	<on-start>
 		<evaluate expression="userService.loadUserEntityByUsername(currentUser.name)" result="flowScope.user" />
 	</on-start>
 
 	<view-state id="home" view="accountHome.xhtml">
+		<transition on="newPlan" to="newPlan" />
+		<transition on="listPlan" to="listPlan" />
+	</view-state>
+
+	<view-state id="newPlan" view="newPlan.xhtml" model="plan">
+		<transition on="backToHome" to="home" />
+		<transition on="confirmNewPlan" to="home">
+			<evaluate expression="planService.createPlan(plan)" />
+		</transition>
+	</view-state>
+
+	<view-state id="listPlan" view="listPlan.xhtml" model="user">
+		<transition on="backToHome" to="home" />
 	</view-state>
 
 </flow>

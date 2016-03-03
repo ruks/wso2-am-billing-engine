@@ -9,10 +9,14 @@
 	
 	<!-- DAO declarations -->
 	<bean id="userDao" class="com.example.j2eeapp.dao.UserJpaDao" />
+	<bean id="planDao" class="com.example.j2eeapp.dao.PlanJpaDao" />
 	
 	<!-- Services declarations -->
 	<bean id="userService" class="com.example.j2eeapp.services.impl.UserServiceImpl">
 		<property name="userDao" ref="userDao" />
+	</bean>
+	<bean id="planService" class="com.example.j2eeapp.services.impl.PlanServiceImpl">
+		<property name="planDao" ref="planDao" />
 	</bean>
 
 	<bean id="userAuthenticationProviderService" class="com.example.j2eeapp.services.impl.UserAuthenticationProviderServiceImpl">
