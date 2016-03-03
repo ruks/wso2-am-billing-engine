@@ -6,6 +6,7 @@ import com.example.j2eeapp.domain.PlanEntity;
 import com.example.j2eeapp.domain.UserEntity;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Service providing service methods to work with user data and entity.
@@ -38,5 +39,7 @@ public interface PlanService {
 	 */
 	PlanEntity loadPlanEntityByPlanName(String planName);
 
-	List<PlanEntity> loadPlanEntities();
+	Map<String, Object> loadPlanEntities();
+
+
 }

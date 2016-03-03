@@ -1,6 +1,8 @@
 package com.example.j2eeapp.services.impl;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.faces.application.FacesMessage;
@@ -62,8 +64,13 @@ public class PlanServiceImpl implements PlanService {
 		return planDao.loadPlanByPlanName(planName);
 	}
 
-	public List<PlanEntity> loadPlanEntities(){
-		return planDao.loadPlans();
+	public Map<String, Object> loadPlanEntities(){
+		LinkedHashMap<String, Object> plans = new LinkedHashMap<String, Object>();
+		plans.put("Select Plan", "Select Plan");
+		for (PlanEntity plan : planDao.loadPlans()){
+			plans.put(plan.getPlanName(), plan.getPlanName());
+		}
+		return plans;
 	}
 
 	protected FacesMessage constructErrorMessage(String message, String detail){

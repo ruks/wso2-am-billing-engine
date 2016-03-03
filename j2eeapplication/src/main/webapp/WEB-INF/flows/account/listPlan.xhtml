@@ -16,14 +16,20 @@
     		<f:attribute name="lastName" value="#{user.lastName}" />
 		</f:metadata>
 	
-		<h1>Account for #{user.firstName} #{user.lastName}</h1>
+		<h1>Account for #{planService.loadPlanEntities().get(0).getPlanName()} </h1>
 
 		<h:form id="newPlanForm">
 		<p:fieldset styleClass="fieldset" legend="Define New Plan">
 		<p:focus />
 		<p:messages id="messages" globalOnly="true" />
 
-			<h:panelGrid id="regPanelGrid" style="margin: 0 auto; margin-top: 25px; text-align: right" cellspacing="8" columns="3">
+			<h:panelGrid id="regPanelGrid" style="margin: 0 auto; margin-top: 25px; text-align: " cellspacing="8" columns="2">
+
+				<p:outputLabel for="console" value="Select Plan:" />
+				<p:selectOneMenu id="console" value="select me" style="width:200px">
+					<f:selectItems value="#{planService.loadPlanEntities()}" />
+				</p:selectOneMenu>
+
 				<p:commandButton id="backToHome" action="backToHome" immediate="true" icon="ui-icon-arrowreturnthick-1-w" value="Back to Home" />
 			</h:panelGrid>
 

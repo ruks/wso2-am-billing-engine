@@ -70,7 +70,8 @@ public class PlanJpaDao extends GenericJpaDao<PlanEntity, Long> implements PlanD
 
 		List<PlanEntity> plans = null;
 
-		Query query = getEntityManager().createQuery("select u from " + getPersistentClass().getSimpleName());
+		Query query = getEntityManager().createQuery("select u from " + getPersistentClass().getSimpleName()
+				+ " u");
 //				+ " u where u.planName = :planName").setParameter("planName", planName);
 
 		try {
@@ -78,7 +79,6 @@ public class PlanJpaDao extends GenericJpaDao<PlanEntity, Long> implements PlanD
 		} catch(NoResultException e) {
 			//do nothing
 		}
-
 		return plans;
 	}
 }
