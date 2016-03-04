@@ -18,8 +18,82 @@
 				<h:panelGrid id="regPanelGrid" style="margin: 0 auto; margin-top: 25px; text-align: right" cellspacing="8" columns="3">
 
 					<h:panelGroup>
+						<h:outputText value="Country"/>
+					</h:panelGroup>
+					<h:selectOneMenu value="#{user.country}" style="width: 150px;">
+						<f:selectItems value="#{country.countries}"/>
+					</h:selectOneMenu>
+					<h:inputHidden/>
+
+					<h:panelGroup>
+						<h:outputText value="Credit Card Number" />
+						<h:outputText style="color:red" value=" *  " />
+					</h:panelGroup>
+					<p:inputText id="ccNumber" label="Credit Card Number" value="#{user.ccNumber}" required="true"
+								 													title="Enter your Card Number">
+						<f:validateLength minimum="16" />
+						<p:ajax event="keyup" update="ccNoMsg" global="false"/>
+					</p:inputText>
+					<h:panelGroup>
+						<p:message id="ccNoMsg" for="ccNumber" />
+						<p:tooltip for="ccNumber" styleClass="tooltip" showEvent="focus" hideEvent="blur" />
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<h:outputText value="Payment Type" />
+						<h:outputText style="color:red" value=" *  " />
+					</h:panelGroup>
+					<h:panelGroup>
+						<p:selectOneRadio id="paymntType" value="#{user.cardType}" layout="custom">
+							<f:selectItem itemLabel="Visa" itemValue="Visa"/>
+							<f:selectItem itemLabel="Master Card" itemValue="Master Card"/>
+							<f:selectItem itemLabel="AMEX" itemValue="Amex"/>
+						</p:selectOneRadio>
+						<h:panelGrid columns="3" cellpadding="5">
+							<h:outputLabel for="opt1" value="Visa"/>
+							<p:radioButton id="opt1" for="paymntType" itemIndex="0"/>
+							<br/>
+							<h:outputLabel for="opt2" value="Master Card"/>
+							<p:radioButton id="opt2" for="paymntType" itemIndex="1"/>
+							<br/>
+							<h:outputLabel for="opt3" value="Amex"/>
+							<p:radioButton id="opt3" for="paymntType" itemIndex="2"/>
+							<br/>
+						</h:panelGrid>
+					</h:panelGroup>
+					<h:inputHidden/>
+
+					<h:panelGroup>
+						<h:outputText value="Expiration Date" />
+						<h:outputText style="color:red" value=" *  " />
+					</h:panelGroup>
+					<p:inputText id="expDate" label="Expiration Date" value="#{user.cardExpDate}" required="true"
+								 										title="Enter the card expiration date">
+						<f:validateLength minimum="4" />
+						<p:ajax event="keyup" update="expDateMsg" global="false"/>
+					</p:inputText>
+					<h:panelGroup>
+						<p:message id="expDateMsg" for="expDate" />
+						<p:tooltip for="expDate" styleClass="tooltip" showEvent="focus" hideEvent="blur" />
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<h:outputText value="CVC" />
+						<h:outputText style="color:red" value=" *  " />
+					</h:panelGroup>
+					<p:inputText id="cvc" label="CVC" value="#{user.cvc}" required="true"
+								 title="Enter the card CVC number">
+						<f:validateLength minimum="3" />
+						<p:ajax event="keyup" update="cvcMsg" global="false"/>
+					</p:inputText>
+					<h:panelGroup>
+						<p:message id="cvcMsg" for="cvc" />
+						<p:tooltip for="cvc" styleClass="tooltip" showEvent="focus" hideEvent="blur" />
+					</h:panelGroup>
+
+					<h:panelGroup>
 						<h:outputText value="First Name:" />
-						<h:outputText style="color:red" value="*  " />
+						<h:outputText style="color:red" value=" *  " />
 					</h:panelGroup>
 					<p:inputText id="firstName" label="First Name" value="#{user.firstName}" required="true" title="Enter your First Name!">
 						<f:validateLength minimum="2" />
@@ -32,7 +106,7 @@
 					
 					<h:panelGroup>
 						<h:outputText value="Last Name:" />
-						<h:outputText style="color:red" value="*  " />
+						<h:outputText style="color:red" value=" *  " />
 					</h:panelGroup>
 					<p:inputText id="lastName" label="Last Name" value="#{user.lastName}" required="true" title="Enter your Last Name!">
 						<f:validateLength minimum="2" />
@@ -42,10 +116,40 @@
 						<p:message id="lastNameMsg" for="lastName" />
 						<p:tooltip for="lastName" styleClass="tooltip" showEvent="focus" hideEvent="blur" />
 					</h:panelGroup>
+
+					<h:panelGroup>
+						<h:outputText value="Address 1" />
+						<h:outputText style="color:red" value=" *  " />
+					</h:panelGroup>
+					<p:inputText id="address1" label="Address 1" value="#{user.address1}" required="true"
+								 title="Enter an Address">
+						<f:validateLength minimum="5" />
+						<p:ajax event="keyup" update="address1Msg" global="false"/>
+					</p:inputText>
+					<h:panelGroup>
+						<p:message id="address1Msg" for="address1" />
+						<p:tooltip for="address1" styleClass="tooltip" showEvent="focus" hideEvent="blur" />
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<h:outputText value="Address 2" />
+					</h:panelGroup>
+					<p:inputText id="address2" label="Address 2" value="#{user.address2}"
+								 title="Enter Address 2">
+					</p:inputText>
+					<h:inputHidden/>
+
+					<h:panelGroup>
+						<h:outputText value="Address 3" />
+					</h:panelGroup>
+					<p:inputText id="address3" label="Address 3" value="#{user.address3}"
+								 title="Enter Address 3">
+					</p:inputText>
+					<h:inputHidden/>
 					
 					<h:panelGroup>
 						<h:outputText value="User Name:" />
-						<h:outputText style="color:red" value="*  " />
+						<h:outputText style="color:red" value=" *  " />
 					</h:panelGroup>
 					<p:inputText id="userName" value="#{user.userName}" required="true" label="User Name" title="Enter your User Name!">
 						<f:validateLength minimum="2" />
@@ -58,7 +162,7 @@
 					
 					<h:panelGroup>
 						<h:outputText value="Enter Password:" />
-						<h:outputText style="color:red" value="*  " />
+						<h:outputText style="color:red" value=" *  " />
 					</h:panelGroup>
 					<p:password id="pass1" value="#{user.password}" required="true" label="Password" title="Please enter a password!" feedback="true" match="pass2">
 						<f:validateLength minimum="2" />
@@ -67,7 +171,7 @@
 					
 					<h:panelGroup>
 						<h:outputText value="Repeat Password:" />
-						<h:outputText style="color:red" value="*  " />
+						<h:outputText style="color:red" value=" *  " />
 					</h:panelGroup>
 					<p:password id="pass2" required="true" label="Password" title="Please enter a password!" />
 					<p:message id="pass2Msg" for="pass2" />

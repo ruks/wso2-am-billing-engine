@@ -1,6 +1,9 @@
 package com.example.j2eeapp.ui.utils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -29,4 +32,5 @@ public class UIUtils implements Serializable {
 			viewLoadCount++;
 		}
 	}
+
 }
