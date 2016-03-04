@@ -25,7 +25,10 @@
 
 				<h:panelGrid id="logPanelGrid" style="margin: 0 auto; margin-top: 25px; text-align: right" cellspacing="8" columns="3">
 
-					<p:commandButton id="newPlanButton" action="newPlan" immediate="true" icon="ui-icon-plus" value="New Plan" />
+					<p:commandButton id="stdPlnButton" action="newPlan" immediate="true" icon="ui-icon-plus"
+									 													value="Define Standard Plan" />
+					<p:commandButton id="usgPlnButton" action="newUsagePlan" immediate="true" icon="ui-icon-plus"
+									 														value="Define Usage Plan" />
 					<p:commandButton id="listPlanButton" action="listPlan" update="logPanelGrid,messages" icon="ui-icon-check" value="List Plan" />
 
 				</h:panelGrid>

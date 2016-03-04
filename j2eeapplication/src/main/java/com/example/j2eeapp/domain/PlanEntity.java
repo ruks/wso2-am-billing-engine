@@ -1,5 +1,6 @@
 package com.example.j2eeapp.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -23,6 +24,11 @@ public class PlanEntity extends BaseEntity {
 	private String quota;
 	private String fee;
 	private String adfee;
+
+	public enum PLAN_TYPES {STANDARD, USAGE};
+
+	@Column(name = "planType", columnDefinition = "VARCHAR(255) default 'STANDARD'")
+	private String planType;
 
 	public String getFee() {
 		return fee;
@@ -66,5 +72,13 @@ public class PlanEntity extends BaseEntity {
 
 	public void setAdfee(String adfee) {
 		this.adfee = adfee;
+	}
+
+	public String getPlanType() {
+		return planType;
+	}
+
+	public void setPlanType(String planType) {
+		this.planType = planType;
 	}
 }
