@@ -43,6 +43,28 @@ public class PlanServiceImpl implements PlanService {
 		return true;
 	}
 
+	public boolean createUsagePlan(PlanEntity planEntity){
+		if (!planDao.checkAvailable(planEntity.getPlanName())) {
+			FacesMessage message = constructErrorMessage(String.format(getMessageBundle().getString("userExistsMsg"),
+																					planEntity.getUserName()), null);
+			getFacesContext().addMessage(null, message);
+
+			return false;
+		}
+
+		try {
+			planEntity.setPlanType(PlanEntity.PLAN_TYPES.USAGE.toString());
+			planDao.save(planEntity);
+		} catch(Exception e) {
+			FacesMessage message = constructFatalMessage(e.getMessage(), null);
+			getFacesContext().addMessage(null, message);
+
+			return false;
+		}
+
+		return true;
+	}
+
 	public boolean checkAvailable(AjaxBehaviorEvent event) {
 		InputText inputText = (InputText) event.getSource();
 		String value = (String) inputText.getValue();

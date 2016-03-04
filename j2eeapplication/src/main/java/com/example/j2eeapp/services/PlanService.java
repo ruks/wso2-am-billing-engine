@@ -22,11 +22,19 @@ public interface PlanService {
 	 * @return true if success
 	 */
 	boolean createPlan(PlanEntity planEntity);
+
+	/**
+	 * Create Usage plan - persist usage plan to database
+	 *
+	 * @param planEntity
+	 * @return true if success
+	 */
+	boolean createUsagePlan(PlanEntity planEntity);
 	
 	/**
 	 * Check plan name availability. UI ajax use.
 	 * 
-	 * @param ajax event
+	 * @param event
 	 * @return
 	 */
 	boolean checkAvailable(AjaxBehaviorEvent event);
