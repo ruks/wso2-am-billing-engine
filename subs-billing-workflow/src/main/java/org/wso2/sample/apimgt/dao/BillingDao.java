@@ -18,5 +18,88 @@
  */
 package org.wso2.sample.apimgt.dao;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.apimgt.api.APIManagementException;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class BillingDao {
+
+    private static final Log log = LogFactory.getLog(BillingDao.class);
+
+    private static BillingDao instance;
+
+    private static volatile DataSource dataSource = null;
+
+    private BillingDao () throws APIManagementException{
+        createDataSource();
+    }
+
+    public synchronized static BillingDao getInstance() throws APIManagementException{
+        if(instance == null){
+            instance = new BillingDao();
+        }
+        return instance;
+    }
+
+    private void createDataSource() throws APIManagementException{
+
+        String dataSourceName = "jdbc/BILLING_DB";
+
+        try {
+            Context ctx = new InitialContext();
+            dataSource = (DataSource) ctx.lookup(dataSourceName);
+        } catch (NamingException e) {
+            throw new APIManagementException("Error while looking up the data " +
+                    "source: " + dataSourceName, e);
+        }
+    }
+
+    public boolean userExists(String username) throws APIManagementException {
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        String userCountSQL = "SELECT COUNT(username) AS users FROM appuser WHERE userName = ?";
+
+        try{
+            connection = dataSource.getConnection();
+            preparedStatement = connection.prepareStatement(userCountSQL);
+            preparedStatement.setString(1, username);
+            resultSet = preparedStatement.executeQuery();
+
+            resultSet.next();
+            String count = resultSet.getString("users");
+            return Integer.parseInt(count) > 0;
+
+        } catch (SQLException e) {
+            log.error("SQLException occurred while checking if user exists", e);
+            throw new APIManagementException("Exception occurred while checking if user exists", e);
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                log.error("Unable to close the connection", e);
+            }
+            try {
+                preparedStatement.close();
+            } catch (SQLException e) {
+                log.error("Unable to close the Prepared Statement", e);
+            }
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                log.error("Unable to close the Result Set", e);
+            }
+        }
+    }
 }
