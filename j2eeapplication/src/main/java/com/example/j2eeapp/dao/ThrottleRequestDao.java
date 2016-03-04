@@ -50,6 +50,15 @@ public class ThrottleRequestDao {
     private String dasUrl;
     private String dasUserName;
     private String dasPassword;
+    private PlanDao planDao;
+
+    public PlanDao getPlanDao() {
+        return planDao;
+    }
+
+    public void setPlanDao(PlanDao planDao) {
+        this.planDao = planDao;
+    }
 
     public static String getDasAggregatesSearchRestApiUrl() {
         return DAS_AGGREGATES_SEARCH_REST_API_URL;
@@ -112,12 +121,7 @@ public class ThrottleRequestDao {
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         Date date = new Date();
-
-//        PlanDao planDao= new PlanJpaDao();
-//        PlanEntity plan=planDao.loadPlanByPlanName(planName);
-        PlanEntity plan=new PlanEntity();
-        plan.setFee("100");
-        plan.setAdfee("10");
+        PlanEntity plan=planDao.loadPlanByPlanName(planName);
 
         double subscriptionFee= Double.parseDouble(plan.getFee());
         double successFee = 0;

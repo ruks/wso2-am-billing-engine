@@ -17,6 +17,7 @@
 		<property name="dasUrl" value="${dasUrl}" />
 		<property name="dasUserName" value="${dasUserName}" />
 		<property name="dasPassword" value="${dasPassword}" />
+		<property name="planDao" ref="planDao" />
 	</bean>
 	
 	<!-- Services declarations -->
