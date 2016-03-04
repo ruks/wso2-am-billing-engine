@@ -15,6 +15,7 @@
 
 	<view-state id="home" view="accountHome.xhtml">
 		<transition on="newPlan" to="newPlan" />
+		<transition on="newUsagePlan" to="newUsagePlan" />
 		<transition on="listPlan" to="listPlan" />
 	</view-state>
 
@@ -22,6 +23,13 @@
 		<transition on="backToHome" to="home" />
 		<transition on="confirmNewPlan" to="home">
 			<evaluate expression="planService.createPlan(plan)" />
+		</transition>
+	</view-state>
+
+	<view-state id="newUsagePlan" view="usagePlan.xhtml" model="plan">
+		<transition on="backToHome" to="home" />
+		<transition on="saveUsgPlan" to="home">
+			<evaluate expression="planService.createUsagePlan(plan)" />
 		</transition>
 	</view-state>
 
