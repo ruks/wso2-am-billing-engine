@@ -10,6 +10,14 @@
 	<!-- DAO declarations -->
 	<bean id="userDao" class="com.example.j2eeapp.dao.UserJpaDao" />
 	<bean id="planDao" class="com.example.j2eeapp.dao.PlanJpaDao" />
+	<bean id="throttleRequestDao" class="com.example.j2eeapp.dao.ThrottleRequestDao" >
+		<property name="apimStoreUrl" value="${apimStoreUrl}" />
+		<property name="apimUserName" value="${apimUserName}" />
+		<property name="apimPassword" value="${apimPassword}" />
+		<property name="dasUrl" value="${dasUrl}" />
+		<property name="dasUserName" value="${dasUserName}" />
+		<property name="dasPassword" value="${dasPassword}" />
+	</bean>
 	
 	<!-- Services declarations -->
 	<bean id="userService" class="com.example.j2eeapp.services.impl.UserServiceImpl">
@@ -17,6 +25,9 @@
 	</bean>
 	<bean id="planService" class="com.example.j2eeapp.services.impl.PlanServiceImpl">
 		<property name="planDao" ref="planDao" />
+	</bean>
+	<bean id="invoiceService" class="com.example.j2eeapp.services.impl.InvoiceServiceImpl">
+		<property name="throttleRequestDao" ref="throttleRequestDao" />
 	</bean>
 
 	<bean id="userAuthenticationProviderService" class="com.example.j2eeapp.services.impl.UserAuthenticationProviderServiceImpl">

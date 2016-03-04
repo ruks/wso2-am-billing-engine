@@ -16,6 +16,7 @@
 	<view-state id="home" view="accountHome.xhtml">
 		<transition on="newPlan" to="newPlan" />
 		<transition on="listPlan" to="listPlan" />
+		<transition on="invoice" to="invoice" />
 	</view-state>
 
 	<view-state id="newPlan" view="newPlan.xhtml" model="plan">
@@ -27,6 +28,19 @@
 
 	<view-state id="listPlan" view="listPlan.xhtml" model="user">
 		<transition on="backToHome" to="home" />
+	</view-state>
+
+	<view-state id="invoice" view="invoice.xhtml" model="user">
+		<transition on="backToHome" to="home" />
+		<transition on="createInvoice" to="invoiceHome"/>
+	</view-state>
+
+	<view-state id="invoiceHome" view="invoiceHome.xhtml">
+		<on-render>
+			<evaluate expression="invoiceService.createInvoice()"
+					  result="viewScope.invoice" />
+		</on-render>
+		<transition on="backToHome" to="home"/>
 	</view-state>
 
 </flow>

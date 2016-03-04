@@ -16,18 +16,22 @@
     		<f:attribute name="lastName" value="#{user.lastName}" />
 		</f:metadata>
 	
-		<h1>Account for #{user.firstName} #{user.lastName}</h1>
+		<h1>Invoices for #{user.firstName} #{user.lastName}</h1>
 
-		<h:form id="loginForm">
+		<h:form id="invoiceForm">
 			<p:fieldset styleClass="fieldset">
 				<p:focus />
 				<p:messages id="messages" globalOnly="true" />
 
-				<h:panelGrid id="logPanelGrid" style="margin: 0 auto; margin-top: 25px; text-align: right" cellspacing="8" columns="1">
+				<h:panelGrid id="logPanelGrid" style="margin: 0 auto; margin-top: 25px;" cellspacing="8" columns="2">
 
-					<p:commandButton id="newPlanButton" action="newPlan" immediate="true" icon="ui-icon-plus" value="New Plan" />
-					<p:commandButton id="listPlanButton" action="listPlan" update="logPanelGrid,messages" icon="ui-icon-check" value="List Plan" />
-					<p:commandButton id="invoiceButton" action="invoice" update="logPanelGrid,messages" icon="ui-icon-check" value="Invoice" />
+					<p:outputLabel for="console" value="Select Plan:" />
+					<p:selectOneMenu id="console" value="#{invoiceService.selected}" style="width:200px">
+						<f:selectItems value="#{planService.loadPlanEntities()}" />
+					</p:selectOneMenu>
+
+					<p:commandButton id="backToHome" action="backToHome" immediate="true" icon="ui-icon-arrowreturnthick-1-w" value="Back to Home" />
+					<p:commandButton id="createInvoice" action="createInvoice" immediate="true" icon="ui-icon-arrowreturnthick-1-w" value="Generate Invoice" />
 
 				</h:panelGrid>
 			</p:fieldset>

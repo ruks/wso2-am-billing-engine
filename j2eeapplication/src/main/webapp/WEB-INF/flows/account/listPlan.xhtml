@@ -16,10 +16,10 @@
     		<f:attribute name="lastName" value="#{user.lastName}" />
 		</f:metadata>
 	
-		<h1>Account for #{planService.loadPlanEntities().get(0).getPlanName()} </h1>
+		<h1>List of plans of #{user.firstName} </h1>
 
-		<h:form id="newPlanForm">
-		<p:fieldset styleClass="fieldset" legend="Define New Plan">
+		<h:form id="listPlanForm">
+		<p:fieldset styleClass="fieldset">
 		<p:focus />
 		<p:messages id="messages" globalOnly="true" />
 
