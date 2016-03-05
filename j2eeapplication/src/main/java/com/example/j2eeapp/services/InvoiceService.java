@@ -17,7 +17,7 @@ public interface InvoiceService {
 	/**
 	 * Create plan - persist to database
 	 * 
-	 * @param planEntity
+	 * @param user
 	 * @return true if success
 	 */
 	Invoice createInvoice(UserEntity user);

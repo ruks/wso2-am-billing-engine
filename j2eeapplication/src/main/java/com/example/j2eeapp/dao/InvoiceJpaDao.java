@@ -1,8 +1,8 @@
 package com.example.j2eeapp.dao;
 
+import bean.Invoice;
 import com.example.j2eeapp.commons.dao.GenericJpaDao;
 import com.example.j2eeapp.domain.PlanEntity;
-import com.example.j2eeapp.domain.UserEntity;
 import org.springframework.util.Assert;
 
 import javax.persistence.NoResultException;
@@ -14,24 +14,24 @@ import java.util.List;
  * 
  * @author Arthur Rukshan
  */
-public class PlanJpaDao extends GenericJpaDao<PlanEntity, Long> implements PlanDao {
+public class InvoiceJpaDao extends GenericJpaDao<Invoice, Long> implements InvoiceDao {
 
-	public PlanJpaDao() {
-		super(PlanEntity.class);
+	public InvoiceJpaDao() {
+		super(Invoice.class);
 	}
 
 	/**
 	 * Queries database for user name availability
 	 * 
-	 * @param planName
+	 * @param invoiceId
 	 * @return true if available
 	 */
-	public boolean checkAvailable(String planName) {
-		Assert.notNull(planName);
+	public boolean checkAvailable(String invoiceId) {
+		Assert.notNull(invoiceId);
 		
 		Query query = getEntityManager()
 			.createQuery("select count(*) from " + getPersistentClass().getSimpleName() 
-					+ " u where u.planName = :planName").setParameter("planName", planName);
+					+ " u where u.invoiceNo = :invoiceNo").setParameter("invoiceNo", invoiceId);
 		
 		Long count = (Long) query.getSingleResult();
 		
@@ -41,16 +41,16 @@ public class PlanJpaDao extends GenericJpaDao<PlanEntity, Long> implements PlanD
 	/**
 	 * Queries user by username
 	 * 
-	 * @param planName
+	 * @param ID
 	 * @return User entity
 	 */
-	public PlanEntity loadPlanByPlanName(String planName) {
-		Assert.notNull(planName);
+	public PlanEntity loadInvoiceByID(String ID) {
+		Assert.notNull(ID);
 
 		PlanEntity plan = null;
 		
 		Query query = getEntityManager().createQuery("select u from " + getPersistentClass().getSimpleName()
-				+ " u where u.planName = :planName").setParameter("planName", planName);
+				+ " u where u.invoiceNo = :invoiceNo").setParameter("invoiceNo", ID);
 		
 		try {
 			plan = (PlanEntity) query.getSingleResult();
@@ -66,13 +66,12 @@ public class PlanJpaDao extends GenericJpaDao<PlanEntity, Long> implements PlanD
 	 *
 	 * @return User entity
 	 */
-	public List<PlanEntity> loadPlans() {
+	public List<Invoice> loadInvoices() {
 
-		List<PlanEntity> plans = null;
+		List<Invoice> plans = null;
 
 		Query query = getEntityManager().createQuery("select u from " + getPersistentClass().getSimpleName()
 				+ " u");
-//				+ " u where u.planName = :planName").setParameter("planName", planName);
 
 		try {
 			plans =  query.getResultList();

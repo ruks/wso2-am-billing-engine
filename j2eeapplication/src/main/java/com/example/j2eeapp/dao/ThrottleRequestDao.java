@@ -122,47 +122,49 @@ public class ThrottleRequestDao {
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         Date date = new Date();
-        PlanEntity plan=planDao.loadPlanByPlanName(planName);
+        PlanEntity plan = planDao.loadPlanByPlanName(planName);
 
-        double subscriptionFee= Double.parseDouble(plan.getFee());
+        double subscriptionFee = Double.parseDouble(plan.getFee());
         double successFee = 0;
-        double throttleFee = throttle*Double.parseDouble(plan.getAdfee());
-        double totalFee = subscriptionFee+successFee+throttleFee;
+        double throttleFee = throttle * Double.parseDouble(plan.getAdfee());
+        double totalFee = subscriptionFee + successFee + throttleFee;
 
-        Invoice invoice=new Invoice();
-        invoice.setAddress1("address1");
-        invoice.setAddress2("address2");
-        invoice.setAddress3("address2");
+        Invoice invoice = new Invoice();
+        invoice.setAddress1(user.getAddress1());
+        invoice.setAddress2(user.getAddress2());
+        invoice.setAddress3(user.getAddress3());
         invoice.setCreatedDate(dateFormat.format(date));
-        invoice.setDuedDate(dateFormat.format(date));
+        invoice.setDueDate(dateFormat.format(date));
         invoice.setInvoiceNo(1);
-        invoice.setPaymentMethod("Cash");
+        invoice.setPaymentMethod(user.getCardType());
         invoice.setSubscriptionFee(plan.getFee());
         invoice.setSuccessCount(success);
-        invoice.setSuccessFee(successFee+"");
+        invoice.setSuccessFee(successFee + "");
         invoice.setThrottleCount(throttle);
-        invoice.setThrottleFee(throttleFee+"");
-        invoice.setTotalFee(totalFee+"");
+        invoice.setThrottleFee(throttleFee + "");
+        invoice.setTotalFee(totalFee + "");
         invoice.setUserCompany("example company");
         invoice.setUserEmail("user@example.com");
         invoice.setUserFirstName(user.getFirstName());
-        invoice.setUserLastName("last name");
+        invoice.setUserLastName(user.getLastName());
         invoice.setPlanName(plan.getPlanName());
+        invoice.setFeePerSuccess(0 + "");
+        invoice.setFeePerThrottle(plan.getAdfee());
         return invoice;
     }
 
     public Invoice getCount(String planName, UserEntity user) {
 
-        if(planName==null){
-            planName="silver";
+        if (planName == null) {
+            planName = "silver";
         }
 
         try {
             DASRestClient s = new DASRestClient(this.dasUrl, this.apimUserName, this.dasPassword.toCharArray());
 
             String query = getQuery(planName);//"tenantDomain" + ":\"" + "admin@carbon.super" + "\"";
-            if(query==null){
-                System.out.println("no subscription for plan: "+planName);
+            if (query == null) {
+                System.out.println("no subscription for plan: " + planName);
                 return null;
             }
 
@@ -186,8 +188,10 @@ public class ThrottleRequestDao {
             System.out.println(scount);
             System.out.println(tcount);
 
-//            return "Sucess: "+scount+" Throttle: "+tcount;
-            return getInvoice(scount,tcount,planName,user);
+            //            return "Sucess: "+scount+" Throttle: "+tcount;
+            Invoice result = getInvoice(scount, tcount, planName, user);
+
+            return result;
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -213,26 +217,24 @@ public class ThrottleRequestDao {
     }
 
     private String getQuery(String planName) throws Exception {
-        APIRESTClient r=new APIRESTClient(this.apimStoreUrl);
-        r.login(this.apimUserName,this.apimPassword);
-        List<AppApiSubscriptionBean> beans=r.listSubscriptionBeans(planName);
+        APIRESTClient r = new APIRESTClient(this.apimStoreUrl);
+        r.login(this.apimUserName, this.apimPassword);
+        List<AppApiSubscriptionBean> beans = r.listSubscriptionBeans(planName);
 
-        if (beans==null || beans.isEmpty()){
+        if (beans == null || beans.isEmpty()) {
             return null;
         }
-        StringBuilder query=new StringBuilder();
+        StringBuilder query = new StringBuilder();
         AppApiSubscriptionBean bean1 = beans.get(0);
-        query.append("(")
-                .append("api:\"").append(bean1.getApiName()).append("\" AND ")
-                .append("applicationName:\"").append(bean1.getAppName()).append("\" AND ")
-                .append("version:\"").append(bean1.getApiName()).append(":v").append(bean1.getVersion()).append("\" ) ");
+        query.append("(").append("api:\"").append(bean1.getApiName()).append("\" AND ").append("applicationName:\"")
+                .append(bean1.getAppName()).append("\" AND ").append("version:\"").append(bean1.getApiName())
+                .append(":v").append(bean1.getVersion()).append("\" ) ");
 
         for (int i = 1; i < beans.size(); i++) {
             AppApiSubscriptionBean bean = beans.get(i);
-            query.append("OR (")
-                    .append("api:\"").append(bean.getApiName()).append("\" AND ")
-                    .append("applicationName:\"").append(bean.getAppName()).append("\" AND ")
-                    .append("version:\"").append(bean1.getApiName()).append(":v").append(bean.getVersion()).append("\" ) ");
+            query.append("OR (").append("api:\"").append(bean.getApiName()).append("\" AND ")
+                    .append("applicationName:\"").append(bean.getAppName()).append("\" AND ").append("version:\"")
+                    .append(bean1.getApiName()).append(":v").append(bean.getVersion()).append("\" ) ");
         }
 
         return query.toString();

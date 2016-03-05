@@ -22,20 +22,19 @@ import com.example.j2eeapp.commons.domain.BaseEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.io.Serializable;
 
 @Entity
-@Table(name="invoice")
-public class Invoice extends BaseEntity{
+@Table(name = "invoice")
+public class Invoice extends BaseEntity {
 
     private String createdDate;
-    private String duedDate;
+    private String dueDate;
     private int invoiceNo;
     private String userFirstName;
     private String userLastName;
     private String userCompany;
     private String userEmail;
-    private String address1,address2,address3;
+    private String address1, address2, address3;
     private String paymentMethod;
     private int successCount;
     private int throttleCount;
@@ -45,7 +44,26 @@ public class Invoice extends BaseEntity{
     private String throttleFee;
     private String totalFee;
 
+    private String feePerSuccess;
+    private String feePerThrottle;
+
     private String planName;
+
+    public String getFeePerSuccess() {
+        return feePerSuccess;
+    }
+
+    public void setFeePerSuccess(String feePerSuccess) {
+        this.feePerSuccess = feePerSuccess;
+    }
+
+    public String getFeePerThrottle() {
+        return feePerThrottle;
+    }
+
+    public void setFeePerThrottle(String feePerThrottle) {
+        this.feePerThrottle = feePerThrottle;
+    }
 
     public String getPlanName() {
         return planName;
@@ -63,12 +81,12 @@ public class Invoice extends BaseEntity{
         this.createdDate = createdDate;
     }
 
-    public String getDuedDate() {
-        return duedDate;
+    public String getDueDate() {
+        return dueDate;
     }
 
-    public void setDuedDate(String duedDate) {
-        this.duedDate = duedDate;
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
     }
 
     public int getInvoiceNo() {
@@ -190,6 +208,5 @@ public class Invoice extends BaseEntity{
     public void setTotalFee(String totalFee) {
         this.totalFee = totalFee;
     }
-
 
 }

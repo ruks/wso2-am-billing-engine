@@ -10,6 +10,7 @@
 	<!-- DAO declarations -->
 	<bean id="userDao" class="com.example.j2eeapp.dao.UserJpaDao" />
 	<bean id="planDao" class="com.example.j2eeapp.dao.PlanJpaDao" />
+	<bean id="invoiceDao" class="com.example.j2eeapp.dao.InvoiceJpaDao" />
 	<bean id="throttleRequestDao" class="com.example.j2eeapp.dao.ThrottleRequestDao" >
 		<property name="apimStoreUrl" value="${apimStoreUrl}" />
 		<property name="apimUserName" value="${apimUserName}" />
@@ -29,6 +30,7 @@
 	</bean>
 	<bean id="invoiceService" class="com.example.j2eeapp.services.impl.InvoiceServiceImpl">
 		<property name="throttleRequestDao" ref="throttleRequestDao" />
+		<property name="invoiceDao" ref="invoiceDao" />
 	</bean>
 
 	<bean id="userAuthenticationProviderService" class="com.example.j2eeapp.services.impl.UserAuthenticationProviderServiceImpl">

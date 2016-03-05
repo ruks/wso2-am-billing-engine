@@ -109,9 +109,9 @@
 								</td>
 
 								<td>
-									Invoice #: 123<br></br>
-									Created: January 1, 2015<br></br>
-									Due: February 1, 2015
+									Invoice #: #{invoice.invoiceNo}<br></br>
+									Created: #{invoice.createdDate}<br></br>
+									Due: #{invoice.dueDate}
 								</td>
 							</tr>
 						</table>
@@ -123,16 +123,17 @@
 						<table>
 							<tr>
 								<td>
-									Next Step Webs, Inc.<br></br>
-									12345 Sunny Road<br></br>
-									Sunnyville, TX 12345
+									WSO2, Inc.<br></br>
+									Palm Grove, Colombo<br></br>
+									Sri Lanka, TX 12345
 								</td>
 
 								<td>
-									#{invoice.userFirstName}
-									Acme Corp.<br></br>
-									John Doe<br></br>
-									john@example.com
+									#{invoice.userFirstName} #{invoice.userLastName}<br></br>
+									#{invoice.userCompany}<br></br>
+									#{invoice.address1} #{invoice.address2}<br></br>
+									#{invoice.address3}<br></br>
+									#{invoice.userEmail}
 								</td>
 							</tr>
 						</table>
@@ -145,7 +146,7 @@
 					</td>
 
 					<td>
-						Check #
+						#{invoice.paymentMethod} #
 					</td>
 				</tr>
 
@@ -176,6 +177,26 @@
 
 					<td>
 						#{invoice.throttleCount}
+					</td>
+				</tr>
+
+				<tr class="details">
+					<td>
+						Fee per Success Request
+					</td>
+
+					<td>
+						#{invoice.feePerSuccess}
+					</td>
+				</tr>
+
+				<tr class="details">
+					<td>
+						Fee per Throttled Request
+					</td>
+
+					<td>
+						#{invoice.feePerThrottle}
 					</td>
 				</tr>
 
