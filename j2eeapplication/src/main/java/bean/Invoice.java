@@ -45,8 +45,14 @@ public class Invoice extends BaseEntity{
     private String throttleFee;
     private String totalFee;
 
-    public Invoice(){
+    private String planName;
 
+    public String getPlanName() {
+        return planName;
+    }
+
+    public void setPlanName(String planName) {
+        this.planName = planName;
     }
 
     public String getCreatedDate() {

@@ -45,7 +45,7 @@
 
 	<view-state id="invoiceHome" view="invoiceHome.xhtml">
 		<on-render>
-			<evaluate expression="invoiceService.createInvoice()"
+			<evaluate expression="invoiceService.createInvoice(user)"
 					  result="viewScope.invoice" />
 		</on-render>
 		<transition on="backToHome" to="home"/>

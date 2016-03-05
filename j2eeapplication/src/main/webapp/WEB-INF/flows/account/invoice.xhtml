@@ -25,8 +25,9 @@
 
 				<h:panelGrid id="logPanelGrid" style="margin: 0 auto; margin-top: 25px;" cellspacing="8" columns="2">
 
-					<p:outputLabel for="console" value="Select Plan:" />
-					<p:selectOneMenu id="console" value="#{invoiceService.selected}" style="width:200px">
+					<p:outputLabel for="plans" value="Select Plan:" />
+					<p:selectOneMenu id="plans" value="#{invoiceService.selected}" style="width:200px">
+						<p:ajax event="change" update="@this" />
 						<f:selectItems value="#{planService.loadPlanEntities()}" />
 					</p:selectOneMenu>
 

@@ -2,6 +2,7 @@ package com.example.j2eeapp.services;
 
 import bean.Invoice;
 import com.example.j2eeapp.domain.PlanEntity;
+import com.example.j2eeapp.domain.UserEntity;
 
 import javax.faces.event.AjaxBehaviorEvent;
 import java.util.Map;
@@ -19,6 +20,5 @@ public interface InvoiceService {
 	 * @param planEntity
 	 * @return true if success
 	 */
-	Invoice createInvoice();
-
+	Invoice createInvoice(UserEntity user);
 }

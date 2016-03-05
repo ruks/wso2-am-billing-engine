@@ -25,6 +25,7 @@ import bean.SearchRequestBean;
 import com.example.j2eeapp.clients.APIRESTClient;
 import com.example.j2eeapp.clients.DASRestClient;
 import com.example.j2eeapp.domain.PlanEntity;
+import com.example.j2eeapp.domain.UserEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.json.JSONArray;
@@ -117,7 +118,7 @@ public class ThrottleRequestDao {
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
     }
 
-    public Invoice getInvoice(int success, int throttle, String planName) {
+    public Invoice getInvoice(int success, int throttle, String planName, UserEntity user) {
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         Date date = new Date();
@@ -144,13 +145,13 @@ public class ThrottleRequestDao {
         invoice.setTotalFee(totalFee+"");
         invoice.setUserCompany("example company");
         invoice.setUserEmail("user@example.com");
-        invoice.setUserFirstName("first name");
+        invoice.setUserFirstName(user.getFirstName());
         invoice.setUserLastName("last name");
-
+        invoice.setPlanName(plan.getPlanName());
         return invoice;
     }
 
-    public Invoice getCount(String planName) {
+    public Invoice getCount(String planName, UserEntity user) {
 
         if(planName==null){
             planName="silver";
@@ -186,7 +187,7 @@ public class ThrottleRequestDao {
             System.out.println(tcount);
 
 //            return "Sucess: "+scount+" Throttle: "+tcount;
-            return getInvoice(scount,tcount,planName);
+            return getInvoice(scount,tcount,planName,user);
 
         } catch (MalformedURLException e) {
             e.printStackTrace();

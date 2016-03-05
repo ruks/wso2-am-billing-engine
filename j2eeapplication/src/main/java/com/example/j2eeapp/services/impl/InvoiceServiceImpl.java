@@ -4,6 +4,7 @@ import bean.Invoice;
 import com.example.j2eeapp.dao.PlanDao;
 import com.example.j2eeapp.dao.ThrottleRequestDao;
 import com.example.j2eeapp.domain.PlanEntity;
+import com.example.j2eeapp.domain.UserEntity;
 import com.example.j2eeapp.services.InvoiceService;
 import com.example.j2eeapp.services.PlanService;
 import org.primefaces.component.inputtext.InputText;
@@ -22,6 +23,9 @@ import java.util.ResourceBundle;
  */
 public class InvoiceServiceImpl implements InvoiceService {
 
+	private ThrottleRequestDao throttleRequestDao;
+	public String selected;
+
 	public ThrottleRequestDao getThrottleRequestDao() {
 		return throttleRequestDao;
 	}
@@ -30,8 +34,6 @@ public class InvoiceServiceImpl implements InvoiceService {
 		this.throttleRequestDao = throttleRequestDao;
 	}
 
-	private ThrottleRequestDao throttleRequestDao;
-
 	public String getSelected() {
 		return selected;
 	}
@@ -39,8 +41,6 @@ public class InvoiceServiceImpl implements InvoiceService {
 	public void setSelected(String selected) {
 		this.selected = selected;
 	}
-
-	public String selected="Silver";
 
 	protected FacesMessage constructErrorMessage(String message, String detail){
 		return new FacesMessage(FacesMessage.SEVERITY_ERROR, message, detail);
@@ -62,7 +62,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 		return ResourceBundle.getBundle("message-labels");
 	}
 
-	public Invoice createInvoice() {
-		return throttleRequestDao.getCount(selected);
+	public Invoice createInvoice(UserEntity user) {
+		return throttleRequestDao.getCount(selected,user);
 	}
 }
