@@ -25,7 +25,7 @@
 
 				<h:panelGrid id="logPanelGrid" style="margin: 0 auto; margin-top: 25px; text-align: middle" cellspacing="4" columns="1">
 
-					<p:dataTable id="tbl" var="invoice" value="#{dataExporterView.invoices}"
+					<p:dataTable id="tbl" var="invoice" value="#{invoiceService.listInvoices(user)}"
 								 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
 								 paginator="true" rows="10" style="margin-bottom:20px">
 

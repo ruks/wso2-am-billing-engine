@@ -24,10 +24,12 @@ import org.wso2.apim.billing.services.InvoiceService;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
 import java.io.Serializable;
 import java.util.List;
 
 @ManagedBean
+@SessionScoped
 public class DataExporterView implements Serializable {
 
     private List<InvoiceEntity> invoices;
@@ -63,4 +65,5 @@ public class DataExporterView implements Serializable {
     public void setInvoices(List<InvoiceEntity> invoices) {
         this.invoices = invoices;
     }
+
 }

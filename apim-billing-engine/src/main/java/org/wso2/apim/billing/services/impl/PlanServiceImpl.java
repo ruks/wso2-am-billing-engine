@@ -90,8 +90,19 @@ public class PlanServiceImpl implements PlanService {
 
     public Map<String, Object> loadPlanEntities() {
         LinkedHashMap<String, Object> plans = new LinkedHashMap<String, Object>();
-        plans.put("Select Plan", "Select Plan");
+//        plans.put("Select Plan", "Select Plan");
         for (PlanEntity plan : planDao.loadPlans()) {
+//            plans.put(plan.getPlanName(), plan.getPlanName());
+            plans.put(plan.getPlanName(), plan);
+        }
+        return plans;
+    }
+
+    public Map<String, Object> loadPlanEntitiesString() {
+        LinkedHashMap<String, Object> plans = new LinkedHashMap<String, Object>();
+        //        plans.put("Select Plan", "Select Plan");
+        for (PlanEntity plan : planDao.loadPlans()) {
+            //            plans.put(plan.getPlanName(), plan.getPlanName());
             plans.put(plan.getPlanName(), plan.getPlanName());
         }
         return plans;

@@ -3,6 +3,7 @@ package org.wso2.apim.billing.services.impl;
 import org.wso2.apim.billing.domain.InvoiceEntity;
 import org.wso2.apim.billing.dao.InvoiceDao;
 import org.wso2.apim.billing.dao.ThrottleRequestDao;
+import org.wso2.apim.billing.domain.PlanEntity;
 import org.wso2.apim.billing.domain.UserEntity;
 import org.wso2.apim.billing.services.InvoiceService;
 
@@ -20,7 +21,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     private ThrottleRequestDao throttleRequestDao;
     private InvoiceDao invoiceDao;
-    public String selected;
+    private String selected;
 
     public ThrottleRequestDao getThrottleRequestDao() {
         return throttleRequestDao;

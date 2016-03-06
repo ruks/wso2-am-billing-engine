@@ -129,13 +129,15 @@ public class ThrottleRequestDao {
         double throttleFee = throttle * Double.parseDouble(plan.getAdfee());
         double totalFee = subscriptionFee + successFee + throttleFee;
 
+        int ran=(int)Math.random()*1000;
+
         InvoiceEntity invoiceEntity = new InvoiceEntity();
         invoiceEntity.setAddress1(user.getAddress1());
         invoiceEntity.setAddress2(user.getAddress2());
         invoiceEntity.setAddress3(user.getAddress3());
         invoiceEntity.setCreatedDate(dateFormat.format(date));
         invoiceEntity.setDueDate(dateFormat.format(date));
-//        invoiceEntity.setInvoiceNo(1);
+        invoiceEntity.setInvoiceNo(ran);
         invoiceEntity.setPaymentMethod(user.getCardType());
         invoiceEntity.setSubscriptionFee(plan.getFee());
         invoiceEntity.setSuccessCount(success);

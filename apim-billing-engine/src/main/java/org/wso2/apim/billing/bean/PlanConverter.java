@@ -28,6 +28,69 @@ import javax.faces.convert.Converter;
 public class PlanConverter implements Converter {
 
     private PlanDao planDAO;
+    private PlanEntity selectedPlan;
+    private String planName;
+    private String userName;
+    private String quota;
+    private String fee;
+    private String adFee;
+    private String planType;
+
+    public String getAdFee() {
+        return adFee;
+    }
+
+    public void setAdFee(String adFee) {
+        this.adFee = adFee;
+    }
+
+    public String getFee() {
+        return fee;
+    }
+
+    public void setFee(String fee) {
+        this.fee = fee;
+    }
+
+    public String getPlanName() {
+        return planName;
+    }
+
+    public void setPlanName(String planName) {
+        this.planName = planName;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getQuota() {
+        return quota;
+    }
+
+    public void setQuota(String quota) {
+        this.quota = quota;
+    }
+
+    public String getPlanType() {
+        return planType;
+    }
+
+    public void setPlanType(String planType) {
+        this.planType = planType;
+    }
+
+    public PlanEntity getSelectedPlan() {
+        return selectedPlan;
+    }
+
+    public void setSelectedPlan(PlanEntity selectedPlan) {
+        this.selectedPlan = selectedPlan;
+    }
 
     public PlanDao getPlanDAO() {
         return planDAO;
@@ -38,14 +101,27 @@ public class PlanConverter implements Converter {
     }
 
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
-        return planDAO.loadPlanByPlanName(value);
+        PlanEntity plan= planDAO.loadPlanByPlanName(value);
+        planName = plan.getPlanName();
+        userName = plan.getUserName();
+        quota = plan.getQuota();
+        fee = plan.getFee();
+        adFee = plan.getAdfee();
+        planType = plan.getPlanType();
+
+        return plan;
     }
 
     public String getAsString(FacesContext context, UIComponent component, Object value) {
-        String name = ((PlanEntity) value).getPlanName();
-        if (name == null) {
-            return null;
+        try {
+            String name = ((PlanEntity) value).getPlanName();
+            if (name == null) {
+                return null;
+            }
+            return name.toString();
+        }catch (Exception e){
+            return "Select Plan1";
         }
-        return name.toString();
+
     }
 }

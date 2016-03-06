@@ -47,4 +47,6 @@ public interface PlanService {
 
     Map<String, Object> loadPlanEntities();
 
+    Map<String, Object> loadPlanEntitiesString();
+
 }

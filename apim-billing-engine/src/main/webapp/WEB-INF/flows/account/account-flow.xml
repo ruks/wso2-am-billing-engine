@@ -53,10 +53,6 @@
 	</view-state>
 
 	<view-state id="viewInvoices" view="viewInvoices.xhtml">
-		<on-render>
-			<evaluate expression="invoiceService.listInvoices(user)"
-					  result="viewScope.invoiceList" />
-		</on-render>
 		<transition on="backToHome" to="home" />
 		<transition on="previewInvoice" to="previewInvoice" />
 	</view-state>

@@ -28,7 +28,7 @@
 					<p:outputLabel for="plans" value="Select Plan:" />
 					<p:selectOneMenu id="plans" value="#{invoiceService.selected}" style="width:200px">
 						<p:ajax event="change" update="@this" />
-						<f:selectItems value="#{planService.loadPlanEntities()}" />
+						<f:selectItems value="#{planService.loadPlanEntitiesString()}" />
 					</p:selectOneMenu>
 
 					<p:commandButton id="backToHome" action="backToHome" immediate="true" icon="ui-icon-arrowreturnthick-1-w" value="Back to Home" />
