@@ -16,19 +16,23 @@
 * under the License.
 *
 */
-package bean;
+package com.example.j2eeapp.domain;
 
 import com.example.j2eeapp.commons.domain.BaseEntity;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "invoice")
-public class Invoice extends BaseEntity {
+public class InvoiceEntity extends BaseEntity {
 
     private String createdDate;
     private String dueDate;
+
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private int invoiceNo;
     private String userFirstName;
     private String userLastName;

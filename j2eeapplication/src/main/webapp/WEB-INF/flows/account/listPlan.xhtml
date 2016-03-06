@@ -23,12 +23,71 @@
 		<p:focus />
 		<p:messages id="messages" globalOnly="true" />
 
-			<h:panelGrid id="regPanelGrid" style="margin: 0 auto; margin-top: 25px; text-align: " cellspacing="8" columns="2">
+			<h:panelGrid id="regPanelGrid" style="margin: 0 auto; margin-top: 25px; text-align: " cellspacing="8" columns="3">
 
 				<p:outputLabel for="console" value="Select Plan:" />
-				<p:selectOneMenu id="console" value="select me" style="width:200px">
+				<p:selectOneMenu id="console" value="#{plan}" style="width:200px" >
+					<p:ajax event="change" update="@this" />
 					<f:selectItems value="#{planService.loadPlanEntities()}" />
 				</p:selectOneMenu>
+				<h:panelGroup>
+					<p:message id="planListMsg" for="console" />
+					<p:tooltip for="console" styleClass="tooltip" showEvent="focus" hideEvent="blur" />
+				</h:panelGroup>
+
+				<h:panelGroup>
+					<h:outputText value="Plan Name:" />
+					<h:outputText style="color:red" value="*  " />
+				</h:panelGroup>
+				<p:inputText id="planName" label="Plan Name" value="#{plan.planName}" required="true" title="Enter Plan Name!">
+					<f:validateLength minimum="2" />
+					<p:ajax event="keyup" update="planNameMsg" global="false" listener="#{planService.checkAvailable}"/>
+				</p:inputText>
+				<h:panelGroup>
+					<p:message id="planNameMsg" for="planName" />
+					<p:tooltip for="planName" styleClass="tooltip" showEvent="focus" hideEvent="blur" />
+				</h:panelGroup>
+
+				<h:panelGroup>
+					<h:outputText value="User Name:" />
+					<h:outputText style="color:red" value="*  " />
+				</h:panelGroup>
+				<p:inputText id="userName" value="#{plan.userName}" required="true" label="User Name" title="Enter your User Name!">
+					<f:validateLength minimum="2" />
+					<p:ajax event="keyup" update="userNameMsg" global="false"/>
+				</p:inputText>
+				<h:panelGroup>
+					<p:message id="userNameMsg" for="userName" />
+					<p:tooltip for="userName" styleClass="tooltip" showEvent="focus" hideEvent="blur" />
+				</h:panelGroup>
+
+				<h:panelGroup>
+					<h:outputText value="Allowed Quota:" />
+					<h:outputText style="color:red" value="*  " />
+				</h:panelGroup>
+				<p:inputText id="quota" value="#{plan.quota}" required="true" label="Quota" title="Please enter quota!" feedback="true">
+					<f:validateLength minimum="2" />
+				</p:inputText>
+				<p:message id="quotaMsg" for="quota" />
+
+				<h:panelGroup>
+					<h:outputText value="Subscription Fee:" />
+					<h:outputText style="color:red" value="*  " />
+				</h:panelGroup>
+				<p:inputText id="fee" value="#{plan.fee}" required="true" label="Fee" title="Please enter fee!" feedback="true">
+					<f:validateLength minimum="2" />
+				</p:inputText>
+				<p:message id="feeMsg" for="fee" />
+
+
+				<h:panelGroup>
+					<h:outputText value="Additional Fee:" />
+					<h:outputText style="color:red" value="*  " />
+				</h:panelGroup>
+				<p:inputText id="adfee" value="#{plan.adfee}" required="true" label="Additional Fee" title="Please enter Additional fee!" feedback="true">
+					<f:validateLength minimum="2" />
+				</p:inputText>
+				<p:message id="adfeeMsg" for="adfee" />
 
 				<p:commandButton id="backToHome" action="backToHome" immediate="true" icon="ui-icon-arrowreturnthick-1-w" value="Back to Home" />
 			</h:panelGrid>

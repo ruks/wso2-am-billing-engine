@@ -29,8 +29,12 @@
 									 													value="Define Standard Plan" />
 					<p:commandButton id="usgPlnButton" action="newUsagePlan" immediate="true" icon="ui-icon-plus"
 									 														value="Define Usage Plan" />
-					<p:commandButton id="listPlanButton" action="listPlan" update="logPanelGrid,messages" icon="ui-icon-check" value="List Plan" />
-					<p:commandButton id="invoiceButton" action="invoice" update="logPanelGrid,messages" icon="ui-icon-check" value="Invoice" />
+					<p:commandButton id="listPlanButton" action="listPlan" update="logPanelGrid,messages"
+									 icon="ui-icon-check" value="List Plan"/>
+					<p:commandButton id="invoiceButton" action="invoice" update="logPanelGrid,messages"
+									 icon="ui-icon-check" value="Invoice"/>
+					<p:commandButton id="viewInvoiceButtons" action="viewInvoices" update="logPanelGrid,messages"
+									 icon="ui-icon-check" value="View Invoices"/>
 
 				</h:panelGrid>
 			</p:fieldset>

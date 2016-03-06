@@ -109,9 +109,9 @@
 								</td>
 
 								<td>
-									Invoice #: #{invoice.invoiceNo}<br></br>
-									Created: #{invoice.createdDate}<br></br>
-									Due: #{invoice.dueDate}
+									Invoice #: #{dataExporterView.selectedId.invoiceNo}<br></br>
+									Created: #{dataExporterView.selectedId.createdDate}<br></br>
+									Due: #{dataExporterView.selectedId.dueDate}
 								</td>
 							</tr>
 						</table>
@@ -129,11 +129,11 @@
 								</td>
 
 								<td>
-									#{invoice.userFirstName} #{invoice.userLastName}<br></br>
-									#{invoice.userCompany}<br></br>
-									#{invoice.address1} #{invoice.address2}<br></br>
-									#{invoice.address3}<br></br>
-									#{invoice.userEmail}
+									#{dataExporterView.selectedId.userFirstName} #{dataExporterView.selectedId.userLastName}<br></br>
+									#{dataExporterView.selectedId.userCompany}<br></br>
+									#{dataExporterView.selectedId.address1} #{dataExporterView.selectedId.address2}<br></br>
+									#{dataExporterView.selectedId.address3}<br></br>
+									#{dataExporterView.selectedId.userEmail}
 								</td>
 							</tr>
 						</table>
@@ -146,7 +146,7 @@
 					</td>
 
 					<td>
-						#{invoice.paymentMethod} #
+						#{dataExporterView.selectedId.paymentMethod} #
 					</td>
 				</tr>
 
@@ -156,7 +156,7 @@
 					</td>
 
 					<td>
-						#{invoice.planName}
+						#{dataExporterView.selectedId.planName}
 					</td>
 				</tr>
 
@@ -166,7 +166,7 @@
 					</td>
 
 					<td>
-						#{invoice.successCount}
+						#{dataExporterView.selectedId.successCount}
 					</td>
 				</tr>
 
@@ -176,7 +176,7 @@
 					</td>
 
 					<td>
-						#{invoice.throttleCount}
+						#{dataExporterView.selectedId.throttleCount}
 					</td>
 				</tr>
 
@@ -186,7 +186,7 @@
 					</td>
 
 					<td>
-						#{invoice.feePerSuccess}
+						#{dataExporterView.selectedId.feePerSuccess}
 					</td>
 				</tr>
 
@@ -196,7 +196,7 @@
 					</td>
 
 					<td>
-						#{invoice.feePerThrottle}
+						#{dataExporterView.selectedId.feePerThrottle}
 					</td>
 				</tr>
 
@@ -216,7 +216,7 @@
 					</td>
 
 					<td>
-						$#{invoice.subscriptionFee}
+						$#{dataExporterView.selectedId.subscriptionFee}
 					</td>
 				</tr>
 
@@ -226,7 +226,7 @@
 					</td>
 
 					<td>
-						$#{invoice.successFee}
+						$#{dataExporterView.selectedId.successFee}
 					</td>
 				</tr>
 
@@ -236,7 +236,7 @@
 					</td>
 
 					<td>
-						$#{invoice.throttleFee}
+						$#{dataExporterView.selectedId.throttleFee}
 					</td>
 				</tr>
 
@@ -244,7 +244,7 @@
 					<td></td>
 
 					<td>
-						Total: $#{invoice.totalFee}
+						Total: $#{dataExporterView.selectedId.totalFee}
 					</td>
 				</tr>
 			</table>

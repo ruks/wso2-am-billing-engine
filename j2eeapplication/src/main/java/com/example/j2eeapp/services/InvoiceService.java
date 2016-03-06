@@ -1,11 +1,9 @@
 package com.example.j2eeapp.services;
 
-import bean.Invoice;
-import com.example.j2eeapp.domain.PlanEntity;
+import com.example.j2eeapp.domain.InvoiceEntity;
 import com.example.j2eeapp.domain.UserEntity;
 
-import javax.faces.event.AjaxBehaviorEvent;
-import java.util.Map;
+import java.util.List;
 
 /**
  * Service providing service methods to work with user data and entity.
@@ -20,5 +18,9 @@ public interface InvoiceService {
 	 * @param user
 	 * @return true if success
 	 */
-	Invoice createInvoice(UserEntity user);
+	InvoiceEntity createInvoice(UserEntity user);
+
+	List<InvoiceEntity> listInvoices(UserEntity user);
+
+	InvoiceEntity getInvoiceById(UserEntity user, int id);
 }

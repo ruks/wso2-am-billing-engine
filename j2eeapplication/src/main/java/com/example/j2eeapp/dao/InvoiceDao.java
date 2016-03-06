@@ -1,8 +1,8 @@
 package com.example.j2eeapp.dao;
 
-import bean.Invoice;
+import com.example.j2eeapp.domain.InvoiceEntity;
 import com.example.j2eeapp.commons.dao.GenericDao;
-import com.example.j2eeapp.domain.PlanEntity;
+import com.example.j2eeapp.domain.UserEntity;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
  * 
  * @author Arthur Rukshan
  */
-public interface InvoiceDao extends GenericDao<Invoice, Long> {
+public interface InvoiceDao extends GenericDao<InvoiceEntity, Long> {
 
 	/**
 	 * Queries database for user name availability
@@ -19,7 +19,7 @@ public interface InvoiceDao extends GenericDao<Invoice, Long> {
 	 * @param invoiceId
 	 * @return true if available
 	 */
-	boolean checkAvailable(String invoiceId);
+	boolean checkAvailable(int invoiceId);
 	
 	/**
 	 * Queries user by username
@@ -27,7 +27,7 @@ public interface InvoiceDao extends GenericDao<Invoice, Long> {
 	 * @param ID
 	 * @return User entity
 	 */
-	PlanEntity loadInvoiceByID(String ID);
+	InvoiceEntity loadInvoiceByID(UserEntity user, int ID);
 
-	List<Invoice> loadInvoices();
+	List<InvoiceEntity> loadInvoices(UserEntity user);
 }

@@ -20,7 +20,7 @@ package com.example.j2eeapp.dao;
 
 import bean.AggregateField;
 import bean.AppApiSubscriptionBean;
-import bean.Invoice;
+import com.example.j2eeapp.domain.InvoiceEntity;
 import bean.SearchRequestBean;
 import com.example.j2eeapp.clients.APIRESTClient;
 import com.example.j2eeapp.clients.DASRestClient;
@@ -118,9 +118,9 @@ public class ThrottleRequestDao {
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
     }
 
-    public Invoice getInvoice(int success, int throttle, String planName, UserEntity user) {
+    private InvoiceEntity getInvoice(int success, int throttle, String planName, UserEntity user) {
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd hh/mm");
         Date date = new Date();
         PlanEntity plan = planDao.loadPlanByPlanName(planName);
 
@@ -129,31 +129,31 @@ public class ThrottleRequestDao {
         double throttleFee = throttle * Double.parseDouble(plan.getAdfee());
         double totalFee = subscriptionFee + successFee + throttleFee;
 
-        Invoice invoice = new Invoice();
-        invoice.setAddress1(user.getAddress1());
-        invoice.setAddress2(user.getAddress2());
-        invoice.setAddress3(user.getAddress3());
-        invoice.setCreatedDate(dateFormat.format(date));
-        invoice.setDueDate(dateFormat.format(date));
-        invoice.setInvoiceNo(1);
-        invoice.setPaymentMethod(user.getCardType());
-        invoice.setSubscriptionFee(plan.getFee());
-        invoice.setSuccessCount(success);
-        invoice.setSuccessFee(successFee + "");
-        invoice.setThrottleCount(throttle);
-        invoice.setThrottleFee(throttleFee + "");
-        invoice.setTotalFee(totalFee + "");
-        invoice.setUserCompany("example company");
-        invoice.setUserEmail("user@example.com");
-        invoice.setUserFirstName(user.getFirstName());
-        invoice.setUserLastName(user.getLastName());
-        invoice.setPlanName(plan.getPlanName());
-        invoice.setFeePerSuccess(0 + "");
-        invoice.setFeePerThrottle(plan.getAdfee());
-        return invoice;
+        InvoiceEntity invoiceEntity = new InvoiceEntity();
+        invoiceEntity.setAddress1(user.getAddress1());
+        invoiceEntity.setAddress2(user.getAddress2());
+        invoiceEntity.setAddress3(user.getAddress3());
+        invoiceEntity.setCreatedDate(dateFormat.format(date));
+        invoiceEntity.setDueDate(dateFormat.format(date));
+//        invoiceEntity.setInvoiceNo(1);
+        invoiceEntity.setPaymentMethod(user.getCardType());
+        invoiceEntity.setSubscriptionFee(plan.getFee());
+        invoiceEntity.setSuccessCount(success);
+        invoiceEntity.setSuccessFee(successFee + "");
+        invoiceEntity.setThrottleCount(throttle);
+        invoiceEntity.setThrottleFee(throttleFee + "");
+        invoiceEntity.setTotalFee(totalFee + "");
+        invoiceEntity.setUserCompany("example company");
+        invoiceEntity.setUserEmail("user@example.com");
+        invoiceEntity.setUserFirstName(user.getFirstName());
+        invoiceEntity.setUserLastName(user.getLastName());
+        invoiceEntity.setPlanName(plan.getPlanName());
+        invoiceEntity.setFeePerSuccess(0 + "");
+        invoiceEntity.setFeePerThrottle(plan.getAdfee());
+        return invoiceEntity;
     }
 
-    public Invoice getCount(String planName, UserEntity user) {
+    public InvoiceEntity GenerateInvoice(String planName, UserEntity user) {
 
         if (planName == null) {
             planName = "silver";
@@ -182,14 +182,9 @@ public class ThrottleRequestDao {
             String resMsg = getResponseBody(res);
             JSONArray obj = new JSONArray(resMsg);
             JSONObject val = obj.getJSONObject(0).getJSONObject("values");
-            int scount = val.getInt("sCount");
-            int tcount = val.getInt("tCount");
-
-            System.out.println(scount);
-            System.out.println(tcount);
-
-            //            return "Sucess: "+scount+" Throttle: "+tcount;
-            Invoice result = getInvoice(scount, tcount, planName, user);
+            int sCount = val.getInt("sCount");
+            int tCount = val.getInt("tCount");
+            InvoiceEntity result = getInvoice(sCount, tCount, planName, user);
 
             return result;
 

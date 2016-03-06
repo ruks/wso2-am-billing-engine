@@ -18,6 +18,7 @@
 		<transition on="newUsagePlan" to="newUsagePlan" />
 		<transition on="listPlan" to="listPlan" />
 		<transition on="invoice" to="invoice" />
+		<transition on="viewInvoices" to="viewInvoices" />
 	</view-state>
 
 	<view-state id="newPlan" view="newPlan.xhtml" model="plan">
@@ -48,7 +49,20 @@
 			<evaluate expression="invoiceService.createInvoice(user)"
 					  result="viewScope.invoice" />
 		</on-render>
-		<transition on="backToHome" to="home"/>
+		<transition on="backToHome" to="invoice"/>
+	</view-state>
+
+	<view-state id="viewInvoices" view="viewInvoices.xhtml">
+		<on-render>
+			<evaluate expression="invoiceService.listInvoices(user)"
+					  result="viewScope.invoiceList" />
+		</on-render>
+		<transition on="backToHome" to="home" />
+		<transition on="previewInvoice" to="previewInvoice" />
+	</view-state>
+
+	<view-state id="previewInvoice" view="invoicePreview.xhtml" model="user">
+		<transition on="backToHome" to="viewInvoices" />
 	</view-state>
 
 </flow>

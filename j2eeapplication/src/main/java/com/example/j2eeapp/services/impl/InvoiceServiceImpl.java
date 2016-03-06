@@ -1,20 +1,14 @@
 package com.example.j2eeapp.services.impl;
 
-import bean.Invoice;
+import com.example.j2eeapp.domain.InvoiceEntity;
 import com.example.j2eeapp.dao.InvoiceDao;
-import com.example.j2eeapp.dao.PlanDao;
 import com.example.j2eeapp.dao.ThrottleRequestDao;
-import com.example.j2eeapp.domain.PlanEntity;
 import com.example.j2eeapp.domain.UserEntity;
 import com.example.j2eeapp.services.InvoiceService;
-import com.example.j2eeapp.services.PlanService;
-import org.primefaces.component.inputtext.InputText;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -72,9 +66,17 @@ public class InvoiceServiceImpl implements InvoiceService {
         return ResourceBundle.getBundle("message-labels");
     }
 
-    public Invoice createInvoice(UserEntity user) {
-        Invoice result = throttleRequestDao.getCount(selected, user);
+    public InvoiceEntity createInvoice(UserEntity user) {
+        InvoiceEntity result = throttleRequestDao.GenerateInvoice(selected, user);
         invoiceDao.save(result);
         return result;
+    }
+
+    public List<InvoiceEntity> listInvoices(UserEntity user) {
+        return invoiceDao.loadInvoices(user);
+    }
+
+    public InvoiceEntity getInvoiceById(UserEntity user, int id) {
+        return invoiceDao.loadInvoiceByID(user, id);
     }
 }

@@ -1,8 +1,8 @@
 package com.example.j2eeapp.dao;
 
-import bean.Invoice;
+import com.example.j2eeapp.domain.InvoiceEntity;
 import com.example.j2eeapp.commons.dao.GenericJpaDao;
-import com.example.j2eeapp.domain.PlanEntity;
+import com.example.j2eeapp.domain.UserEntity;
 import org.springframework.util.Assert;
 
 import javax.persistence.NoResultException;
@@ -14,10 +14,10 @@ import java.util.List;
  * 
  * @author Arthur Rukshan
  */
-public class InvoiceJpaDao extends GenericJpaDao<Invoice, Long> implements InvoiceDao {
+public class InvoiceJpaDao extends GenericJpaDao<InvoiceEntity, Long> implements InvoiceDao {
 
 	public InvoiceJpaDao() {
-		super(Invoice.class);
+		super(InvoiceEntity.class);
 	}
 
 	/**
@@ -26,7 +26,7 @@ public class InvoiceJpaDao extends GenericJpaDao<Invoice, Long> implements Invoi
 	 * @param invoiceId
 	 * @return true if available
 	 */
-	public boolean checkAvailable(String invoiceId) {
+	public boolean checkAvailable(int invoiceId) {
 		Assert.notNull(invoiceId);
 		
 		Query query = getEntityManager()
@@ -44,16 +44,16 @@ public class InvoiceJpaDao extends GenericJpaDao<Invoice, Long> implements Invoi
 	 * @param ID
 	 * @return User entity
 	 */
-	public PlanEntity loadInvoiceByID(String ID) {
+	public InvoiceEntity loadInvoiceByID(UserEntity user, int ID) {
 		Assert.notNull(ID);
 
-		PlanEntity plan = null;
+		InvoiceEntity plan = null;
 		
 		Query query = getEntityManager().createQuery("select u from " + getPersistentClass().getSimpleName()
 				+ " u where u.invoiceNo = :invoiceNo").setParameter("invoiceNo", ID);
 		
 		try {
-			plan = (PlanEntity) query.getSingleResult();
+			plan = (InvoiceEntity) query.getSingleResult();
 		} catch(NoResultException e) {
 			//do nothing
 		}
@@ -66,18 +66,17 @@ public class InvoiceJpaDao extends GenericJpaDao<Invoice, Long> implements Invoi
 	 *
 	 * @return User entity
 	 */
-	public List<Invoice> loadInvoices() {
+	public List<InvoiceEntity> loadInvoices(UserEntity user) {
 
-		List<Invoice> plans = null;
+		List<InvoiceEntity> plans = null;
 
-		Query query = getEntityManager().createQuery("select u from " + getPersistentClass().getSimpleName()
-				+ " u");
-
+		Query query = getEntityManager().createQuery("select u from " + getPersistentClass().getSimpleName() + " u");
 		try {
 			plans =  query.getResultList();
 		} catch(NoResultException e) {
 			//do nothing
 		}
+		System.out.println("size "+plans.size());
 		return plans;
 	}
 }

@@ -20,7 +20,10 @@
 		<property name="dasPassword" value="${dasPassword}" />
 		<property name="planDao" ref="planDao" />
 	</bean>
-	
+	<bean id="planConverter" class="bean.PlanConverter" >
+		<property name="planDAO" ref="planDao" />
+	</bean>
+
 	<!-- Services declarations -->
 	<bean id="userService" class="com.example.j2eeapp.services.impl.UserServiceImpl">
 		<property name="userDao" ref="userDao" />
