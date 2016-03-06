@@ -1,43 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-	
-	<import resource="datasource-config.xml" />
-	<import resource="webflow-config.xml" />	
-	<import resource="security-config.xml" />
-	
-	<!-- DAO declarations -->
-	<bean id="userDao" class="com.example.j2eeapp.dao.UserJpaDao" />
-	<bean id="planDao" class="com.example.j2eeapp.dao.PlanJpaDao" />
-	<bean id="invoiceDao" class="com.example.j2eeapp.dao.InvoiceJpaDao" />
-	<bean id="throttleRequestDao" class="com.example.j2eeapp.dao.ThrottleRequestDao" >
-		<property name="apimStoreUrl" value="${apimStoreUrl}" />
-		<property name="apimUserName" value="${apimUserName}" />
-		<property name="apimPassword" value="${apimPassword}" />
-		<property name="dasUrl" value="${dasUrl}" />
-		<property name="dasUserName" value="${dasUserName}" />
-		<property name="dasPassword" value="${dasPassword}" />
-		<property name="planDao" ref="planDao" />
-	</bean>
-	<bean id="planConverter" class="bean.PlanConverter" >
-		<property name="planDAO" ref="planDao" />
-	</bean>
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<!-- Services declarations -->
-	<bean id="userService" class="com.example.j2eeapp.services.impl.UserServiceImpl">
-		<property name="userDao" ref="userDao" />
-	</bean>
-	<bean id="planService" class="com.example.j2eeapp.services.impl.PlanServiceImpl">
-		<property name="planDao" ref="planDao" />
-	</bean>
-	<bean id="invoiceService" class="com.example.j2eeapp.services.impl.InvoiceServiceImpl">
-		<property name="throttleRequestDao" ref="throttleRequestDao" />
-		<property name="invoiceDao" ref="invoiceDao" />
-	</bean>
+    <import resource="datasource-config.xml"/>
+    <import resource="webflow-config.xml"/>
+    <import resource="security-config.xml"/>
 
-	<bean id="userAuthenticationProviderService" class="com.example.j2eeapp.services.impl.UserAuthenticationProviderServiceImpl">
-		<property name="authenticationManager" ref="authenticationManager" />
-	</bean>
-	
+    <!-- DAO declarations -->
+    <bean id="userDao" class="org.wso2.apim.billing.dao.UserJpaDao"/>
+    <bean id="planDao" class="org.wso2.apim.billing.dao.PlanJpaDao"/>
+    <bean id="invoiceDao" class="org.wso2.apim.billing.dao.InvoiceJpaDao"/>
+    <bean id="throttleRequestDao" class="org.wso2.apim.billing.dao.ThrottleRequestDao">
+        <property name="apimStoreUrl" value="${apimStoreUrl}"/>
+        <property name="apimUserName" value="${apimUserName}"/>
+        <property name="apimPassword" value="${apimPassword}"/>
+        <property name="dasUrl" value="${dasUrl}"/>
+        <property name="dasUserName" value="${dasUserName}"/>
+        <property name="dasPassword" value="${dasPassword}"/>
+        <property name="planDao" ref="planDao"/>
+    </bean>
+    <bean id="planConverter" class="org.wso2.apim.billing.bean.PlanConverter">
+        <property name="planDAO" ref="planDao"/>
+    </bean>
+
+    <!-- Services declarations -->
+    <bean id="userService" class="org.wso2.apim.billing.services.impl.UserServiceImpl">
+        <property name="userDao" ref="userDao"/>
+    </bean>
+    <bean id="planService" class="org.wso2.apim.billing.services.impl.PlanServiceImpl">
+        <property name="planDao" ref="planDao"/>
+    </bean>
+    <bean id="invoiceService" class="org.wso2.apim.billing.services.impl.InvoiceServiceImpl">
+        <property name="throttleRequestDao" ref="throttleRequestDao"/>
+        <property name="invoiceDao" ref="invoiceDao"/>
+    </bean>
+
+    <bean id="userAuthenticationProviderService"
+          class="org.wso2.apim.billing.services.impl.UserAuthenticationProviderServiceImpl">
+        <property name="authenticationManager" ref="authenticationManager"/>
+    </bean>
+
 </beans>

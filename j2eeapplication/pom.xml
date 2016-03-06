@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   
-  <groupId>com.example.j2eeapp</groupId>
-  <artifactId>j2eeapplication</artifactId>
+  <groupId>org.wso2.apim</groupId>
+  <artifactId>apim-billing-engine</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
-  <name>J2EE Application Example</name>
+  <name>WSO2 APIM Billing Engine</name>
   
   <repositories>
     	<repository>

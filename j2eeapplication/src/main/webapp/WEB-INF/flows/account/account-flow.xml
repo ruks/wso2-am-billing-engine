@@ -6,8 +6,8 @@
 
 	<secured attributes="ROLE_USER"/>
 
-	<var name="uiUtils" class="com.example.j2eeapp.ui.utils.UIUtils"/>
-	<var name="plan" class="com.example.j2eeapp.domain.PlanEntity"/>
+	<var name="uiUtils" class="org.wso2.apim.billing.ui.utils.UIUtils"/>
+	<var name="plan" class="org.wso2.apim.billing.domain.PlanEntity"/>
 
 	<on-start>
 		<evaluate expression="userService.loadUserEntityByUsername(currentUser.name)" result="flowScope.user" />
