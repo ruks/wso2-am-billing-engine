@@ -137,6 +137,8 @@ public class ThrottleRequestDao {
 
         PlanEntity plan = planDao.loadPlanByPlanName(planName);
 
+        throttle = getThrottleCount(plan, success, throttle);
+
         double subscriptionFee = plan.getSubscriptionFee();
         double successFee = getSuccessRequestFee(plan, success);
         double throttleFee = getThrottleRequestFee(plan, throttle);
@@ -273,6 +275,21 @@ public class ThrottleRequestDao {
             return 0.0;
         } else {
             return 0.0;
+        }
+    }
+
+    private int getThrottleCount(PlanEntity plan, int success, int throttle){
+        if (plan.getPlanType().equals("STANDARD")) {
+            int diff = success - Integer.parseInt(plan.getQuota());
+            if(diff > 0){
+                return diff;
+            }else {
+                return success;
+            }
+        } else if (plan.getPlanType().equals("USAGE")) {
+            return throttle;
+        } else {
+            return throttle;
         }
     }
 }
