@@ -32,24 +32,17 @@ public class PlanConverter implements Converter {
     private String planName;
     private String userName;
     private String quota;
-    private String fee;
-    private String adFee;
+    private double feePerRequest;
+//    private double adFee;
+    private double subscriptionFee;
     private String planType;
 
-    public String getAdFee() {
-        return adFee;
+    public double getFeePerRequest() {
+        return feePerRequest;
     }
 
-    public void setAdFee(String adFee) {
-        this.adFee = adFee;
-    }
-
-    public String getFee() {
-        return fee;
-    }
-
-    public void setFee(String fee) {
-        this.fee = fee;
+    public void setFeePerRequest(double feePerRequest) {
+        this.feePerRequest = feePerRequest;
     }
 
     public String getPlanName() {
@@ -100,15 +93,22 @@ public class PlanConverter implements Converter {
         this.planDAO = planDAO;
     }
 
+    public double getSubscriptionFee() {
+        return subscriptionFee;
+    }
+
+    public void setSubscriptionFee(double subscriptionFee) {
+        this.subscriptionFee = subscriptionFee;
+    }
+
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
-        PlanEntity plan= planDAO.loadPlanByPlanName(value);
+        PlanEntity plan = planDAO.loadPlanByPlanName(value);
         planName = plan.getPlanName();
         userName = plan.getUserName();
         quota = plan.getQuota();
-        fee = plan.getFee();
-        adFee = plan.getAdfee();
+        feePerRequest = plan.getFeePerRequest();
         planType = plan.getPlanType();
-
+        subscriptionFee = plan.getSubscriptionFee();
         return plan;
     }
 

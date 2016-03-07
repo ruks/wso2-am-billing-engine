@@ -38,6 +38,7 @@ import java.net.MalformedURLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -52,6 +53,19 @@ public class ThrottleRequestDao {
     private String dasUserName;
     private String dasPassword;
     private PlanDao planDao;
+    private String jksPath;
+
+    public ThrottleRequestDao() {
+
+    }
+
+    public String getJksPath() {
+        return jksPath;
+    }
+
+    public void setJksPath(String jksPath) {
+        this.jksPath = jksPath;
+    }
 
     public PlanDao getPlanDao() {
         return planDao;
@@ -113,49 +127,52 @@ public class ThrottleRequestDao {
         this.dasPassword = dasPassword;
     }
 
-    static {
-        System.setProperty("javax.net.ssl.trustStore", "/home/rukshan/wso2-jks/wso2carbon.jks");
-        System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
-    }
-
     private InvoiceEntity getInvoice(int success, int throttle, String planName, UserEntity user) {
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd hh/mm");
-        Date date = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        Calendar calendar = Calendar.getInstance();
+        String billDate = dateFormat.format(calendar.getTime());
+        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + 1);
+        String dueDate = dateFormat.format(calendar.getTime());
+
         PlanEntity plan = planDao.loadPlanByPlanName(planName);
 
-        double subscriptionFee = Double.parseDouble(plan.getFee());
-        double successFee = 0;
-        double throttleFee = throttle * Double.parseDouble(plan.getAdfee());
+        double subscriptionFee = plan.getSubscriptionFee();
+        double successFee = getSuccessRequestFee(plan, success);
+        double throttleFee = getThrottleRequestFee(plan, throttle);
         double totalFee = subscriptionFee + successFee + throttleFee;
 
-        int ran=(int)Math.random()*1000;
+        int ran = (int) (Math.random() * 1000);
 
         InvoiceEntity invoiceEntity = new InvoiceEntity();
         invoiceEntity.setAddress1(user.getAddress1());
         invoiceEntity.setAddress2(user.getAddress2());
         invoiceEntity.setAddress3(user.getAddress3());
-        invoiceEntity.setCreatedDate(dateFormat.format(date));
-        invoiceEntity.setDueDate(dateFormat.format(date));
+        invoiceEntity.setCreatedDate(billDate);
+        invoiceEntity.setDueDate(dueDate);
         invoiceEntity.setInvoiceNo(ran);
         invoiceEntity.setPaymentMethod(user.getCardType());
-        invoiceEntity.setSubscriptionFee(plan.getFee());
+        invoiceEntity.setSubscriptionFee(plan.getSubscriptionFee());
         invoiceEntity.setSuccessCount(success);
-        invoiceEntity.setSuccessFee(successFee + "");
+        invoiceEntity.setSuccessFee(successFee);
         invoiceEntity.setThrottleCount(throttle);
-        invoiceEntity.setThrottleFee(throttleFee + "");
-        invoiceEntity.setTotalFee(totalFee + "");
-        invoiceEntity.setUserCompany("example company");
-        invoiceEntity.setUserEmail("user@example.com");
+        invoiceEntity.setThrottleFee(throttleFee);
+        invoiceEntity.setTotalFee(totalFee);
+        invoiceEntity.setUserCompany(user.getCompany());
+        invoiceEntity.setUserEmail(user.getEmail());
         invoiceEntity.setUserFirstName(user.getFirstName());
         invoiceEntity.setUserLastName(user.getLastName());
         invoiceEntity.setPlanName(plan.getPlanName());
-        invoiceEntity.setFeePerSuccess(0 + "");
-        invoiceEntity.setFeePerThrottle(plan.getAdfee());
+        invoiceEntity.setFeePerSuccess(successFee);
+        invoiceEntity.setFeePerThrottle(plan.getFeePerRequest());
+        invoiceEntity.setPlanType(plan.getPlanType());
         return invoiceEntity;
     }
 
     public InvoiceEntity GenerateInvoice(String planName, UserEntity user) {
+
+        System.setProperty("javax.net.ssl.trustStore", jksPath);
+        System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
 
         if (planName == null) {
             planName = "silver";
@@ -182,6 +199,7 @@ public class ThrottleRequestDao {
 
             CloseableHttpResponse res = s.doPost(request, this.dasUrl + DAS_AGGREGATES_SEARCH_REST_API_URL);
             String resMsg = getResponseBody(res);
+            System.out.println("response: " + resMsg);
             JSONArray obj = new JSONArray(resMsg);
             JSONObject val = obj.getJSONObject(0).getJSONObject("values");
             int sCount = val.getInt("sCount");
@@ -221,6 +239,7 @@ public class ThrottleRequestDao {
         if (beans == null || beans.isEmpty()) {
             return null;
         }
+
         StringBuilder query = new StringBuilder();
         AppApiSubscriptionBean bean1 = beans.get(0);
         query.append("(").append("api:\"").append(bean1.getApiName()).append("\" AND ").append("applicationName:\"")
@@ -231,9 +250,29 @@ public class ThrottleRequestDao {
             AppApiSubscriptionBean bean = beans.get(i);
             query.append("OR (").append("api:\"").append(bean.getApiName()).append("\" AND ")
                     .append("applicationName:\"").append(bean.getAppName()).append("\" AND ").append("version:\"")
-                    .append(bean1.getApiName()).append(":v").append(bean.getVersion()).append("\" ) ");
+                    .append(bean.getApiName()).append(":v").append(bean.getVersion()).append("\" ) ");
         }
 
         return query.toString();
+    }
+
+    private double getSuccessRequestFee(PlanEntity plan, int success) {
+        if (plan.getPlanType().equals("STANDARD")) {
+            return 0.0;
+        } else if (plan.getPlanType().equals("USAGE")) {
+            return success * plan.getFeePerRequest();
+        } else {
+            return 0.0;
+        }
+    }
+
+    private double getThrottleRequestFee(PlanEntity plan, int throttle) {
+        if (plan.getPlanType().equals("STANDARD")) {
+            return throttle * plan.getFeePerRequest();
+        } else if (plan.getPlanType().equals("USAGE")) {
+            return 0.0;
+        } else {
+            return 0.0;
+        }
     }
 }

@@ -22,6 +22,7 @@
 	</view-state>
 
 	<view-state id="newPlan" view="newPlan.xhtml" model="plan">
+		<var name="plan" class="org.wso2.apim.billing.domain.PlanEntity"/>
 		<transition on="backToHome" to="home" />
 		<transition on="confirmNewPlan" to="home">
 			<evaluate expression="planService.createPlan(plan)" />
@@ -29,6 +30,7 @@
 	</view-state>
 
 	<view-state id="newUsagePlan" view="usagePlan.xhtml" model="plan">
+		<var name="plan" class="org.wso2.apim.billing.domain.PlanEntity"/>
 		<transition on="backToHome" to="home" />
 		<transition on="saveUsgPlan" to="home">
 			<evaluate expression="planService.createUsagePlan(plan)" />

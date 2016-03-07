@@ -18,11 +18,13 @@
         <property name="dasUrl" value="${dasUrl}"/>
         <property name="dasUserName" value="${dasUserName}"/>
         <property name="dasPassword" value="${dasPassword}"/>
+        <property name="jksPath" value="${jksPath}"/>
         <property name="planDao" ref="planDao"/>
     </bean>
     <bean id="planConverter" class="org.wso2.apim.billing.bean.PlanConverter">
         <property name="planDAO" ref="planDao"/>
     </bean>
+
 
     <!-- Services declarations -->
     <bean id="userService" class="org.wso2.apim.billing.services.impl.UserServiceImpl">

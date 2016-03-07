@@ -44,6 +44,16 @@ public class UserEntity extends BaseEntity {
 	private String phoneNumber;
 
 	private String email;
+
+	private String company;
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
 	
 	public String getFirstName() {
 		return firstName;

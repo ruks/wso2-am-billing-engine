@@ -19,22 +19,14 @@ public class PlanEntity extends BaseEntity {
     private String planName;
     private String userName;
     private String quota;
-    private String fee;
-    private String adfee;
+    private double feePerRequest;
+    private double subscriptionFee;
+//    private double additionalFee;
 
-    public enum PLAN_TYPES {STANDARD, USAGE}
+    public enum PLAN_TYPES {STANDARD, USAGE};
 
-    ;
-
-    @Column(name = "planType", columnDefinition = "VARCHAR(255) default 'STANDARD'") private String planType;
-
-    public String getFee() {
-        return fee;
-    }
-
-    public void setFee(String fee) {
-        this.fee = fee;
-    }
+    @Column(name = "planType", columnDefinition = "VARCHAR(255) default 'STANDARD'")
+    private String planType;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -64,13 +56,13 @@ public class PlanEntity extends BaseEntity {
         this.quota = quota;
     }
 
-    public String getAdfee() {
-        return adfee;
-    }
-
-    public void setAdfee(String adfee) {
-        this.adfee = adfee;
-    }
+//    public double getAdditionalFee() {
+//        return additionalFee;
+//    }
+//
+//    public void setAdditionalFee(double additionalFee) {
+//        this.additionalFee = additionalFee;
+//    }
 
     public String getPlanType() {
         return planType;
@@ -78,5 +70,21 @@ public class PlanEntity extends BaseEntity {
 
     public void setPlanType(String planType) {
         this.planType = planType;
+    }
+
+    public double getFeePerRequest() {
+        return feePerRequest;
+    }
+
+    public void setFeePerRequest(double feePerRequest) {
+        this.feePerRequest = feePerRequest;
+    }
+
+    public double getSubscriptionFee() {
+        return subscriptionFee;
+    }
+
+    public void setSubscriptionFee(double subscriptionFee) {
+        this.subscriptionFee = subscriptionFee;
     }
 }

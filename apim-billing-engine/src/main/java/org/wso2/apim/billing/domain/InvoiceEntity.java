@@ -32,7 +32,8 @@ public class InvoiceEntity extends BaseEntity {
     private String createdDate;
     private String dueDate;
 
-    @GeneratedValue(strategy = GenerationType.AUTO) private int invoiceNo;
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int invoiceNo;
     private String userFirstName;
     private String userLastName;
     private String userCompany;
@@ -42,29 +43,30 @@ public class InvoiceEntity extends BaseEntity {
     private int successCount;
     private int throttleCount;
 
-    private String subscriptionFee;
-    private String successFee;
-    private String throttleFee;
-    private String totalFee;
+    private double subscriptionFee;
+    private double successFee;
+    private double throttleFee;
+    private double totalFee;
 
-    private String feePerSuccess;
-    private String feePerThrottle;
+    private double feePerSuccess;
+    private double feePerThrottle;
 
     private String planName;
+    private String planType;
 
-    public String getFeePerSuccess() {
+    public double getFeePerSuccess() {
         return feePerSuccess;
     }
 
-    public void setFeePerSuccess(String feePerSuccess) {
+    public void setFeePerSuccess(double feePerSuccess) {
         this.feePerSuccess = feePerSuccess;
     }
 
-    public String getFeePerThrottle() {
+    public double getFeePerThrottle() {
         return feePerThrottle;
     }
 
-    public void setFeePerThrottle(String feePerThrottle) {
+    public void setFeePerThrottle(double feePerThrottle) {
         this.feePerThrottle = feePerThrottle;
     }
 
@@ -180,36 +182,43 @@ public class InvoiceEntity extends BaseEntity {
         this.throttleCount = throttleCount;
     }
 
-    public String getSubscriptionFee() {
+    public double getSubscriptionFee() {
         return subscriptionFee;
     }
 
-    public void setSubscriptionFee(String subscriptionFee) {
+    public void setSubscriptionFee(double subscriptionFee) {
         this.subscriptionFee = subscriptionFee;
     }
 
-    public String getSuccessFee() {
+    public double getSuccessFee() {
         return successFee;
     }
 
-    public void setSuccessFee(String successFee) {
+    public void setSuccessFee(double successFee) {
         this.successFee = successFee;
     }
 
-    public String getThrottleFee() {
+    public double getThrottleFee() {
         return throttleFee;
     }
 
-    public void setThrottleFee(String throttleFee) {
+    public void setThrottleFee(double throttleFee) {
         this.throttleFee = throttleFee;
     }
 
-    public String getTotalFee() {
+    public double getTotalFee() {
         return totalFee;
     }
 
-    public void setTotalFee(String totalFee) {
+    public void setTotalFee(double totalFee) {
         this.totalFee = totalFee;
     }
 
+    public String getPlanType() {
+        return planType;
+    }
+
+    public void setPlanType(String planType) {
+        this.planType = planType;
+    }
 }

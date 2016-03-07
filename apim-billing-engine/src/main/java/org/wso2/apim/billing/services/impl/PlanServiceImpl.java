@@ -32,6 +32,7 @@ public class PlanServiceImpl implements PlanService {
         }
 
         try {
+            planEntity.setPlanType(PlanEntity.PLAN_TYPES.STANDARD.toString());
             planDao.save(planEntity);
         } catch (Exception e) {
             FacesMessage message = constructFatalMessage(e.getMessage(), null);
@@ -40,6 +41,7 @@ public class PlanServiceImpl implements PlanService {
             return false;
         }
 
+        FacesContext.getCurrentInstance().getViewRoot().getViewMap().remove("plan");
         return true;
     }
 
@@ -58,10 +60,9 @@ public class PlanServiceImpl implements PlanService {
         } catch (Exception e) {
             FacesMessage message = constructFatalMessage(e.getMessage(), null);
             getFacesContext().addMessage(null, message);
-
             return false;
         }
-
+        FacesContext.getCurrentInstance().getViewRoot().getViewMap().remove("plan");
         return true;
     }
 

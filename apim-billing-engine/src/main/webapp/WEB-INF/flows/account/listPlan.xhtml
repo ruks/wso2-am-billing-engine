@@ -72,7 +72,7 @@
 					<h:outputText value="Subscription Fee:" />
 					<h:outputText style="color:red" value="*  " />
 				</h:panelGroup>
-				<p:inputText id="fee" value="#{planConverter.fee}" required="true" label="Fee" title="Please enter fee!" feedback="true">
+				<p:inputText id="fee" value="#{planConverter.subscriptionFee}" required="true" label="Fee" title="Please enter fee!" feedback="true">
 					<f:validateLength minimum="2" />
 				</p:inputText>
 
@@ -80,7 +80,7 @@
 					<h:outputText value="Additional Fee:" />
 					<h:outputText style="color:red" value="*  " />
 				</h:panelGroup>
-				<p:inputText id="adfee" value="#{planConverter.adFee}" required="true" label="Additional Fee" title="Please enter Additional fee!" feedback="true">
+				<p:inputText id="adfee" value="#{planConverter.feePerRequest}" required="true" label="Additional Fee" title="Please enter Additional fee!" feedback="true">
 					<f:validateLength minimum="2" />
 				</p:inputText>
 
