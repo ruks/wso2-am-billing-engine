@@ -43,4 +43,5 @@
         <property name="authenticationManager" ref="authenticationManager"/>
     </bean>
 
+    <bean id="redirectBean" class="org.wso2.apim.billing.bean.RedirectBean"/>
 </beans>

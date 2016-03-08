@@ -31,6 +31,12 @@
 						<f:selectItems value="#{planService.loadPlanEntitiesString()}" />
 					</p:selectOneMenu>
 
+					<p:outputLabel for="billingMonth" value="Select Cycle:" />
+					<p:selectOneMenu id="billingMonth" value="#{monthCycleBean.selected}" style="width:200px">
+						<p:ajax event="change" update="@this" />
+						<f:selectItems value="#{monthCycleBean.loadListOfMonths()}" />
+					</p:selectOneMenu>
+
 					<p:commandButton id="backToHome" action="backToHome" immediate="true" icon="ui-icon-arrowreturnthick-1-w" value="Back to Home" />
 					<p:commandButton id="createInvoice" action="createInvoice" immediate="true" icon="ui-icon-arrowreturnthick-1-w" value="Generate Invoice" />
 

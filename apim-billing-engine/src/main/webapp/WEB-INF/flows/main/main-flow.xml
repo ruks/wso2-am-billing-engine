@@ -23,10 +23,12 @@
 	
 	<action-state id="authentication">
 		<evaluate expression="userAuthenticationProviderService.processUserAuthentication(user)" />
-		<transition on="yes" to="finish" />
+		<transition on="yes" to="redirect" />
 		<transition on="no" to="welcome" />
 	</action-state>
-	
+
 	<end-state id="finish" view="externalRedirect:account" />
-	
+
+	<view-state id="redirect" view="externalRedirect:https://localhost:9443/store/"/>
+
 </flow>
