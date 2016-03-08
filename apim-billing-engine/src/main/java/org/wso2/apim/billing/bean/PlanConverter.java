@@ -30,10 +30,8 @@ public class PlanConverter implements Converter {
     private PlanDao planDAO;
     private PlanEntity selectedPlan;
     private String planName;
-    private String userName;
     private String quota;
     private double feePerRequest;
-//    private double adFee;
     private double subscriptionFee;
     private String planType;
 
@@ -51,14 +49,6 @@ public class PlanConverter implements Converter {
 
     public void setPlanName(String planName) {
         this.planName = planName;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public String getQuota() {
@@ -104,7 +94,6 @@ public class PlanConverter implements Converter {
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
         PlanEntity plan = planDAO.loadPlanByPlanName(value);
         planName = plan.getPlanName();
-        userName = plan.getUserName();
         quota = plan.getQuota();
         feePerRequest = plan.getFeePerRequest();
         planType = plan.getPlanType();

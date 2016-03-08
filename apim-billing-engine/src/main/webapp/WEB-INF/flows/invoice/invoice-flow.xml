@@ -13,7 +13,7 @@
 		<!--<evaluate expression="userService.loadUserEntityByUsername(currentUser.name)" result="flowScope.user" />-->
 	<!--</on-start>-->
 
-	<view-state id="invoiceHome" view="invoiceHome.xhtml">
+	<view-state id="invoiceHome" view="sinUp.xhtml">
 
 	</view-state>
 

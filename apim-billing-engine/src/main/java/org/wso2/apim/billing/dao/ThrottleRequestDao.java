@@ -184,7 +184,7 @@ public class ThrottleRequestDao {
         }
 
         try {
-            DASRestClient s = new DASRestClient(this.dasUrl, this.apimUserName, this.dasPassword.toCharArray());
+            DASRestClient s = new DASRestClient(this.dasUrl, this.dasUserName, this.dasPassword.toCharArray());
 
             String query = getQuery(planName);//"tenantDomain" + ":\"" + "admin@carbon.super" + "\"";
             if (query == null) {

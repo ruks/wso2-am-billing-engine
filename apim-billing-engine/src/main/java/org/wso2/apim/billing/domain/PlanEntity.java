@@ -17,13 +17,13 @@ public class PlanEntity extends BaseEntity {
     private static final long serialVersionUID = -8789920463809744548L;
 
     private String planName;
-    private String userName;
     private String quota;
     private double feePerRequest;
     private double subscriptionFee;
-//    private double additionalFee;
 
-    public enum PLAN_TYPES {STANDARD, USAGE};
+    public enum PLAN_TYPES {STANDARD, USAGE}
+
+    ;
 
     @Column(name = "planType", columnDefinition = "VARCHAR(255) default 'STANDARD'")
     private String planType;
@@ -40,14 +40,6 @@ public class PlanEntity extends BaseEntity {
         this.planName = planName;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
     public String getQuota() {
         return quota;
     }
@@ -55,14 +47,6 @@ public class PlanEntity extends BaseEntity {
     public void setQuota(String quota) {
         this.quota = quota;
     }
-
-//    public double getAdditionalFee() {
-//        return additionalFee;
-//    }
-//
-//    public void setAdditionalFee(double additionalFee) {
-//        this.additionalFee = additionalFee;
-//    }
 
     public String getPlanType() {
         return planType;

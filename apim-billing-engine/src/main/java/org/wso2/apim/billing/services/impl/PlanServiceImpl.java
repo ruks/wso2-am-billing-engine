@@ -25,7 +25,7 @@ public class PlanServiceImpl implements PlanService {
     public boolean createPlan(PlanEntity planEntity) {
         if (!planDao.checkAvailable(planEntity.getPlanName())) {
             FacesMessage message = constructErrorMessage(
-                    String.format(getMessageBundle().getString("userExistsMsg"), planEntity.getUserName()), null);
+                    String.format(getMessageBundle().getString("userExistsMsg"), planEntity.getPlanName()), null);
             getFacesContext().addMessage(null, message);
 
             return false;
@@ -48,7 +48,7 @@ public class PlanServiceImpl implements PlanService {
     public boolean createUsagePlan(PlanEntity planEntity) {
         if (!planDao.checkAvailable(planEntity.getPlanName())) {
             FacesMessage message = constructErrorMessage(
-                    String.format(getMessageBundle().getString("userExistsMsg"), planEntity.getUserName()), null);
+                    String.format(getMessageBundle().getString("userExistsMsg"), planEntity.getPlanName()), null);
             getFacesContext().addMessage(null, message);
 
             return false;

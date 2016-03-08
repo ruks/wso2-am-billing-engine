@@ -35,19 +35,6 @@
 					</h:panelGroup>
 
 					<h:panelGroup>
-						<h:outputText value="User Name:" />
-						<h:outputText style="color:red" value="*  " />
-					</h:panelGroup>
-					<p:inputText id="userName" value="#{plan.userName}" required="true" label="User Name" title="Enter your User Name!">
-						<f:validateLength minimum="2" />
-						<p:ajax event="keyup" update="userNameMsg" global="false"/>
-					</p:inputText>
-					<h:panelGroup>
-						<p:message id="userNameMsg" for="userName" />
-						<p:tooltip for="userName" styleClass="tooltip" showEvent="focus" hideEvent="blur" />
-					</h:panelGroup>
-
-					<h:panelGroup>
 						<h:outputText value="Enter Quota:" />
 						<h:outputText style="color:red" value="*  " />
 					</h:panelGroup>
