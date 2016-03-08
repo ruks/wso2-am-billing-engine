@@ -71,5 +71,5 @@
     a.year=b.year AND a.month=b.month AND a.day=b.day;
                                                                                                                                                         
 </Script>
-   
+    <CronExpression>0 0/1 * 1/1 * ? *</CronExpression>
 </Analytics>

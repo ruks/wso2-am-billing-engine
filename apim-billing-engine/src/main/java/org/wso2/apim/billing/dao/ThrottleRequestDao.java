@@ -144,6 +144,9 @@ public class ThrottleRequestDao {
         double throttleFee = getThrottleRequestFee(plan, throttle);
         double totalFee = subscriptionFee + successFee + throttleFee;
 
+        double feePerRequest = getPerSuccessFee(plan);
+        double feePerThrottle = getPerThrottleFee(plan);
+
         int ran = (int) (Math.random() * 1000);
 
         InvoiceEntity invoiceEntity = new InvoiceEntity();
@@ -165,8 +168,8 @@ public class ThrottleRequestDao {
         invoiceEntity.setUserFirstName(user.getFirstName());
         invoiceEntity.setUserLastName(user.getLastName());
         invoiceEntity.setPlanName(plan.getPlanName());
-        invoiceEntity.setFeePerSuccess(successFee);
-        invoiceEntity.setFeePerThrottle(plan.getFeePerRequest());
+        invoiceEntity.setFeePerSuccess(feePerRequest);
+        invoiceEntity.setFeePerThrottle(feePerThrottle);
         invoiceEntity.setPlanType(plan.getPlanType());
         return invoiceEntity;
     }
@@ -278,18 +281,34 @@ public class ThrottleRequestDao {
         }
     }
 
-    private int getThrottleCount(PlanEntity plan, int success, int throttle){
+    private int getThrottleCount(PlanEntity plan, int success, int throttle) {
         if (plan.getPlanType().equals("STANDARD")) {
             int diff = success - Integer.parseInt(plan.getQuota());
-            if(diff > 0){
+            if (diff > 0) {
                 return diff;
-            }else {
+            } else {
                 return success;
             }
         } else if (plan.getPlanType().equals("USAGE")) {
             return throttle;
         } else {
             return throttle;
+        }
+    }
+
+    private double getPerSuccessFee(PlanEntity plan) {
+        if (plan.getPlanType().equals("STANDARD")) {
+            return 0.0;
+        } else {
+            return plan.getFeePerRequest();
+        }
+    }
+
+    private double getPerThrottleFee(PlanEntity plan) {
+        if (plan.getPlanType().equals("STANDARD")) {
+            return plan.getFeePerRequest();
+        } else {
+            return 0.0;
         }
     }
 }
