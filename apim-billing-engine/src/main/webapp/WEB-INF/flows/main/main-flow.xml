@@ -1,34 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <flow xmlns="http://www.springframework.org/schema/webflow"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
         http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
-	<var name="user" class="org.wso2.apim.billing.domain.UserEntity"/>
-	<var name="country" class="org.wso2.apim.billing.domain.utils.Country"/>
+    <var name="user" class="org.wso2.apim.billing.domain.UserEntity"/>
+    <var name="country" class="org.wso2.apim.billing.domain.utils.Country"/>
+    <input name="CallbackUrl"/>
+    <input name="workflowRefId"/>
+    <input name="reDirectUrl"/>
 
-	<view-state id="welcome" view="welcome.xhtml" model="user">
-		<transition on="newUser" to="signUp" />
-		<transition on="confirmSignIn" to="finish">
-			<evaluate expression="userAuthenticationProviderService.processUserAuthentication(user)" />
-		</transition>
-	</view-state>
+    <view-state id="welcome" view="welcome.xhtml" model="user">
+        <on-render>
+            <set name="redirectBean.reDirectUrl" value="reDirectUrl"></set>
+            <set name="redirectBean.workflowRefId" value="workflowRefId"></set>
+            <set name="redirectBean.CallbackUrl" value="CallbackUrl"></set>
+        </on-render>
+        <transition on="newUser" to="signUp"/>
+        <transition on="confirmSignIn" to="finish">
+            <evaluate expression="userAuthenticationProviderService.processUserAuthentication(user)"/>
+        </transition>
+    </view-state>
 
-	<view-state id="signUp" view="signUp.xhtml" model="user">
-		<transition on="backToSignIn" to="welcome" />
-		<transition on="confirmSignUp" to="authentication">
-			<evaluate expression="userService.createUser(user)" />
-		</transition>
-	</view-state>
-	
-	<action-state id="authentication">
-		<evaluate expression="userAuthenticationProviderService.processUserAuthentication(user)" />
-		<transition on="yes" to="redirect" />
-		<transition on="no" to="welcome" />
-	</action-state>
+    <view-state id="signUp" view="signUp.xhtml" model="user">
+        <transition on="backToSignIn" to="welcome"/>
+        <transition on="confirmSignUp" to="redirect">
+            <!--<evaluate expression="userService.createUser(user)"/>-->
+        </transition>
+    </view-state>
 
-	<end-state id="finish" view="externalRedirect:account" />
+    <action-state id="authentication">
+        <evaluate expression="userAuthenticationProviderService.processUserAuthentication(user)"/>
+        <transition on="yes" to="redirect"/>
+            <!--<evaluate expression="redirectBean.activateSubscription()"/>-->
+        <!--</transition>-->
+        <transition on="no" to="welcome"/>
+    </action-state>
 
-	<view-state id="redirect" view="externalRedirect:https://localhost:9443/store/"/>
+    <end-state id="finish" view="externalRedirect:account"/>
+
+    <view-state id="redirect" view="externalRedirect:#{redirectBean.getUrl()}"/>
 
 </flow>

@@ -18,19 +18,17 @@
 */
 package org.wso2.apim.billing.bean;
 
-import org.springframework.webflow.execution.RequestContext;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 
 @ManagedBean
 @SessionScoped
 public class RedirectBean implements Serializable {
 
-    String reDirectUrl;
+    String reDirectUrl = "account";
+    String workflowRefId;
+    String CallbackUrl;
 
     public String getReDirectUrl() {
         return reDirectUrl;
@@ -40,27 +38,30 @@ public class RedirectBean implements Serializable {
         this.reDirectUrl = reDirectUrl;
     }
 
-    public String getUrl() {
-//        String s=context.getRequestParameters().asAttributeMap().toString();
-//        System.out.println(s);
-//        System.out.println("----------------------------------------------------------------------------------------------------------here");
-
-//        FacesContext ctx = FacesContext.getCurrentInstance();
-//        HttpServletRequest servletRequest = (HttpServletRequest) ctx.getExternalContext().getRequest();
-//        String fullURI = servletRequest.getRequestURI();
-//        System.out.println(fullURI);
-//        System.out.println(ctx.getExternalContext().getRequestParameterMap().get("CallbackUrl"));
-//        "finish or externalRedirect:yes";
-        return "https://localhost:9443/store/";
+    public String getWorkflowRefId() {
+        return workflowRefId;
     }
 
-    public String eval() {
-        System.out.println("----------------------------------------------------------------------------------------------------------here");
-        FacesContext ctx = FacesContext.getCurrentInstance();
-        HttpServletRequest servletRequest = (HttpServletRequest) ctx.getExternalContext().getRequest();
-        String fullURI = servletRequest.getRequestURI();
+    public void setWorkflowRefId(String workflowRefId) {
+        this.workflowRefId = workflowRefId;
+    }
 
-        System.out.println(ctx.getExternalContext().getRequestParameterMap().get("CallbackUrl"));
-        return "Https://www.google.lk";
+    public String getCallbackUrl() {
+        return CallbackUrl;
+    }
+
+    public void setCallbackUrl(String callbackUrl) {
+        CallbackUrl = callbackUrl;
+    }
+
+    public String getUrl() {
+        if (reDirectUrl == null) {
+            return "account";
+        }
+        return reDirectUrl;
+    }
+
+    public void activateSubscription() {
+        System.out.println("activateSubscription");
     }
 }

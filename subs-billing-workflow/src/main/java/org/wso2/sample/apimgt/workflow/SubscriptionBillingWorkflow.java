@@ -22,18 +22,24 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.WorkflowResponse;
+import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
 import org.wso2.carbon.apimgt.impl.dto.SubscriptionWorkflowDTO;
 import org.wso2.carbon.apimgt.impl.dto.WorkflowDTO;
 import org.wso2.carbon.apimgt.impl.workflow.HttpWorkflowResponse;
 import org.wso2.carbon.apimgt.impl.workflow.SubscriptionCreationSimpleWorkflowExecutor;
 import org.wso2.carbon.apimgt.impl.workflow.WorkflowException;
+import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.sample.apimgt.dao.BillingDao;
 
+import java.io.File;
 import java.util.List;
 
 public class SubscriptionBillingWorkflow extends SubscriptionCreationSimpleWorkflowExecutor {
 
     private static final Log log = LogFactory.getLog(SubscriptionBillingWorkflow.class);
+
+    private String billingEngineUrl;
+    private String APIMStoreUrl;
 
     @Override
     public String getWorkflowType() {
@@ -53,8 +59,8 @@ public class SubscriptionBillingWorkflow extends SubscriptionCreationSimpleWorkf
         SubscriptionWorkflowDTO subsWorkflowDTO = null;
         boolean userExists = false;
 
-        if(workflowDTO instanceof SubscriptionWorkflowDTO){
-            subsWorkflowDTO = (SubscriptionWorkflowDTO)workflowDTO;
+        if (workflowDTO instanceof SubscriptionWorkflowDTO) {
+            subsWorkflowDTO = (SubscriptionWorkflowDTO) workflowDTO;
 
             try {
                 BillingDao billingDao = BillingDao.getInstance();
@@ -65,18 +71,35 @@ public class SubscriptionBillingWorkflow extends SubscriptionCreationSimpleWorkf
             }
         }
 
-        if(!userExists){
+        if (!userExists) {
+            loadDefaultConfig();
             HttpWorkflowResponse httpworkflowResponse = new HttpWorkflowResponse();
-            httpworkflowResponse.setRedirectUrl("http://localhost:8080/apim-billing-engine/");
+            httpworkflowResponse.setRedirectUrl(billingEngineUrl);
             httpworkflowResponse.setAdditionalParameters("CallbackUrl",
-                    "http://localhost:9763/store/site/blocks/workflow/workflow-listener/ajax/workflow-listener.jag");
-            httpworkflowResponse.setAdditionalParameters("workflowRefId" , workflowDTO.getExternalWorkflowReference());
-            httpworkflowResponse.setRedirectConfirmationMsg("You will be redirected to a page to setup your billing " +
-                    "account Information");
+                    APIMStoreUrl + "/site/blocks/workflow/workflow-listener/ajax/workflow-listener.jag");
+            httpworkflowResponse.setAdditionalParameters("workflowRefId", workflowDTO.getExternalWorkflowReference());
+            httpworkflowResponse.setAdditionalParameters("reDirectUrl", APIMStoreUrl);
+            httpworkflowResponse.setRedirectConfirmationMsg(
+                    "You will be redirected to a page to setup your billing " + "account Information");
             return httpworkflowResponse;
         }
 
         return super.execute(workflowDTO);
+    }
+
+    public void loadDefaultConfig() {
+        APIManagerConfiguration configuration = new APIManagerConfiguration();
+        String filePath = CarbonUtils.getCarbonHome() + File.separator + "repository" +
+                File.separator + "conf" + File.separator + "api-manager.xml";
+        try {
+            configuration.load(filePath);
+        } catch (APIManagementException e) {
+            log.error("cannot find the congifuration file at: " + filePath, e);
+        }
+
+        billingEngineUrl = configuration.getFirstProperty("billingEngineUrl");
+        APIMStoreUrl = configuration.getFirstProperty("APIStore.URL");
+
     }
 
 }
