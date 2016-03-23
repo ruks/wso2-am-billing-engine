@@ -25,7 +25,7 @@
     <view-state id="signUp" view="signUp.xhtml" model="user">
         <transition on="backToSignIn" to="welcome"/>
         <transition on="confirmSignUp" to="redirect">
-            <!--<evaluate expression="userService.createUser(user)"/>-->
+            <evaluate expression="userService.createUser(user)"/>
         </transition>
     </view-state>
 
