@@ -18,6 +18,8 @@
 */
 package org.wso2.apim.billing.bean;
 
+import org.wso2.apim.billing.domain.UserEntity;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import java.io.Serializable;
@@ -61,7 +63,7 @@ public class RedirectBean implements Serializable {
         return reDirectUrl;
     }
 
-    public void activateSubscription() {
+    public void activateSubscription(UserEntity userEntity) {
         System.out.println("activateSubscription");
     }
 }

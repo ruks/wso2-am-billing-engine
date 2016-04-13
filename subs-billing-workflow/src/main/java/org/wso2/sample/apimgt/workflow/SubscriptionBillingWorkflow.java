@@ -22,19 +22,19 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.WorkflowResponse;
+import org.wso2.carbon.apimgt.impl.APIConstants;
 import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
+import org.wso2.carbon.apimgt.impl.dao.ApiMgtDAO;
 import org.wso2.carbon.apimgt.impl.dto.SubscriptionWorkflowDTO;
 import org.wso2.carbon.apimgt.impl.dto.WorkflowDTO;
-import org.wso2.carbon.apimgt.impl.workflow.HttpWorkflowResponse;
-import org.wso2.carbon.apimgt.impl.workflow.SubscriptionCreationSimpleWorkflowExecutor;
-import org.wso2.carbon.apimgt.impl.workflow.WorkflowException;
+import org.wso2.carbon.apimgt.impl.workflow.*;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.sample.apimgt.dao.BillingDao;
 
 import java.io.File;
 import java.util.List;
 
-public class SubscriptionBillingWorkflow extends SubscriptionCreationSimpleWorkflowExecutor {
+public class SubscriptionBillingWorkflow extends WorkflowExecutor {
 
     private static final Log log = LogFactory.getLog(SubscriptionBillingWorkflow.class);
 
@@ -43,17 +43,16 @@ public class SubscriptionBillingWorkflow extends SubscriptionCreationSimpleWorkf
 
     @Override
     public String getWorkflowType() {
-        return super.getWorkflowType();
+        return "SubscriptionBillingWorkflow";
     }
 
     @Override
     public List<WorkflowDTO> getWorkflowDetails(String status) throws WorkflowException {
-        return super.getWorkflowDetails(status);
+        return null;
     }
 
     @Override
     public WorkflowResponse execute(WorkflowDTO workflowDTO) throws WorkflowException {
-
         super.execute(workflowDTO);
 
         SubscriptionWorkflowDTO subsWorkflowDTO = null;
@@ -82,9 +81,47 @@ public class SubscriptionBillingWorkflow extends SubscriptionCreationSimpleWorkf
             httpworkflowResponse.setRedirectConfirmationMsg(
                     "You will be redirected to a page to setup your billing " + "account Information");
             return httpworkflowResponse;
+        } else {
+            ApiMgtDAO apiMgtDAO = ApiMgtDAO.getInstance();
+            try {
+                apiMgtDAO.updateSubscriptionStatus(Integer.parseInt(workflowDTO.getWorkflowReference()),
+                        APIConstants.SubscriptionStatus.UNBLOCKED);
+            } catch (APIManagementException e) {
+                log.error("Could not complete subscription creation workflow", e);
+                throw new WorkflowException("Could not complete subscription creation workflow", e);
+            }
         }
 
-        return super.execute(workflowDTO);
+        return new GeneralWorkflowResponse();
+    }
+
+    @Override
+    public WorkflowResponse complete(WorkflowDTO workflowDTO) throws WorkflowException {
+        workflowDTO.setUpdatedTime(System.currentTimeMillis());
+        super.complete(workflowDTO);
+        log.info("Subscription Creation [Complete] Workflow Invoked. Workflow ID : " + workflowDTO
+                .getExternalWorkflowReference() + "Workflow State : " + workflowDTO.getStatus());
+
+        ApiMgtDAO apiMgtDAO = ApiMgtDAO.getInstance();
+
+        if (WorkflowStatus.APPROVED.equals(workflowDTO.getStatus())) {
+            try {
+                apiMgtDAO.updateSubscriptionStatus(Integer.parseInt(workflowDTO.getWorkflowReference()),
+                        APIConstants.SubscriptionStatus.UNBLOCKED);
+            } catch (APIManagementException e) {
+                log.error("Could not complete subscription creation workflow", e);
+                throw new WorkflowException("Could not complete subscription creation workflow", e);
+            }
+        } else if (WorkflowStatus.REJECTED.equals(workflowDTO.getStatus())) {
+            try {
+                apiMgtDAO.updateSubscriptionStatus(Integer.parseInt(workflowDTO.getWorkflowReference()),
+                        APIConstants.SubscriptionStatus.REJECTED);
+            } catch (APIManagementException e) {
+                log.error("Could not complete subscription creation workflow", e);
+                throw new WorkflowException("Could not complete subscription creation workflow", e);
+            }
+        }
+        return new GeneralWorkflowResponse();
     }
 
     public void loadDefaultConfig() {

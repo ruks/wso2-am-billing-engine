@@ -6,6 +6,7 @@
 
     <var name="user" class="org.wso2.apim.billing.domain.UserEntity"/>
     <var name="country" class="org.wso2.apim.billing.domain.utils.Country"/>
+    <var name="redirectBean" class="org.wso2.apim.billing.bean.RedirectBean"/>
     <input name="CallbackUrl"/>
     <input name="workflowRefId"/>
     <input name="reDirectUrl"/>
@@ -26,14 +27,13 @@
         <transition on="backToSignIn" to="welcome"/>
         <transition on="confirmSignUp" to="redirect">
             <evaluate expression="userService.createUser(user)"/>
+            <evaluate expression="workflowClient.activateSubscription(redirectBean, user)"/>
         </transition>
     </view-state>
 
     <action-state id="authentication">
         <evaluate expression="userAuthenticationProviderService.processUserAuthentication(user)"/>
         <transition on="yes" to="redirect"/>
-            <!--<evaluate expression="redirectBean.activateSubscription()"/>-->
-        <!--</transition>-->
         <transition on="no" to="welcome"/>
     </action-state>
 

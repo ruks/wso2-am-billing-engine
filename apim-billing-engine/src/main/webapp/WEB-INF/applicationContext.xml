@@ -43,5 +43,9 @@
         <property name="authenticationManager" ref="authenticationManager"/>
     </bean>
 
-    <bean id="redirectBean" class="org.wso2.apim.billing.bean.RedirectBean"/>
+    <bean id="workflowClient" class="org.wso2.apim.billing.services.impl.WorkflowClientImpl">
+        <property name="jksPath" value="${jksPath}"/>
+        <property name="apimUserName" value="${apimUserName}"/>
+        <property name="apimPassword" value="${apimPassword}"/>
+    </bean>
 </beans>
