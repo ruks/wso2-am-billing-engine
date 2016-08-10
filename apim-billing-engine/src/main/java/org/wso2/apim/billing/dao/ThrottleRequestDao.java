@@ -206,10 +206,16 @@ public class ThrottleRequestDao {
             String resMsg = getResponseBody(res);
             System.out.println("response: " + resMsg);
             JSONArray obj = new JSONArray(resMsg);
-            JSONObject val = obj.getJSONObject(0).getJSONObject("values");
-            int sCount = val.getInt("sCount");
-            int tCount = val.getInt("tCount");
-            InvoiceEntity result = getInvoice(sCount, tCount, planName, user);
+            InvoiceEntity result;
+            if(obj.length() != 0){
+            	JSONObject val = obj.getJSONObject(0).getJSONObject("values");
+                int sCount = val.getInt("sCount");
+                int tCount = val.getInt("tCount");
+                result = getInvoice(sCount, tCount, planName, user);
+            } else {
+            	result = getInvoice(0, 0, planName, user);
+            }
+          
 
             return result;
 
