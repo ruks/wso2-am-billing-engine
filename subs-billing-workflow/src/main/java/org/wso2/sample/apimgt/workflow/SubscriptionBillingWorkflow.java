@@ -82,7 +82,7 @@ public class SubscriptionBillingWorkflow extends WorkflowExecutor {
                     "You will be redirected to a page to setup your billing " + "account Information");
             return httpworkflowResponse;
         } else {
-            ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
+            ApiMgtDAO apiMgtDAO = ApiMgtDAO.getInstance();
             try {
                 apiMgtDAO.updateSubscriptionStatus(Integer.parseInt(workflowDTO.getWorkflowReference()),
                         APIConstants.SubscriptionStatus.UNBLOCKED);
@@ -102,7 +102,7 @@ public class SubscriptionBillingWorkflow extends WorkflowExecutor {
         log.info("Subscription Creation [Complete] Workflow Invoked. Workflow ID : " + workflowDTO
                 .getExternalWorkflowReference() + "Workflow State : " + workflowDTO.getStatus());
 
-        ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
+        ApiMgtDAO apiMgtDAO = ApiMgtDAO.getInstance();
 
         if (WorkflowStatus.APPROVED.equals(workflowDTO.getStatus())) {
             try {
@@ -125,6 +125,14 @@ public class SubscriptionBillingWorkflow extends WorkflowExecutor {
     }
 
     public void loadDefaultConfig() {
+    	//TODO : remove this and use 'APIManagerConfigurationService' osgi service to read configurations. 
+    
+    	/*
+    	 * APIManagerConfiguration configuration = ServiceReferenceHolder.getInstance()
+                        .getAPIManagerConfigurationService().getAPIManagerConfiguration();
+
+                String billingEngineUrl = configuration.getFirstProperty("billingEngineUrl");
+    	 */
         APIManagerConfiguration configuration = new APIManagerConfiguration();
         String filePath = CarbonUtils.getCarbonHome() + File.separator + "repository" +
                 File.separator + "conf" + File.separator + "api-manager.xml";
