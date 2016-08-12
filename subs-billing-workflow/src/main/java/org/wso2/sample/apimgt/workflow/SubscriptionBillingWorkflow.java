@@ -82,7 +82,7 @@ public class SubscriptionBillingWorkflow extends WorkflowExecutor {
                     "You will be redirected to a page to setup your billing " + "account Information");
             return httpworkflowResponse;
         } else {
-            ApiMgtDAO apiMgtDAO = ApiMgtDAO.getInstance();
+            ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
             try {
                 apiMgtDAO.updateSubscriptionStatus(Integer.parseInt(workflowDTO.getWorkflowReference()),
                         APIConstants.SubscriptionStatus.UNBLOCKED);
@@ -102,7 +102,7 @@ public class SubscriptionBillingWorkflow extends WorkflowExecutor {
         log.info("Subscription Creation [Complete] Workflow Invoked. Workflow ID : " + workflowDTO
                 .getExternalWorkflowReference() + "Workflow State : " + workflowDTO.getStatus());
 
-        ApiMgtDAO apiMgtDAO = ApiMgtDAO.getInstance();
+        ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
 
         if (WorkflowStatus.APPROVED.equals(workflowDTO.getStatus())) {
             try {
