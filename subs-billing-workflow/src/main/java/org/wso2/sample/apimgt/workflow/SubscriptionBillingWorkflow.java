@@ -125,6 +125,14 @@ public class SubscriptionBillingWorkflow extends WorkflowExecutor {
     }
 
     public void loadDefaultConfig() {
+    	//TODO : remove this and use 'APIManagerConfigurationService' osgi service to read configurations. 
+    
+    	/*
+    	 * APIManagerConfiguration configuration = ServiceReferenceHolder.getInstance()
+                        .getAPIManagerConfigurationService().getAPIManagerConfiguration();
+
+                String billingEngineUrl = configuration.getFirstProperty("billingEngineUrl");
+    	 */
         APIManagerConfiguration configuration = new APIManagerConfiguration();
         String filePath = CarbonUtils.getCarbonHome() + File.separator + "repository" +
                 File.separator + "conf" + File.separator + "api-manager.xml";
