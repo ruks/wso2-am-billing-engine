@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<artifact name="APIM_2_1_0_BILLING" version="2.1.0" type="analytics/spark" serverRole="DataAnalyticsServer">
+    <file>APIM_2_1_0_BILLING.xml</file>
+</artifact>

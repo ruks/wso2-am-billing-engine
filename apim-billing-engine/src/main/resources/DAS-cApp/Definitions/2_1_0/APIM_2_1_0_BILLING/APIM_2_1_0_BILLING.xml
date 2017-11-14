@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Analytics>
+    <Name>APIM_2_1_0_BILLING</Name>
+<Script>
+
+    create temporary table APIThrottleData USING CarbonAnalytics OPTIONS(tableName
+    "ORG_WSO2_APIMGT_STATISTICS_THROTTLE");
+
+    create temporary table APIRequestData USING CarbonAnalytics OPTIONS(tableName
+    "ORG_WSO2_APIMGT_STATISTICS_PERMINUTEREQUEST");
+
+    CREATE TEMPORARY TABLE THROTTLED_SUMMARY USING CarbonAnalytics OPTIONS (tableName "THROTTLED_SUMMARY",
+    schema "tenantDomain string -i,
+    userId string -i,
+    api string -i,
+    version string -i,
+    applicationName string -i,
+    year int -i,
+    month int -i,
+    day int -i,
+    time string -i,
+    success_request_count int -i,
+    throttleout_count int -i,
+    max_request_time long -i,
+    tenantDomain_userId_facet facet -i",
+    primaryKeys "tenantDomain,userId,api,version,applicationName,year,month,day"
+    );
+
+    insert into table THROTTLED_SUMMARY select
+    COALESCE(a.tenantDomain,b.tenantDomain),
+    COALESCE(a.userId,b.userId),
+    COALESCE(a.api,b.api),
+    COALESCE(a.api_version,b.api_version),
+    COALESCE(a.applicationName,b.applicationName,'_ANONYMOUS_'),
+    COALESCE(a.year,b.year),
+    COALESCE(a.month,b.month),
+    COALESCE(a.day,b.day),
+    COALESCE(a.time,b.time),
+    COALESCE(success_request_count,0),
+    COALESCE(throttleout_count,0),
+    COALESCE(a.times, COALESCE(b.times,0)),
+    facet2( COALESCE(a.tenantDomain,b.tenantDomain), COALESCE(a.userId,b.userId))
+    from
+    (select tenantDomain,userId,api,api_version,applicationName,first(requestTime) as times,
+    substring(cast(first(requestTime)/1000 as timestamp),0,4) year,
+    substring(cast(first(requestTime)/1000 as timestamp),6,2) month,
+    substring(cast(first(requestTime)/1000 as timestamp),9,2) day,
+    substring(cast(first(requestTime)/1000 as timestamp),0,16) time,
+    sum(total_request_count)  as success_request_count
+
+    from APIRequestData where context is not NULL group by
+    tenantDomain,userId,api,api_version,applicationName,
+    substring(cast(requestTime/1000 as timestamp),0,4) ,
+    substring(cast(requestTime/1000 as timestamp),6,2),
+    substring(cast(requestTime/1000 as timestamp),9,2)
+    ) a full outer join
+
+    (select tenantDomain,userId,api,api_version,applicationName,first(throttledTime) as times,
+    substring(cast(first(throttledTime)/1000 as timestamp),0,4) year,
+    substring(cast(first(throttledTime)/1000 as timestamp),6,2) month,
+    substring(cast(first(throttledTime)/1000 as timestamp),9,2) day,
+    substring(cast(first(throttledTime)/1000 as timestamp),0,16) time,
+    count(apiPublisher) as throttleout_count
+    from APIThrottleData where context is not NULL group by
+    tenantDomain,userId,api,api_version,applicationName,
+    substring(cast(throttledTime/1000 as timestamp),0,4),
+    substring(cast(throttledTime/1000 as timestamp),6,2),
+    substring(cast(throttledTime/1000 as timestamp),9,2)
+    ) b ON a.userId=b.userId AND a.tenantDomain=b.tenantDomain AND a.api=b.api AND a.api_version=b.api_version AND
+    a.applicationName=b.applicationName AND
+    a.year=b.year AND a.month=b.month AND a.day=b.day;
+                                                                                                                                                        
+</Script>
+    <CronExpression>0 0/1 * 1/1 * ? *</CronExpression>
+</Analytics>

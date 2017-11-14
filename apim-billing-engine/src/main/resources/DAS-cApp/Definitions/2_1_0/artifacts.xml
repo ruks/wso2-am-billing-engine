@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<artifacts>
+    <artifact name="APIM_2_1_0_BILLING_CAPP" version="2.1.0" type="carbon/application">
+	    <dependency artifact="APIM_2_1_0_BILLING" version="2.1.0" include="true" serverRole="DataAnalyticsServer"/>        	
+    </artifact>
+</artifacts>
