@@ -18,6 +18,7 @@
 */
 package org.wso2.apim.billing.dao;
 
+import org.wso2.apim.billing.Util;
 import org.wso2.apim.billing.bean.AggregateField;
 import org.wso2.apim.billing.bean.AppApiSubscriptionBean;
 import org.wso2.apim.billing.domain.InvoiceEntity;
@@ -31,6 +32,8 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -175,12 +178,14 @@ public class ThrottleRequestDao {
     }
 
     public InvoiceEntity GenerateInvoice(String planName, UserEntity user) {
-
+        System.out.println("planName " + planName);
         System.setProperty("javax.net.ssl.trustStore", jksPath);
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
 
         if (planName == null) {
-            planName = "silver";
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Plan name is not selected", "Sorry!"));
+            return null;
         }
 
         try {
@@ -188,7 +193,9 @@ public class ThrottleRequestDao {
 
             String query = getQuery(planName);//"tenantDomain" + ":\"" + "admin@carbon.super" + "\"";
             if (query == null) {
-                System.out.println("no subscription for plan: " + planName);
+                String msg = "No subscription for plan: " + planName;
+                System.out.println(msg);
+                Util.setErrorMessage(msg);
                 return null;
             }
 

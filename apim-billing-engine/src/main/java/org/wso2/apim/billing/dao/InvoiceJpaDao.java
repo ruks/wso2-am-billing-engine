@@ -70,8 +70,8 @@ public class InvoiceJpaDao extends GenericJpaDao<InvoiceEntity, Long> implements
     public List<InvoiceEntity> loadInvoices(UserEntity user) {
 
         List<InvoiceEntity> plans = null;
-
-        Query query = getEntityManager().createQuery("select u from " + getPersistentClass().getSimpleName() + " u");
+        String sql = "select u from " + getPersistentClass().getSimpleName() + " u";
+        Query query = getEntityManager().createQuery(sql);
         try {
             plans = query.getResultList();
         } catch (NoResultException e) {

@@ -18,7 +18,7 @@ public interface InvoiceService {
      * @param user
      * @return true if success
      */
-    InvoiceEntity createInvoice(UserEntity user);
+    InvoiceEntity createInvoice(UserEntity user) throws Exception;
 
     List<InvoiceEntity> listInvoices(UserEntity user);
 

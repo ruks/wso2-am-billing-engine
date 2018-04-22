@@ -67,10 +67,16 @@ public class InvoiceServiceImpl implements InvoiceService {
         return ResourceBundle.getBundle("message-labels");
     }
 
-    public InvoiceEntity createInvoice(UserEntity user) {
+    public InvoiceEntity createInvoice(UserEntity user) throws Exception{
         InvoiceEntity result = throttleRequestDao.GenerateInvoice(selected, user);
-        invoiceDao.save(result);
-        return result;
+        if (result != null) {
+            invoiceDao.save(result);
+            return result;
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error occurred when generate invoice", "Sorry!"));
+        }
+        throw new Exception("Error occurred when generate invoice");
     }
 
     public List<InvoiceEntity> listInvoices(UserEntity user) {

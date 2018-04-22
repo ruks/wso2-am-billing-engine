@@ -25,7 +25,7 @@
 
 				<h:panelGrid id="logPanelGrid" style="margin: 0 auto; margin-top: 25px; text-align: middle" cellspacing="4" columns="1">
 
-					<p:dataTable id="tbl" var="invoice" value="#{invoiceService.listInvoices(user)}"
+					<p:dataTable id="tbl" var="thisInvoice" value="#{invoiceService.listInvoices(user)}"
 								 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
 								 paginator="true" rows="10" style="margin-bottom:20px">
 
@@ -33,35 +33,35 @@
 							<f:facet name="header">
 								<h:outputText value="Invoice No" />
 							</f:facet>
-							<h:outputText value="#{invoice.invoiceNo}" />
+							<h:outputText value="#{thisInvoice.invoiceNo}" />
 						</p:column>
 
 						<p:column>
 							<f:facet name="header">
 								<h:outputText value="Invoice Plan" />
 							</f:facet>
-							<h:outputText value="#{invoice.planName}" />
+							<h:outputText value="#{thisInvoice.planName}" />
 						</p:column>
 
 						<p:column>
 							<f:facet name="header">
 								<h:outputText value="Created Date"/>
 							</f:facet>
-							<h:outputText value="#{invoice.createdDate}" />
+							<h:outputText value="#{thisInvoice.createdDate}" />
 						</p:column>
 
 						<p:column>
 							<f:facet name="header">
 								<h:outputText value="Due Date" />
 							</f:facet>
-							<h:outputText value="#{invoice.dueDate}" />
+							<h:outputText value="#{thisInvoice.dueDate}" />
 						</p:column>
 
 						<p:column>
 							<f:facet name="header">
 								<h:outputText value="Total Cost $" />
 							</f:facet>
-							<h:outputText value="#{invoice.totalFee}" />
+							<h:outputText value="#{thisInvoice.totalFee}" />
 						</p:column>
 
 						<p:column style="width:32px;text-align: center">
