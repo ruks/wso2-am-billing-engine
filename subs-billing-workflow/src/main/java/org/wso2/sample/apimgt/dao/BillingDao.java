@@ -86,17 +86,23 @@ public class BillingDao {
             throw new APIManagementException("Exception occurred while checking if user exists", e);
         } finally {
             try {
-                connection.close();
+                if (connection != null) {
+                    connection.close();
+                }
             } catch (SQLException e) {
                 log.error("Unable to close the connection", e);
             }
             try {
-                preparedStatement.close();
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
             } catch (SQLException e) {
                 log.error("Unable to close the Prepared Statement", e);
             }
             try {
-                resultSet.close();
+                if (resultSet != null) {
+                    resultSet.close();
+                }
             } catch (SQLException e) {
                 log.error("Unable to close the Result Set", e);
             }
