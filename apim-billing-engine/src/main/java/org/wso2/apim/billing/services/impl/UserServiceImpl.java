@@ -2,12 +2,14 @@ package org.wso2.apim.billing.services.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import org.apache.commons.codec.binary.StringUtils;
 import org.primefaces.component.inputtext.InputText;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,6 +30,7 @@ import org.wso2.apim.billing.services.UserService;
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private UserDao userDao;
+    private String userRole;
 
     /**
      * Create user - persist to database
@@ -36,7 +39,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
      * @return true if success
      */
     public boolean createUser(UserEntity userEntity) {
-
+        List<String> roles = new ArrayList<String>();
+        if (userRole != null && !userRole.isEmpty()) {
+            userRole = userRole.trim();
+            String[] roleArr = userRole.split(",");
+            for (String aRole : roleArr) {
+                roles.add(aRole.trim());
+            }
+        }
+        userEntity.setRoles(String.join(",", roles));
         if (!userDao.checkAvailable(userEntity.getUserName())) {
             FacesMessage message = constructErrorMessage(
                     String.format(getMessageBundle().getString("userExistsMsg"), userEntity.getUserName()), null);
@@ -71,12 +82,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         boolean available = userDao.checkAvailable(value);
 
         if (!available) {
-            FacesMessage message = constructErrorMessage(null,
-                    String.format(getMessageBundle().getString("userExistsMsg"), value));
+            FacesMessage message =
+                    constructErrorMessage(null, String.format(getMessageBundle().getString("userExistsMsg"), value));
             getFacesContext().addMessage(event.getComponent().getClientId(), message);
         } else {
-            FacesMessage message = constructInfoMessage(null,
-                    String.format(getMessageBundle().getString("userAvailableMsg"), value));
+            FacesMessage message =
+                    constructInfoMessage(null, String.format(getMessageBundle().getString("userAvailableMsg"), value));
             getFacesContext().addMessage(event.getComponent().getClientId(), message);
         }
 
@@ -96,7 +107,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
 
         Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+        String userRoles = user.getRoles();
+        if (userRoles != null && !userRoles.isEmpty()) {
+            userRoles = userRoles.trim();
+            String[] roleArr = userRoles.split(",");
+            for (String aRole : roleArr) {
+                authorities.add(new SimpleGrantedAuthority(aRole));
+            }
+        }
 
         User userDetails = new User(user.getUserName(), user.getPassword(), authorities);
 
@@ -141,4 +160,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         this.userDao = userDao;
     }
 
+    public String getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
+    }
 }

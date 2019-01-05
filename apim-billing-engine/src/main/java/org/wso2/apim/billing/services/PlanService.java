@@ -2,8 +2,11 @@ package org.wso2.apim.billing.services;
 
 import javax.faces.event.AjaxBehaviorEvent;
 
+import org.wso2.apim.billing.domain.BillingAttribute;
+import org.wso2.apim.billing.domain.BillingPlan;
 import org.wso2.apim.billing.domain.PlanEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,5 +51,7 @@ public interface PlanService {
     Map<String, Object> loadPlanEntities();
 
     Map<String, Object> loadPlanEntitiesString();
+
+    List<BillingAttribute> listAttributes(BillingPlan billingPlan);
 
 }

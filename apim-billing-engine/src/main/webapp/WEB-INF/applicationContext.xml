@@ -7,9 +7,13 @@
     <import resource="webflow-config.xml"/>
     <import resource="security-config.xml"/>
 
+    <!--<bean name="usagePlan" class="org.wso2.apim.billing.domain.BillingPlan" scope="session"/>-->
+    <!--<bean name="billingModel" class="org.wso2.apim.billing.domain.BillingModel" scope="request"/>-->
+
     <!-- DAO declarations -->
     <bean id="userDao" class="org.wso2.apim.billing.dao.UserJpaDao"/>
     <bean id="planDao" class="org.wso2.apim.billing.dao.PlanJpaDao"/>
+    <bean id="usagePlanDao" class="org.wso2.apim.billing.dao.UsagePlanJpaDao"/>
     <bean id="invoiceDao" class="org.wso2.apim.billing.dao.InvoiceJpaDao"/>
     <bean id="throttleRequestDao" class="org.wso2.apim.billing.dao.ThrottleRequestDao">
         <property name="apimStoreUrl" value="${apimStoreUrl}"/>
@@ -21,17 +25,36 @@
         <property name="jksPath" value="${jksPath}"/>
         <property name="planDao" ref="planDao"/>
     </bean>
+
     <bean id="planConverter" class="org.wso2.apim.billing.bean.PlanConverter">
         <property name="planDAO" ref="planDao"/>
+    </bean>
+
+    <bean id="tokenManager" class="org.wso2.apim.billing.clients.TokenManager">
+        <property name="userName" value="${apimUserName}"/>
+        <property name="password" value="${apimPassword}"/>
+        <property name="tokenUrl" value="${tokenUrl}"/>
+        <property name="dcrUrl" value="${dcrUrl}"/>
+        <property name="introspectUrl" value="${introspectUrl}"/>
+    </bean>
+    <bean id="apirestClient" class="org.wso2.apim.billing.clients.APIRESTClient">
+        <property name="publisherUrl" value="${publisherUrl}" />
+    </bean>
+    <bean id="apiInfoService" class="org.wso2.apim.billing.services.impl.APIInfoServiceImpl">
+        <property name="publisherUrl" value="${publisherUrl}"/>
+        <property name="tokenManager" ref="tokenManager"/>
+        <property name="apirestClient" ref="apirestClient"/>
     </bean>
 
 
     <!-- Services declarations -->
     <bean id="userService" class="org.wso2.apim.billing.services.impl.UserServiceImpl">
         <property name="userDao" ref="userDao"/>
+        <property name="userRole" value="${userRole}"/>
     </bean>
     <bean id="planService" class="org.wso2.apim.billing.services.impl.PlanServiceImpl">
         <property name="planDao" ref="planDao"/>
+        <property name="usagePlanDao" ref="usagePlanDao"/>
     </bean>
     <bean id="invoiceService" class="org.wso2.apim.billing.services.impl.InvoiceServiceImpl">
         <property name="throttleRequestDao" ref="throttleRequestDao"/>
@@ -47,5 +70,12 @@
         <property name="jksPath" value="${jksPath}"/>
         <property name="apimUserName" value="${apimUserName}"/>
         <property name="apimPassword" value="${apimPassword}"/>
+    </bean>
+
+    <bean id="checkAdminUser" class="org.wso2.apim.billing.dao.StartupUserCheck" init-method="checkOrUpdate">
+        <property name="userDao" ref="userDao"/>
+        <property name="adminUser" value="${adminUser}"/>
+        <property name="adminPass" value="${adminPass}"/>
+        <property name="adminRole" value="${adminRole}"/>
     </bean>
 </beans>

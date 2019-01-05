@@ -40,8 +40,8 @@ public class InvoiceEntity extends BaseEntity {
     private String userEmail;
     private String address1, address2, address3;
     private String paymentMethod;
-    private int successCount;
-    private int throttleCount;
+    private long successCount;
+    private long throttleCount;
 
     private double subscriptionFee;
     private double successFee;
@@ -166,19 +166,19 @@ public class InvoiceEntity extends BaseEntity {
         this.paymentMethod = paymentMethod;
     }
 
-    public int getSuccessCount() {
+    public long getSuccessCount() {
         return successCount;
     }
 
-    public void setSuccessCount(int successCount) {
+    public void setSuccessCount(long successCount) {
         this.successCount = successCount;
     }
 
-    public int getThrottleCount() {
+    public long getThrottleCount() {
         return throttleCount;
     }
 
-    public void setThrottleCount(int throttleCount) {
+    public void setThrottleCount(long throttleCount) {
         this.throttleCount = throttleCount;
     }
 

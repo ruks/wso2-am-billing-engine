@@ -5,5 +5,13 @@
 	
 	<application>
 		<el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
-	</application>	
+	</application>
+	<converter>
+		<converter-id>billingModelConverter</converter-id>
+		<converter-class>org.wso2.apim.billing.bean.BillingModelConverter</converter-class>
+	</converter>
+	<converter>
+		<converter-id>basicAPIInfoConverter</converter-id>
+		<converter-class>org.wso2.apim.billing.bean.BasicAPIInfoConverter</converter-class>
+	</converter>
 </faces-config>

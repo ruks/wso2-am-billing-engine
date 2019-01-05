@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.HttpClientContext;
@@ -32,17 +33,17 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HttpContext;
 import org.wso2.apim.billing.bean.SearchRequestBean;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.InputStreamReader;
 
-public class DASRestClient {
+public class SPRestClient {
     private CloseableHttpClient httpClient;
     private String dasUrl;
     private String user;
     private char[] pass;
     private final Gson gson = new Gson();
-    private static final Log log = LogFactory.getLog(DASRestClient.class);
+    private static final Log log = LogFactory.getLog(SPRestClient.class);
     public static final String HTTP_AUTH_HEADER_NAME = "Authorization";
     public static final String HTTP_AUTH_HEADER_TYPE = "Basic";
     public static final String APPLICATION_JSON = "application/json";
@@ -54,8 +55,7 @@ public class DASRestClient {
      * @param user DAS rest api username
      * @param pass DAs rest api password
      */
-    public DASRestClient(String url, String user, char[] pass) throws MalformedURLException {
-        URL dasURL = new URL(url);
+    public SPRestClient(String url, String user, char[] pass) {
         httpClient = HttpClients.custom().setHostnameVerifier(SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)
                 .build();
         this.dasUrl = url;
@@ -71,9 +71,10 @@ public class DASRestClient {
      * @return return the HttpResponse after the request sent
      * @throws IOException throw if the connection exception occur
      */
-    public CloseableHttpResponse doPost(SearchRequestBean request, String url) throws IOException {
-        String json = gson.toJson(request);
+    public String getResponse(SearchRequestBean request, String url) throws IOException {
+        String json = request.getPayload();
         System.out.println(json);
+        System.out.println(url);
         if (log.isDebugEnabled()) {
             log.debug("Sending Lucene Query : " + json);
         }
@@ -88,7 +89,13 @@ public class DASRestClient {
         postRequest.setEntity(input);
 
         //send the request
-        return httpClient.execute(postRequest, context);
+        CloseableHttpResponse res  = httpClient.execute(postRequest, context);
+        System.out.println(res.getStatusLine().getStatusCode());
+        if(200 == res.getStatusLine().getStatusCode()) {
+            return getResponseBody(res);
+        } else {
+            throw new IOException("Error occurred while getting proper response.");
+        }
     }
 
     /**
@@ -103,5 +110,17 @@ public class DASRestClient {
         String cred = builder.toString();
         byte[] encodedBytes = Base64.encodeBase64(cred.getBytes());
         return new String(encodedBytes);
+    }
+
+    private String getResponseBody(HttpResponse response) throws IOException {
+        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
+        String line;
+        StringBuffer sb = new StringBuffer();
+
+        while ((line = rd.readLine()) != null) {
+            sb.append(line);
+        }
+        rd.close();
+        return sb.toString();
     }
 }

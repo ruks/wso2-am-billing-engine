@@ -4,10 +4,12 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/webflow
         http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
-	<secured attributes="ROLE_USER"/>
+	<secured attributes="ROLE_USER, ROLE_ADMIN" match="any" />
 
 	<var name="uiUtils" class="org.wso2.apim.billing.ui.utils.UIUtils"/>
 	<var name="plan" class="org.wso2.apim.billing.domain.PlanEntity"/>
+
+
 
 	<on-start>
 		<evaluate expression="userService.loadUserEntityByUsername(currentUser.name)" result="flowScope.user" />
@@ -19,6 +21,15 @@
 		<transition on="listPlan" to="listPlan" />
 		<transition on="invoice" to="invoice" />
 		<transition on="viewInvoices" to="viewInvoices" />
+		<transition on="definePlan" to="definePlan" />
+	</view-state>
+
+	<view-state id="definePlan" view="billingPlan.xhtml" model="usagePlan">
+		<var name="usagePlan" class="org.wso2.apim.billing.domain.BillingPlan"/>
+		<transition on="backToHome" to="home" />
+		<transition on="addBillingPlan" to="home">
+			<evaluate expression="planService.creatBillingePlan(usagePlan)" />
+		</transition>
 	</view-state>
 
 	<view-state id="newPlan" view="newPlan.xhtml" model="plan">

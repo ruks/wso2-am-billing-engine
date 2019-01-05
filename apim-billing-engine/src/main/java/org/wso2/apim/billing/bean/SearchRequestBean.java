@@ -18,63 +18,17 @@
 */
 package org.wso2.apim.billing.bean;
 
-import java.util.List;
-
 /**
  * This class is used as a bean for represent Lucene aggregate request for DAS REST API
  */
 public class SearchRequestBean {
-    public String getQuery() {
-        return query;
+    private String payload;
+
+    public String getPayload() {
+        return payload;
     }
 
-    public void setQuery(String query) {
-        this.query = query;
+    public void setPayload(String payload) {
+        this.payload = payload;
     }
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }
-
-    public SearchRequestBean(String query, int aggregateLevel, String groupByField, String tableName) {
-        super();
-        this.query = query;
-        this.aggregateLevel = aggregateLevel;
-        this.groupByField = groupByField;
-        this.tableName = tableName;
-    }
-
-    public int getAggregateLevel() {
-        return aggregateLevel;
-    }
-
-    public void setAggregateLevel(int aggregateLevel) {
-        this.aggregateLevel = aggregateLevel;
-    }
-
-    public String getGroupByField() {
-        return groupByField;
-    }
-
-    public void setGroupByField(String groupByField) {
-        this.groupByField = groupByField;
-    }
-
-    public List<AggregateField> getAggregateFields() {
-        return aggregateFields;
-    }
-
-    public void setAggregateFields(List<AggregateField> aggregateFields) {
-        this.aggregateFields = aggregateFields;
-    }
-
-    private String query;
-    private int aggregateLevel;
-    private String tableName;
-    private String groupByField;
-    private List<AggregateField> aggregateFields;
 }

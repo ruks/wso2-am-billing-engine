@@ -35,7 +35,8 @@
 						<p:message id="passMsg" for="pass" />
 						<p:tooltip for="pass" styleClass="tooltip" showEvent="focus" hideEvent="blur" />
 					</h:panelGroup>
-					
+
+					<p:defaultCommand target="submitButton" />
 					<p:commandButton id="newUserButton" action="newUser" immediate="true" icon="ui-icon-plus" value="Sign Up" />
 					<p:commandButton id="submitButton" action="confirmSignIn" update="logPanelGrid,messages" icon="ui-icon-check" value="Sign In" />
 					

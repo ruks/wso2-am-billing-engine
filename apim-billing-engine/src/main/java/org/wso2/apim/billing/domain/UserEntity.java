@@ -8,6 +8,8 @@ import org.springframework.security.authentication.encoding.PasswordEncoder;
 
 import org.wso2.apim.billing.commons.domain.BaseEntity;
 
+import java.util.List;
+
 /**
  * Entity to hold application user data - first name, last name, etc.
  * 
@@ -22,6 +24,7 @@ public class UserEntity extends BaseEntity {
 	private String lastName;
 	private String userName;
 	private String password;
+	private String roles;
 
 	private String country;
 
@@ -174,5 +177,13 @@ public class UserEntity extends BaseEntity {
 
 	public void setCvc(String cvc) {
 		this.cvc = cvc;
+	}
+
+	public String getRoles() {
+		return roles;
+	}
+
+	public void setRoles(String roles) {
+		this.roles = roles;
 	}
 }

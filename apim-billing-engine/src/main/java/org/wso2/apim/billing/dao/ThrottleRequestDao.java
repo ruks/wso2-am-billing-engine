@@ -19,35 +19,30 @@
 package org.wso2.apim.billing.dao;
 
 import org.wso2.apim.billing.Util;
-import org.wso2.apim.billing.bean.AggregateField;
+import org.wso2.apim.billing.bean.APIUsage;
 import org.wso2.apim.billing.bean.AppApiSubscriptionBean;
 import org.wso2.apim.billing.domain.InvoiceEntity;
 import org.wso2.apim.billing.bean.SearchRequestBean;
 import org.wso2.apim.billing.clients.APIRESTClient;
-import org.wso2.apim.billing.clients.DASRestClient;
+import org.wso2.apim.billing.clients.SPRestClient;
 import org.wso2.apim.billing.domain.PlanEntity;
 import org.wso2.apim.billing.domain.UserEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class ThrottleRequestDao {
 
-    public static final String DAS_AGGREGATES_SEARCH_REST_API_URL = "/analytics/aggregates";
+    public static final String SP_REST_API = "/stores/query";
     private String apimStoreUrl;
     private String apimUserName;
     private String apimPassword;
@@ -78,8 +73,8 @@ public class ThrottleRequestDao {
         this.planDao = planDao;
     }
 
-    public static String getDasAggregatesSearchRestApiUrl() {
-        return DAS_AGGREGATES_SEARCH_REST_API_URL;
+    public static String getSpRestApi() {
+        return SP_REST_API;
     }
 
     public String getApimStoreUrl() {
@@ -130,7 +125,8 @@ public class ThrottleRequestDao {
         this.dasPassword = dasPassword;
     }
 
-    private InvoiceEntity getInvoice(int success, int throttle, String planName, UserEntity user) {
+    private InvoiceEntity getInvoice(List<APIUsage> apiUsages, String planName, UserEntity user) {
+        APIUsage apiUsage=apiUsages.get(0);
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         Calendar calendar = Calendar.getInstance();
@@ -140,11 +136,11 @@ public class ThrottleRequestDao {
 
         PlanEntity plan = planDao.loadPlanByPlanName(planName);
 
-        throttle = getThrottleCount(plan, success, throttle);
+//        throttle = getThrottleCount(plan, apiUsage.getSuccessCount(), apiUsage.getExceedCount());
 
         double subscriptionFee = plan.getSubscriptionFee();
-        double successFee = getSuccessRequestFee(plan, success);
-        double throttleFee = getThrottleRequestFee(plan, throttle);
+        double successFee = getSuccessRequestFee(plan, apiUsage.getSuccessCount());
+        double throttleFee = getThrottleRequestFee(plan, apiUsage.getExceedCount());
         double totalFee = subscriptionFee + successFee + throttleFee;
 
         double feePerRequest = getPerSuccessFee(plan);
@@ -161,9 +157,9 @@ public class ThrottleRequestDao {
         invoiceEntity.setInvoiceNo(ran);
         invoiceEntity.setPaymentMethod(user.getCardType());
         invoiceEntity.setSubscriptionFee(plan.getSubscriptionFee());
-        invoiceEntity.setSuccessCount(success);
+        invoiceEntity.setSuccessCount(apiUsage.getSuccessCount());
         invoiceEntity.setSuccessFee(successFee);
-        invoiceEntity.setThrottleCount(throttle);
+        invoiceEntity.setThrottleCount(apiUsage.getExceedCount());
         invoiceEntity.setThrottleFee(throttleFee);
         invoiceEntity.setTotalFee(totalFee);
         invoiceEntity.setUserCompany(user.getCompany());
@@ -189,43 +185,48 @@ public class ThrottleRequestDao {
         }
 
         try {
-            DASRestClient s = new DASRestClient(this.dasUrl, this.dasUserName, this.dasPassword.toCharArray());
-
-            String query = getQuery(planName);//"tenantDomain" + ":\"" + "admin@carbon.super" + "\"";
-            if (query == null) {
-                String msg = "No subscription for plan: " + planName;
-                System.out.println(msg);
-                Util.setErrorMessage(msg);
-                return null;
-            }
+            SPRestClient s = new SPRestClient(this.dasUrl, this.dasUserName, this.dasPassword.toCharArray());
 
             //creating request bean
-            SearchRequestBean request = new SearchRequestBean(query, 1, "tenantDomain_userId_facet",
-                    "THROTTLED_SUMMARY");
-            ArrayList<AggregateField> fields = new ArrayList<AggregateField>();
-            AggregateField field = new AggregateField("success_request_count", "sum", "sCount");
-            AggregateField field2 = new AggregateField("throttleout_count", "sum", "tCount");
-            fields.add(field);
-            fields.add(field2);
-            request.setAggregateFields(fields);
+            String searchQuery = "from throttleInfoBillingAggregate on applicationOwner=='" + user.getUserName()
+                    + "' within 0L, 2543913404000L per 'months' select apiName, apiVersion, "
+                    + "subscriptionTier, applicationName, successCount, exceedCount";
+            SearchRequestBean request = new SearchRequestBean();
+            JSONObject reJsonObject = new JSONObject();
+            reJsonObject.put("appName", "APIM_BILLING_INFO_SUMMARY");
+            reJsonObject.put("query", searchQuery);
+            request.setPayload(reJsonObject.toString());
 
-            CloseableHttpResponse res = s.doPost(request, this.dasUrl + DAS_AGGREGATES_SEARCH_REST_API_URL);
-            String resMsg = getResponseBody(res);
+            String resMsg = s.getResponse(request, this.dasUrl + SP_REST_API);
             System.out.println("response: " + resMsg);
-            JSONArray obj = new JSONArray(resMsg);
+            JSONObject obj = new JSONObject(resMsg);
             InvoiceEntity result;
+            List<APIUsage> apiUsages = new ArrayList<APIUsage>();
             if(obj.length() != 0){
-            	JSONObject val = obj.getJSONObject(0).getJSONObject("values");
-                int sCount = val.getInt("sCount");
-                int tCount = val.getInt("tCount");
-                result = getInvoice(sCount, tCount, planName, user);
+            	JSONArray records = obj.getJSONArray("records");
+                for (int i = 0; i < records.length(); i++) {
+                    APIUsage apiUsage = new APIUsage();
+                    JSONArray row = records.getJSONArray(i);
+                    System.out.println(row);
+                    String apiName = row.getString(0);
+                    String apiVersion = row.getString(1);
+                    String SubscriptionTier = row.getString(2);
+                    String applicationName = row.getString(3);
+                    long successCount = row.getLong(4);
+                    long exceedCount = row.getLong(5);
+                    apiUsage.setApiName(apiName);
+                    apiUsage.setVersion(apiVersion);
+                    apiUsage.setSubscriptionTier(SubscriptionTier);
+                    apiUsage.setApplicationName(applicationName);
+                    apiUsage.setSuccessCount(successCount);
+                    apiUsage.setExceedCount(exceedCount);
+                    apiUsages.add(apiUsage);
+                }
+                result = getInvoice(apiUsages, planName, user);
             } else {
-            	result = getInvoice(0, 0, planName, user);
+            	result = new InvoiceEntity();
             }
-          
-
             return result;
-
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -237,20 +238,9 @@ public class ThrottleRequestDao {
         return null;
     }
 
-    private String getResponseBody(HttpResponse response) throws IOException {
-        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-        String line;
-        StringBuffer sb = new StringBuffer();
-
-        while ((line = rd.readLine()) != null) {
-            sb.append(line);
-        }
-        rd.close();
-        return sb.toString();
-    }
-
     private String getQuery(String planName) throws Exception {
-        APIRESTClient r = new APIRESTClient(this.apimStoreUrl);
+        APIRESTClient r = new APIRESTClient();
+        r.setUrls(this.apimStoreUrl);
         r.login(this.apimUserName, this.apimPassword);
         List<AppApiSubscriptionBean> beans = r.listSubscriptionBeans(planName);
 
@@ -274,7 +264,7 @@ public class ThrottleRequestDao {
         return query.toString();
     }
 
-    private double getSuccessRequestFee(PlanEntity plan, int success) {
+    private double getSuccessRequestFee(PlanEntity plan, long success) {
         if (plan.getPlanType().equals("STANDARD")) {
             return 0.0;
         } else if (plan.getPlanType().equals("USAGE")) {
@@ -284,7 +274,7 @@ public class ThrottleRequestDao {
         }
     }
 
-    private double getThrottleRequestFee(PlanEntity plan, int throttle) {
+    private double getThrottleRequestFee(PlanEntity plan, long throttle) {
         if (plan.getPlanType().equals("STANDARD")) {
             return throttle * plan.getFeePerRequest();
         } else if (plan.getPlanType().equals("USAGE")) {
