@@ -2,6 +2,7 @@ package org.wso2.apim.billing.services.impl;
 
 import org.primefaces.component.inputtext.InputText;
 import org.wso2.apim.billing.dao.PlanDao;
+import org.wso2.apim.billing.dao.SubscriptionDao;
 import org.wso2.apim.billing.dao.UsagePlanDao;
 import org.wso2.apim.billing.domain.*;
 import org.wso2.apim.billing.services.PlanService;
@@ -21,6 +22,7 @@ public class PlanServiceImpl implements PlanService {
     private PlanDao planDao;
     private UsagePlanDao usagePlanDao;
     private List<BillingAttribute> attributes;
+    private SubscriptionDao subscriptionDao;
 
     public List<BillingAttribute> listAttributes(BillingPlan billingPlan) {
         attributes = new ArrayList<>();
@@ -71,7 +73,7 @@ public class PlanServiceImpl implements PlanService {
         return true;
     }
 
-    public boolean creatBillingePlan(BillingPlan billingPlan) {
+    public boolean createBillingPlan(BillingPlan billingPlan) {
         try {
             usagePlanDao.save(billingPlan);
         } catch (Exception e) {
@@ -146,6 +148,23 @@ public class PlanServiceImpl implements PlanService {
         return plans;
     }
 
+    public List<BillingModel> listBillingPlan(BillingPlan billingPlan) {
+        try {
+           return usagePlanDao.loadBillingPlans(billingPlan);
+        } catch (Exception e) {
+            FacesMessage message = constructFatalMessage(e.getMessage(), "Error occurred getting plans");
+            getFacesContext().addMessage(null, message);
+            return Collections.EMPTY_LIST;
+        }
+    }
+
+    public void subscribe(String user, String id) {
+        PackageSubscription packageSubscription = new PackageSubscription();
+        packageSubscription.setPackageID(id);
+        packageSubscription.setUser(user);
+        subscriptionDao.save(packageSubscription);
+    }
+
     protected FacesMessage constructErrorMessage(String message, String detail) {
         return new FacesMessage(FacesMessage.SEVERITY_ERROR, message, detail);
     }
@@ -180,5 +199,13 @@ public class PlanServiceImpl implements PlanService {
 
     public void setUsagePlanDao(UsagePlanDao usagePlanDao) {
         this.usagePlanDao = usagePlanDao;
+    }
+
+    public SubscriptionDao getSubscriptionDao() {
+        return subscriptionDao;
+    }
+
+    public void setSubscriptionDao(SubscriptionDao subscriptionDao) {
+        this.subscriptionDao = subscriptionDao;
     }
 }

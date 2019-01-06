@@ -22,14 +22,20 @@
 		<transition on="invoice" to="invoice" />
 		<transition on="viewInvoices" to="viewInvoices" />
 		<transition on="definePlan" to="definePlan" />
+		<transition on="listUsagePlan" to="listUsagePlan" />
 	</view-state>
 
 	<view-state id="definePlan" view="billingPlan.xhtml" model="usagePlan">
 		<var name="usagePlan" class="org.wso2.apim.billing.domain.BillingPlan"/>
 		<transition on="backToHome" to="home" />
 		<transition on="addBillingPlan" to="home">
-			<evaluate expression="planService.creatBillingePlan(usagePlan)" />
+			<evaluate expression="planService.createBillingPlan(usagePlan)" />
 		</transition>
+	</view-state>
+
+	<view-state id="listUsagePlan" view="listBillingPlan.xhtml" model="usagePlan">
+		<var name="usagePlan" class="org.wso2.apim.billing.domain.BillingPlan"/>
+		<transition on="backToHome" to="home" />
 	</view-state>
 
 	<view-state id="newPlan" view="newPlan.xhtml" model="plan">

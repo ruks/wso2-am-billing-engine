@@ -3,6 +3,7 @@ package org.wso2.apim.billing.services;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import org.wso2.apim.billing.domain.BillingAttribute;
+import org.wso2.apim.billing.domain.BillingModel;
 import org.wso2.apim.billing.domain.BillingPlan;
 import org.wso2.apim.billing.domain.PlanEntity;
 
@@ -54,4 +55,9 @@ public interface PlanService {
 
     List<BillingAttribute> listAttributes(BillingPlan billingPlan);
 
+    boolean createBillingPlan(BillingPlan billingPlan);
+
+    List<BillingModel> listBillingPlan(BillingPlan billingPlan);
+
+    void subscribe(String user, String id);
 }

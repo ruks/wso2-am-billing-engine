@@ -28,6 +28,9 @@
 
                     <p:commandButton id="definePlan" action="definePlan" immediate="true" icon="ui-icon-plus"
                                      value="Define Billing Plan" rendered="#{request.isUserInRole('ROLE_ADMIN')}"/>
+                    <p:commandButton id="listUsagePlan" action="listUsagePlan" immediate="true" icon="ui-icon-plus"
+                                     value="List Billing Plan" rendered="#{request.isUserInRole('ROLE_ADMIN')}"/>
+
                     <p:commandButton id="stdPlnButton" action="newPlan" immediate="true" icon="ui-icon-plus"
                                      value="Define Standard Plan" rendered="#{request.isUserInRole('ROLE_ADMIN')}"/>
                     <p:commandButton id="usgPlnButton" action="newUsagePlan" immediate="true" icon="ui-icon-plus"

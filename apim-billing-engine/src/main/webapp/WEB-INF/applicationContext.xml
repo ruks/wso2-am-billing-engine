@@ -15,6 +15,7 @@
     <bean id="planDao" class="org.wso2.apim.billing.dao.PlanJpaDao"/>
     <bean id="usagePlanDao" class="org.wso2.apim.billing.dao.UsagePlanJpaDao"/>
     <bean id="invoiceDao" class="org.wso2.apim.billing.dao.InvoiceJpaDao"/>
+    <bean id="subscriptionDao" class="org.wso2.apim.billing.dao.SubscriptionJPADao"/>
     <bean id="throttleRequestDao" class="org.wso2.apim.billing.dao.ThrottleRequestDao">
         <property name="apimStoreUrl" value="${apimStoreUrl}"/>
         <property name="apimUserName" value="${apimUserName}"/>
@@ -55,10 +56,14 @@
     <bean id="planService" class="org.wso2.apim.billing.services.impl.PlanServiceImpl">
         <property name="planDao" ref="planDao"/>
         <property name="usagePlanDao" ref="usagePlanDao"/>
+        <property name="subscriptionDao" ref="subscriptionDao"/>
     </bean>
     <bean id="invoiceService" class="org.wso2.apim.billing.services.impl.InvoiceServiceImpl">
         <property name="throttleRequestDao" ref="throttleRequestDao"/>
         <property name="invoiceDao" ref="invoiceDao"/>
+    </bean>
+    <bean id="subscriptionService" class="org.wso2.apim.billing.services.impl.SubscriptionServiceImpl">
+        <property name="subscriptionDao" ref="subscriptionDao"/>
     </bean>
 
     <bean id="userAuthenticationProviderService"
