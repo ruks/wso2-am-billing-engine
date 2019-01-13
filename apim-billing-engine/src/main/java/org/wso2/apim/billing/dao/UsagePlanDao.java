@@ -14,4 +14,6 @@ import java.util.List;
  */
 public interface UsagePlanDao extends GenericDao<BillingPlan, Long> {
     List<BillingModel> loadBillingPlans(BillingPlan billingPlan);
+
+    List<BillingModel> loadBillingPlansOfUser(String userName);
 }

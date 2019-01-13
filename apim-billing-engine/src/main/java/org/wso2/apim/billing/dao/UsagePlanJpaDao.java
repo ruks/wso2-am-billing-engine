@@ -24,7 +24,7 @@ public class UsagePlanJpaDao extends GenericJpaDao<BillingPlan, Long> implements
 
     @Override
     public List<BillingModel> loadBillingPlans(BillingPlan billingPlan) {
-        if(billingPlan ==null || billingPlan.getApiID() == null ){
+        if (billingPlan == null || billingPlan.getApiID() == null) {
             return Collections.EMPTY_LIST;
         }
         EntityManager entityManager = getEntityManager();
@@ -39,10 +39,10 @@ public class UsagePlanJpaDao extends GenericJpaDao<BillingPlan, Long> implements
         nativeQuery.setParameter(4, billingPlan.getApiID());
         List<Object[]> result = nativeQuery.getResultList();
         Map<Long, BillingModel> plans = new HashMap<>();
-        for(Object[] row : result) {
+        for (Object[] row : result) {
             long packageId = ((BigInteger) row[0]).longValue();
             BillingModel billingModel;
-            if(plans.containsKey(packageId)) {
+            if (plans.containsKey(packageId)) {
                 billingModel = plans.get(packageId);
             } else {
                 billingModel = new BillingModel();
@@ -53,7 +53,40 @@ public class UsagePlanJpaDao extends GenericJpaDao<BillingPlan, Long> implements
                 plans.put(packageId, billingModel);
             }
             List<BillingAttribute> attributes = billingModel.getAttributes();
-            attributes.add(new BillingAttribute(1, (String)row[4], (String)row[3], (String)row[5]));
+            attributes.add(new BillingAttribute(1, (String) row[4], (String) row[3], (String) row[5]));
+        }
+        return new ArrayList<>(plans.values());
+    }
+
+    @Override
+    public List<BillingModel> loadBillingPlansOfUser(String userName) {
+        if (userName == null) {
+            return Collections.EMPTY_LIST;
+        }
+        EntityManager entityManager = getEntityManager();
+        String query = "SELECT billing_package.id,packageName,packageType, displayName,name,value FROM "
+                + "package_subscription,billing_package,billing_attribute,plan where plan.id=billing_package.plan_id "
+                + "and billing_package.id=billing_attribute.billing_package_id and "
+                + "package_subscription.packageID=billing_package.id and package_subscription.user=?";
+        Query nativeQuery = entityManager.createNativeQuery(query);
+        nativeQuery.setParameter(1, userName);
+        List<Object[]> result = nativeQuery.getResultList();
+        Map<Long, BillingModel> plans = new HashMap<>();
+        for (Object[] row : result) {
+            long packageId = ((BigInteger) row[0]).longValue();
+            BillingModel billingModel;
+            if (plans.containsKey(packageId)) {
+                billingModel = plans.get(packageId);
+            } else {
+                billingModel = new BillingModel();
+                billingModel.setId(packageId);
+                billingModel.setPackageName((String) row[1]);
+                billingModel.setPackageType((String) row[2]);
+                billingModel.setAttributes(new ArrayList<>());
+                plans.put(packageId, billingModel);
+            }
+            List<BillingAttribute> attributes = billingModel.getAttributes();
+            attributes.add(new BillingAttribute(1, (String) row[4], (String) row[3], (String) row[5]));
         }
         return new ArrayList<>(plans.values());
     }

@@ -21,25 +21,25 @@ package org.wso2.sample.apimgt.workflow;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.api.APIManagementException;
+import org.wso2.carbon.apimgt.api.APIProvider;
 import org.wso2.carbon.apimgt.api.WorkflowResponse;
+import org.wso2.carbon.apimgt.api.model.API;
+import org.wso2.carbon.apimgt.api.model.APIIdentifier;
 import org.wso2.carbon.apimgt.impl.APIConstants;
-import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
+import org.wso2.carbon.apimgt.impl.APIManagerFactory;
 import org.wso2.carbon.apimgt.impl.dao.ApiMgtDAO;
 import org.wso2.carbon.apimgt.impl.dto.SubscriptionWorkflowDTO;
 import org.wso2.carbon.apimgt.impl.dto.WorkflowDTO;
 import org.wso2.carbon.apimgt.impl.workflow.*;
-import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.sample.apimgt.dao.BillingDao;
+import org.wso2.sample.apimgt.BilllingEngineConnector;
+import org.wso2.sample.apimgt.WorkflowConfiguration;
+import org.wso2.sample.apimgt.impl.BilllingEngineConnectorImpl;
 
-import java.io.File;
 import java.util.List;
 
 public class SubscriptionBillingWorkflow extends WorkflowExecutor {
 
     private static final Log log = LogFactory.getLog(SubscriptionBillingWorkflow.class);
-
-    private String billingEngineUrl;
-    private String APIMStoreUrl;
 
     @Override
     public String getWorkflowType() {
@@ -56,28 +56,32 @@ public class SubscriptionBillingWorkflow extends WorkflowExecutor {
         super.execute(workflowDTO);
 
         SubscriptionWorkflowDTO subsWorkflowDTO = null;
-        boolean userExists = false;
+        boolean isValid = false;
 
         if (workflowDTO instanceof SubscriptionWorkflowDTO) {
             subsWorkflowDTO = (SubscriptionWorkflowDTO) workflowDTO;
-
+            APIIdentifier identifier = new APIIdentifier(subsWorkflowDTO.getApiProvider(), subsWorkflowDTO.getApiName(),
+                    subsWorkflowDTO.getApiVersion());
             try {
-                BillingDao billingDao = BillingDao.getInstance();
-                userExists = billingDao.userExists(subsWorkflowDTO.getSubscriber());
+                APIProvider apiProvider = APIManagerFactory.getInstance().getAPIProvider("admin");
+                API api = apiProvider.getAPI(identifier);
+                BilllingEngineConnector connector = new BilllingEngineConnectorImpl();
+                isValid = connector.checkSubscription(api.getUUID(), subsWorkflowDTO.getTierName(),
+                        subsWorkflowDTO.getSubscriber());
             } catch (APIManagementException e) {
                 log.error("Error occurred while accessing Database: " + e.getMessage(), e);
                 throw new WorkflowException("Error occurred while accessing Database: " + e.getMessage(), e);
             }
         }
 
-        if (!userExists) {
-            loadDefaultConfig();
+        if (!isValid) {
+            String apimStoreUrl = WorkflowConfiguration.getInstance().getBillingEngineUrl();
             HttpWorkflowResponse httpworkflowResponse = new HttpWorkflowResponse();
-            httpworkflowResponse.setRedirectUrl(billingEngineUrl);
+            httpworkflowResponse.setRedirectUrl(WorkflowConfiguration.getInstance().getBillingEngineUrl());
             httpworkflowResponse.setAdditionalParameters("CallbackUrl",
-                    APIMStoreUrl + "/site/blocks/workflow/workflow-listener/ajax/workflow-listener.jag");
+                    apimStoreUrl + "/site/blocks/workflow/workflow-listener/ajax/workflow-listener.jag");
             httpworkflowResponse.setAdditionalParameters("workflowRefId", workflowDTO.getExternalWorkflowReference());
-            httpworkflowResponse.setAdditionalParameters("reDirectUrl", APIMStoreUrl);
+            httpworkflowResponse.setAdditionalParameters("reDirectUrl", apimStoreUrl);
             httpworkflowResponse.setRedirectConfirmationMsg(
                     "You will be redirected to a page to setup your billing " + "account Information");
             return httpworkflowResponse;
@@ -123,28 +127,4 @@ public class SubscriptionBillingWorkflow extends WorkflowExecutor {
         }
         return new GeneralWorkflowResponse();
     }
-
-    public void loadDefaultConfig() {
-    	//TODO : remove this and use 'APIManagerConfigurationService' osgi service to read configurations. 
-    
-    	/*
-    	 * APIManagerConfiguration configuration = ServiceReferenceHolder.getInstance()
-                        .getAPIManagerConfigurationService().getAPIManagerConfiguration();
-
-                String billingEngineUrl = configuration.getFirstProperty("billingEngineUrl");
-    	 */
-        APIManagerConfiguration configuration = new APIManagerConfiguration();
-        String filePath = CarbonUtils.getCarbonHome() + File.separator + "repository" +
-                File.separator + "conf" + File.separator + "api-manager.xml";
-        try {
-            configuration.load(filePath);
-        } catch (APIManagementException e) {
-            log.error("cannot find the congifuration file at: " + filePath, e);
-        }
-
-        billingEngineUrl = configuration.getFirstProperty("billingEngineUrl");
-        APIMStoreUrl = configuration.getFirstProperty("APIStore.URL");
-
-    }
-
 }

@@ -68,7 +68,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     public InvoiceEntity createInvoice(UserEntity user) throws Exception{
-        InvoiceEntity result = throttleRequestDao.GenerateInvoice(selected, user);
+        InvoiceEntity result = throttleRequestDao.GenerateInvoice(user);
         if (result != null) {
             invoiceDao.save(result);
             return result;
@@ -86,4 +86,5 @@ public class InvoiceServiceImpl implements InvoiceService {
     public InvoiceEntity getInvoiceById(UserEntity user, int id) {
         return invoiceDao.loadInvoiceByID(user, id);
     }
+
 }

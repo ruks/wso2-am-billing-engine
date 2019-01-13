@@ -25,6 +25,7 @@
         <property name="dasPassword" value="${dasPassword}"/>
         <property name="jksPath" value="${jksPath}"/>
         <property name="planDao" ref="planDao"/>
+        <property name="usagePlanDao" ref="usagePlanDao"/>
     </bean>
 
     <bean id="planConverter" class="org.wso2.apim.billing.bean.PlanConverter">

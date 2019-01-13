@@ -21,6 +21,7 @@ package org.wso2.apim.billing.dao;
 import org.wso2.apim.billing.Util;
 import org.wso2.apim.billing.bean.APIUsage;
 import org.wso2.apim.billing.bean.AppApiSubscriptionBean;
+import org.wso2.apim.billing.domain.BillingModel;
 import org.wso2.apim.billing.domain.InvoiceEntity;
 import org.wso2.apim.billing.bean.SearchRequestBean;
 import org.wso2.apim.billing.clients.APIRESTClient;
@@ -52,6 +53,7 @@ public class ThrottleRequestDao {
     private String dasPassword;
     private PlanDao planDao;
     private String jksPath;
+    private UsagePlanDao usagePlanDao;
 
     public ThrottleRequestDao() {
 
@@ -125,7 +127,7 @@ public class ThrottleRequestDao {
         this.dasPassword = dasPassword;
     }
 
-    private InvoiceEntity getInvoice(List<APIUsage> apiUsages, String planName, UserEntity user) {
+    private InvoiceEntity getInvoice(List<APIUsage> apiUsages, UserEntity user) {
         APIUsage apiUsage=apiUsages.get(0);
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
@@ -134,17 +136,20 @@ public class ThrottleRequestDao {
         calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + 1);
         String dueDate = dateFormat.format(calendar.getTime());
 
-        PlanEntity plan = planDao.loadPlanByPlanName(planName);
+//        PlanEntity plan = planDao.loadPlanByPlanName(planName);
 
 //        throttle = getThrottleCount(plan, apiUsage.getSuccessCount(), apiUsage.getExceedCount());
 
-        double subscriptionFee = plan.getSubscriptionFee();
-        double successFee = getSuccessRequestFee(plan, apiUsage.getSuccessCount());
-        double throttleFee = getThrottleRequestFee(plan, apiUsage.getExceedCount());
-        double totalFee = subscriptionFee + successFee + throttleFee;
+        List<BillingModel> packages = usagePlanDao.loadBillingPlansOfUser(user.getUserName());
+        BillingModel plan = packages.get(0);
 
-        double feePerRequest = getPerSuccessFee(plan);
-        double feePerThrottle = getPerThrottleFee(plan);
+        double subscriptionFee = 0;
+        double successFee = 0;
+        double throttleFee = 0;
+        double totalFee = 0;
+
+        double feePerRequest = 0;
+        double feePerThrottle = 0;
 
         int ran = (int) (Math.random() * 1000);
 
@@ -156,7 +161,7 @@ public class ThrottleRequestDao {
         invoiceEntity.setDueDate(dueDate);
         invoiceEntity.setInvoiceNo(ran);
         invoiceEntity.setPaymentMethod(user.getCardType());
-        invoiceEntity.setSubscriptionFee(plan.getSubscriptionFee());
+        invoiceEntity.setSubscriptionFee(0);
         invoiceEntity.setSuccessCount(apiUsage.getSuccessCount());
         invoiceEntity.setSuccessFee(successFee);
         invoiceEntity.setThrottleCount(apiUsage.getExceedCount());
@@ -166,23 +171,22 @@ public class ThrottleRequestDao {
         invoiceEntity.setUserEmail(user.getEmail());
         invoiceEntity.setUserFirstName(user.getFirstName());
         invoiceEntity.setUserLastName(user.getLastName());
-        invoiceEntity.setPlanName(plan.getPlanName());
+        invoiceEntity.setPlanName(plan.getPackageName());
         invoiceEntity.setFeePerSuccess(feePerRequest);
         invoiceEntity.setFeePerThrottle(feePerThrottle);
-        invoiceEntity.setPlanType(plan.getPlanType());
+        invoiceEntity.setPlanType(plan.getPackageType());
         return invoiceEntity;
     }
 
-    public InvoiceEntity GenerateInvoice(String planName, UserEntity user) {
-        System.out.println("planName " + planName);
+    public InvoiceEntity GenerateInvoice(UserEntity user) {
         System.setProperty("javax.net.ssl.trustStore", jksPath);
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
 
-        if (planName == null) {
+        /*if (planName == null) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Plan name is not selected", "Sorry!"));
             return null;
-        }
+        }*/
 
         try {
             SPRestClient s = new SPRestClient(this.dasUrl, this.dasUserName, this.dasPassword.toCharArray());
@@ -222,7 +226,7 @@ public class ThrottleRequestDao {
                     apiUsage.setExceedCount(exceedCount);
                     apiUsages.add(apiUsage);
                 }
-                result = getInvoice(apiUsages, planName, user);
+                result = getInvoice(apiUsages, user);
             } else {
             	result = new InvoiceEntity();
             }
@@ -313,5 +317,13 @@ public class ThrottleRequestDao {
         } else {
             return 0.0;
         }
+    }
+
+    public UsagePlanDao getUsagePlanDao() {
+        return usagePlanDao;
+    }
+
+    public void setUsagePlanDao(UsagePlanDao usagePlanDao) {
+        this.usagePlanDao = usagePlanDao;
     }
 }
