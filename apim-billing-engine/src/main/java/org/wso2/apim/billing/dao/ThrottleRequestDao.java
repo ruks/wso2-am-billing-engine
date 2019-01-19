@@ -18,7 +18,6 @@
 */
 package org.wso2.apim.billing.dao;
 
-import org.wso2.apim.billing.Util;
 import org.wso2.apim.billing.bean.APIUsage;
 import org.wso2.apim.billing.bean.AppApiSubscriptionBean;
 import org.wso2.apim.billing.domain.BillingModel;
@@ -31,8 +30,6 @@ import org.wso2.apim.billing.domain.UserEntity;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.DateFormat;
@@ -52,19 +49,20 @@ public class ThrottleRequestDao {
     private String dasUserName;
     private String dasPassword;
     private PlanDao planDao;
-    private String jksPath;
+    private String spTrustStore;
+    private String spTrustStorePassword;
     private UsagePlanDao usagePlanDao;
 
     public ThrottleRequestDao() {
 
     }
 
-    public String getJksPath() {
-        return jksPath;
+    public String getSpTrustStore() {
+        return spTrustStore;
     }
 
-    public void setJksPath(String jksPath) {
-        this.jksPath = jksPath;
+    public void setSpTrustStore(String spTrustStore) {
+        this.spTrustStore = spTrustStore;
     }
 
     public PlanDao getPlanDao() {
@@ -179,8 +177,8 @@ public class ThrottleRequestDao {
     }
 
     public InvoiceEntity GenerateInvoice(UserEntity user) {
-        System.setProperty("javax.net.ssl.trustStore", jksPath);
-        System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
+        System.setProperty("javax.net.ssl.trustStore", spTrustStore);
+        System.setProperty("javax.net.ssl.trustStorePassword", spTrustStorePassword);
 
         /*if (planName == null) {
             FacesContext.getCurrentInstance().addMessage(null,
@@ -325,5 +323,13 @@ public class ThrottleRequestDao {
 
     public void setUsagePlanDao(UsagePlanDao usagePlanDao) {
         this.usagePlanDao = usagePlanDao;
+    }
+
+    public String getSpTrustStorePassword() {
+        return spTrustStorePassword;
+    }
+
+    public void setSpTrustStorePassword(String spTrustStorePassword) {
+        this.spTrustStorePassword = spTrustStorePassword;
     }
 }

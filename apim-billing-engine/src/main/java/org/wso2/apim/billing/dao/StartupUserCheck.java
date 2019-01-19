@@ -23,6 +23,7 @@ public class StartupUserCheck {
         UserEntity userEntity = new UserEntity();
         userEntity.setUserName(adminUser);
         userEntity.setPassword(adminPass);
+        userEntity.setFirstName("Admin");
 
         List<String> roles = new ArrayList<String>();
         if (adminRole != null && !adminRole.isEmpty()) {

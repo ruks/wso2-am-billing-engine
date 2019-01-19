@@ -23,7 +23,8 @@
         <property name="dasUrl" value="${dasUrl}"/>
         <property name="dasUserName" value="${dasUserName}"/>
         <property name="dasPassword" value="${dasPassword}"/>
-        <property name="jksPath" value="${jksPath}"/>
+        <property name="spTrustStore" value="${spTrustStore}"/>
+        <property name="spTrustStorePassword" value="${spTrustStorePassword}"/>
         <property name="planDao" ref="planDao"/>
         <property name="usagePlanDao" ref="usagePlanDao"/>
     </bean>
@@ -38,6 +39,8 @@
         <property name="tokenUrl" value="${tokenUrl}"/>
         <property name="dcrUrl" value="${dcrUrl}"/>
         <property name="introspectUrl" value="${introspectUrl}"/>
+        <property name="apimTrustStore" value="${apimTrustStore}"/>
+        <property name="apimTrustStorePassword" value="${apimTrustStorePassword}"/>
     </bean>
     <bean id="apirestClient" class="org.wso2.apim.billing.clients.APIRESTClient">
         <property name="publisherUrl" value="${publisherUrl}" />
@@ -73,7 +76,8 @@
     </bean>
 
     <bean id="workflowClient" class="org.wso2.apim.billing.services.impl.WorkflowClientImpl">
-        <property name="jksPath" value="${jksPath}"/>
+        <property name="apimTrustStore" value="${apimTrustStore}"/>
+        <property name="apimTrustStorePassword" value="${apimTrustStorePassword}"/>
         <property name="apimUserName" value="${apimUserName}"/>
         <property name="apimPassword" value="${apimPassword}"/>
     </bean>

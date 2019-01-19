@@ -9,16 +9,11 @@
 	<var name="uiUtils" class="org.wso2.apim.billing.ui.utils.UIUtils"/>
 	<var name="plan" class="org.wso2.apim.billing.domain.PlanEntity"/>
 
-
-
 	<on-start>
 		<evaluate expression="userService.loadUserEntityByUsername(currentUser.name)" result="flowScope.user" />
 	</on-start>
 
 	<view-state id="home" view="accountHome.xhtml">
-		<transition on="newPlan" to="newPlan" />
-		<transition on="newUsagePlan" to="newUsagePlan" />
-		<transition on="listPlan" to="listPlan" />
 		<transition on="invoice" to="invoice" />
 		<transition on="viewInvoices" to="viewInvoices" />
 		<transition on="definePlan" to="definePlan" />
@@ -35,26 +30,6 @@
 
 	<view-state id="listUsagePlan" view="listBillingPlan.xhtml" model="usagePlan">
 		<var name="usagePlan" class="org.wso2.apim.billing.domain.BillingPlan"/>
-		<transition on="backToHome" to="home" />
-	</view-state>
-
-	<view-state id="newPlan" view="newPlan.xhtml" model="plan">
-		<var name="plan" class="org.wso2.apim.billing.domain.PlanEntity"/>
-		<transition on="backToHome" to="home" />
-		<transition on="confirmNewPlan" to="home">
-			<evaluate expression="planService.createPlan(plan)" />
-		</transition>
-	</view-state>
-
-	<view-state id="newUsagePlan" view="usagePlan.xhtml" model="plan">
-		<var name="plan" class="org.wso2.apim.billing.domain.PlanEntity"/>
-		<transition on="backToHome" to="home" />
-		<transition on="saveUsgPlan" to="home">
-			<evaluate expression="planService.createUsagePlan(plan)" />
-		</transition>
-	</view-state>
-
-	<view-state id="listPlan" view="listPlan.xhtml" model="user">
 		<transition on="backToHome" to="home" />
 	</view-state>
 

@@ -34,6 +34,8 @@ public class TokenManager {
     private String introspectUrl;
     private String refreshToken;
     private String accessToken;
+    private String apimTrustStore;
+    private String apimTrustStorePassword;
     private static final Log log = LogFactory.getLog(TokenManager.class);
 
     public static void main(String[] args) {
@@ -54,14 +56,8 @@ public class TokenManager {
     }
 
     public String getToken() {
-        System.setProperty("javax.net.ssl.trustStore", "/home/rukshan/apim/2.6.0/wso2am-2.6.0/repository/resources/security/wso2carbon.jks");
-        System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
-
-        setTokenUrl("https://localhost:9443/oauth2/token");
-        setDcrUrl("https://localhost:9443/client-registration/v0.14/register");
-        setIntrospectUrl("https://localhost:9443/oauth2/introspect");
-        setUserName("admin");
-        setPassword("admin");
+        System.setProperty("javax.net.ssl.trustStore", apimTrustStore);
+        System.setProperty("javax.net.ssl.trustStorePassword", apimTrustStorePassword);
 
         createApp();
         getToken(getConsumerKey(), getConsumerSecret());
@@ -245,5 +241,21 @@ public class TokenManager {
 
     public void setIntrospectUrl(String introspectUrl) {
         this.introspectUrl = introspectUrl;
+    }
+
+    public String getApimTrustStore() {
+        return apimTrustStore;
+    }
+
+    public void setApimTrustStore(String apimTrustStore) {
+        this.apimTrustStore = apimTrustStore;
+    }
+
+    public String getApimTrustStorePassword() {
+        return apimTrustStorePassword;
+    }
+
+    public void setApimTrustStorePassword(String apimTrustStorePassword) {
+        this.apimTrustStorePassword = apimTrustStorePassword;
     }
 }

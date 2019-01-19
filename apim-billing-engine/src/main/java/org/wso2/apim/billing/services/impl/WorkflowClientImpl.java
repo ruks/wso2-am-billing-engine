@@ -38,7 +38,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkflowClientImpl implements WorkflowClient {
-    private String jksPath;
+    private String apimTrustStore;
+    private String apimTrustStorePassword;
     private String apimUserName;
     private String apimPassword;
 
@@ -58,12 +59,20 @@ public class WorkflowClientImpl implements WorkflowClient {
         this.apimPassword = apimPassword;
     }
 
-    public String getJksPath() {
-        return jksPath;
+    public String getApimTrustStore() {
+        return apimTrustStore;
     }
 
-    public void setJksPath(String jksPath) {
-        this.jksPath = jksPath;
+    public void setApimTrustStore(String apimTrustStore) {
+        this.apimTrustStore = apimTrustStore;
+    }
+
+    public String getApimTrustStorePassword() {
+        return apimTrustStorePassword;
+    }
+
+    public void setApimTrustStorePassword(String apimTrustStorePassword) {
+        this.apimTrustStorePassword = apimTrustStorePassword;
     }
 
     public boolean activateSubscription(RedirectBean bean, UserEntity userEntity) throws Exception {
@@ -73,8 +82,8 @@ public class WorkflowClientImpl implements WorkflowClient {
             System.out.println("Skipping activateSubscription ");
             return false;
         }
-        System.setProperty("javax.net.ssl.trustStore", jksPath);
-        System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
+        System.setProperty("javax.net.ssl.trustStore", apimTrustStore);
+        System.setProperty("javax.net.ssl.trustStorePassword", apimTrustStorePassword);
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("workflowReference", bean.getWorkflowRefId()));

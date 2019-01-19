@@ -50,30 +50,15 @@ public class PlanServiceImpl implements PlanService {
         this.attributes = attributes;
     }
 
-    public boolean createPlan(PlanEntity planEntity) {
-        if (!planDao.checkAvailable(planEntity.getPlanName())) {
+    public boolean createBillingPlan(BillingPlan billingPlan) {
+        /*if (!planDao.checkAvailable(billingPlan.)) {
             FacesMessage message = constructErrorMessage(
                     String.format(getMessageBundle().getString("userExistsMsg"), planEntity.getPlanName()), null);
             getFacesContext().addMessage(null, message);
 
             return false;
-        }
+        }*/
 
-        try {
-            planEntity.setPlanType(PlanEntity.PLAN_TYPES.STANDARD.toString());
-            planDao.save(planEntity);
-        } catch (Exception e) {
-            FacesMessage message = constructFatalMessage(e.getMessage(), null);
-            getFacesContext().addMessage(null, message);
-
-            return false;
-        }
-
-        FacesContext.getCurrentInstance().getViewRoot().getViewMap().remove("plan");
-        return true;
-    }
-
-    public boolean createBillingPlan(BillingPlan billingPlan) {
         try {
             usagePlanDao.save(billingPlan);
         } catch (Exception e) {
@@ -81,27 +66,6 @@ public class PlanServiceImpl implements PlanService {
             getFacesContext().addMessage(null, message);
             return false;
         }
-        return true;
-    }
-
-    public boolean createUsagePlan(PlanEntity planEntity) {
-        if (!planDao.checkAvailable(planEntity.getPlanName())) {
-            FacesMessage message = constructErrorMessage(
-                    String.format(getMessageBundle().getString("userExistsMsg"), planEntity.getPlanName()), null);
-            getFacesContext().addMessage(null, message);
-
-            return false;
-        }
-
-        try {
-            planEntity.setPlanType(PlanEntity.PLAN_TYPES.USAGE.toString());
-            planDao.save(planEntity);
-        } catch (Exception e) {
-            FacesMessage message = constructFatalMessage(e.getMessage(), null);
-            getFacesContext().addMessage(null, message);
-            return false;
-        }
-        FacesContext.getCurrentInstance().getViewRoot().getViewMap().remove("plan");
         return true;
     }
 

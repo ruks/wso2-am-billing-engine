@@ -50,15 +50,14 @@ import java.util.List;
 import java.util.Map;
 
 public class APIRESTClient {
-    private final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
-    List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-    String loginUrl;
-    String getSubsUrl;
-    String appListUrl;
-    private final CloseableHttpClient httpClient;
-    HttpResponse response;
-    String validTiers = "Unlimited,Gold,Silver,Bronze";
     private static final Log log = LogFactory.getLog(APIRESTClient.class);
+    private final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
+    private List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+    private String loginUrl;
+    private String getSubsUrl;
+    private String appListUrl;
+    private final CloseableHttpClient httpClient;
+    private HttpResponse response;
     private String publisherUrl;
 
     public APIRESTClient() {
