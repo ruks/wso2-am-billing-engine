@@ -4,7 +4,7 @@
 
 |  Branch | Build Status(TravisCI) |
 | :------------ |:-------------
-| master      | [![Build Status](https://api.travis-ci.com/ruks/wso2-am-billing-engine.svg?branch=2.2.x)](https://travis-ci.com/ruks/wso2-am-billing-engine) |
+| 2.6.x      | [![Build Status](https://api.travis-ci.com/ruks/wso2-am-billing-engine.svg?branch=2.6.x)](https://travis-ci.com/ruks/wso2-am-billing-engine) |
 
 Simple billing engine is a sample project to demostrace the capabilities of the wso2 API-manager monotization. And also the capabilities
 of extending and cutomization of APIM ana APIM analyser features to support configure billing engine.
