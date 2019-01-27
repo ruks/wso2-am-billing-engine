@@ -107,7 +107,7 @@ Configure Billing engine
     dasUserName=admin
     dasPassword=admin
     #Path to the java key store (contain certificate for both APIM and analyser)
-    jksPath=/home/rukshan/apim/2.2.0/wso2am-2.2.0/repository/resources/security/wso2carbon.jks
+    spTrustStore=/home/rukshan/apim/2.2.0/wso2am-2.2.0/repository/resources/security/wso2carbon.jks
     
 
 Issue Tracker
@@ -117,3 +117,6 @@ Help us make our software better. Please submit any bug reports or feature
 requests through GitHub:
 
    https://github.com/ruks/wso2-am-billing-engine/issues
+   
+sh bin/catalina.sh jpda start
+1023  tail -f logs/catalina.out 

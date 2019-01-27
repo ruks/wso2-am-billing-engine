@@ -66,22 +66,36 @@
 
                 </h:panelGrid>
 
-                <h:panelGrid id="plansPanel" style="margin: 0 auto; margin-top: 25px; text-align: right"
-                             cellspacing="8" columns="3">
-                    <p:carousel value="#{planService.listBillingPlan(usagePlan)}" headerText="Responsive" var="billingModel"
-                                itemStyle="text-align:center" responsive="true">
+                <h:panelGrid id="plansPanel" columns="4">
+                    <c:forEach items="${planService.listBillingPlan(request.remoteUser, usagePlan)}" var="billingModel" varStatus="status">
                         <p:panelGrid columns="2" style="width:100%;margin:10px 0px" columnClasses="label,value"
                                      layout="grid" styleClass="ui-panelgrid-blank">
-                            <ui:repeat value="#{billingModel.attributes}" var="attribute">
+                            <f:facet name="header">
+                                <h:outputText value="${billingModel.packageName}"/>
+                            </f:facet>
+
+                            <h:outputText value="Type"/>
+                            <h:outputText value="${billingModel.packageType}"/>
+                            <c:forEach  items="${billingModel.getAttributes()}" var="attribute">
                                 <h:outputText value="#{attribute.displayName}:"/>
                                 <h:outputText value="#{attribute.value}"/>
-                            </ui:repeat>
+                            </c:forEach>
                             <f:facet name="footer">
-                                <p:commandButton id="Subscribe" immediate="true" action="#{planService.subscribe(request.remoteUser, billingModel.id)}"
-                                                 value="Subscribe"/>
+                                <c:if test="#{billingModel.subscription eq false}">
+                                    <p:commandButton id="Subscribe_${status.index}_s" immediate="true" action="#{planService.subscribe(request.remoteUser, billingModel.id, usagePlan)}"
+                                                     value="Subscribe" update="plansPanel">
+                                        <f:ajax render="plansPanel"/>
+                                    </p:commandButton>
+                                </c:if>
+                                <c:if test="#{billingModel.subscription eq true}">
+                                    <p:commandButton id="Subscribe_${status.index}_f" immediate="true" action="#{planService.unSubscribe(request.remoteUser, billingModel.id)}"
+                                                     value="Unsubscribe" update="plansPanel">
+                                        <f:ajax render="plansPanel"/>
+                                    </p:commandButton>
+                                </c:if>
                             </f:facet>
                         </p:panelGrid>
-                    </p:carousel>
+                    </c:forEach>
                 </h:panelGrid>
 
                 <p:commandButton id="backToHome" action="backToHome" immediate="true"

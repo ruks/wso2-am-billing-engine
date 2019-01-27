@@ -41,7 +41,8 @@ public interface PlanService {
 
     boolean createBillingPlan(BillingPlan billingPlan);
 
-    List<BillingModel> listBillingPlan(BillingPlan billingPlan);
+    List<BillingModel> listBillingPlan(String user, BillingPlan billingPlan);
 
-    void subscribe(String user, String id);
+    void subscribe(String user, String id, BillingPlan billingPlan);
+    void unSubscribe(String user, String id);
 }

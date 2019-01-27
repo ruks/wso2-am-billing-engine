@@ -24,4 +24,23 @@ public class SubscriptionJPADao extends GenericJpaDao<PackageSubscription, Long>
         List<Object[]> result = nativeQuery.getResultList();
         return result.size() > 0;
     }
+
+    public boolean getSubscriptionsToModel(String user, long packageId) {
+        EntityManager entityManager = getEntityManager();
+        String query = "SELECT id FROM package_subscription where packageId=? and user=?";
+        Query nativeQuery = entityManager.createNativeQuery(query);
+        nativeQuery.setParameter(1, packageId);
+        nativeQuery.setParameter(2, user);
+        List<Object[]> result = nativeQuery.getResultList();
+        return result.size() > 0;
+    }
+
+    public void removeSubscriptionsToModel(String user, long packageId) {
+        EntityManager entityManager = getEntityManager();
+        String query = "DELETE FROM package_subscription where packageId=? and user=?";
+        Query nativeQuery = entityManager.createNativeQuery(query);
+        nativeQuery.setParameter(1, packageId);
+        nativeQuery.setParameter(2, user);
+        nativeQuery.executeUpdate();
+    }
 }

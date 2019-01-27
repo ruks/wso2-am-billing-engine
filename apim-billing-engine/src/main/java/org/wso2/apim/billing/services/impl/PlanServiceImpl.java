@@ -112,9 +112,13 @@ public class PlanServiceImpl implements PlanService {
         return plans;
     }
 
-    public List<BillingModel> listBillingPlan(BillingPlan billingPlan) {
+    public List<BillingModel> listBillingPlan(String user, BillingPlan billingPlan) {
         try {
-           return usagePlanDao.loadBillingPlans(billingPlan);
+            List<BillingModel> billingModels = usagePlanDao.loadBillingPlans(billingPlan);
+            for (BillingModel model : billingModels) {
+                model.setSubscription(subscriptionDao.getSubscriptionsToModel(user, model.getId()));
+            }
+            return billingModels;
         } catch (Exception e) {
             FacesMessage message = constructFatalMessage(e.getMessage(), "Error occurred getting plans");
             getFacesContext().addMessage(null, message);
@@ -122,11 +126,26 @@ public class PlanServiceImpl implements PlanService {
         }
     }
 
-    public void subscribe(String user, String id) {
+    public void subscribe(String user, String id, BillingPlan billingPlan) {
+        if(subscriptionDao.getSubscriptions(user, billingPlan.getApiID(), billingPlan.getThrottlePolicy())) {
+            FacesMessage message = constructErrorMessage("Already subscribed", "Package subscription already exist.");
+            getFacesContext().addMessage(null, message);
+            return;
+        }
         PackageSubscription packageSubscription = new PackageSubscription();
         packageSubscription.setPackageID(id);
         packageSubscription.setUser(user);
         subscriptionDao.save(packageSubscription);
+//        long lid = Long.parseLong(id);
+//        String status = subscriptionDao.getSubscriptionsToModel(user, lid) + "";
+//        return status;
+    }
+
+    public void unSubscribe(String user, String id) {
+        long lid = Long.parseLong(id);
+        subscriptionDao.removeSubscriptionsToModel(user, lid);
+//        String status = subscriptionDao.getSubscriptionsToModel(user, lid) + "";
+//        return status;
     }
 
     protected FacesMessage constructErrorMessage(String message, String detail) {

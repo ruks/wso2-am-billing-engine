@@ -83,9 +83,9 @@
                 </h:panelGrid>
 
                 <h:panelGrid id="attributesPanel" style="margin: 0 auto; margin-top: 25px; text-align: right"
-                             cellspacing="8" columns="3">
-                    <ui:repeat value="#{planService.listAttributes(usagePlan)}" var="attribute" varStatus="idx">
-                        <h:panelGroup id="attributes">
+                             cellspacing="8" columns="2">
+                    <c:forEach items="#{planService.listAttributes(usagePlan)}" var="attribute" varStatus="idx">
+                        <h:panelGroup id="attributes_${idx.index}">
                             <h:outputText value="#{attribute.displayName}:"/>
                             <h:outputText style="color:red" value="*  "/>
                         </h:panelGroup>
@@ -96,27 +96,33 @@
                                      converter="billingModelConverter"
                                      feedback="true">
                         </p:inputText>
-                    </ui:repeat>
+                    </c:forEach>
                     <p:commandButton value="Add Package"
                                      action="#{usagePlan.addBillingModels(usagePlan.currentBillingModel)}"
-                                     update="regPanelGrid2">
+                                     update="viewPlanGridPanel">
                     </p:commandButton>
                 </h:panelGrid>
 
-                <h:panelGrid id="regPanelGrid2" style="margin: 0 auto; margin-top: 25px; text-align: right"
-                             cellspacing="8" columns="3">
-                    <p:carousel value="#{usagePlan.getBillingModels()}" headerText="Responsive" var="billingModel"
-                                itemStyle="text-align:center" responsive="true">
+                <h:panelGrid id="viewPlanGridPanel" columns="4">
+                    <c:forEach items="${usagePlan.getBillingModels()}" var="billingModel" varStatus="status">
                         <p:panelGrid columns="2" style="width:100%;margin:10px 0px" columnClasses="label,value"
                                      layout="grid" styleClass="ui-panelgrid-blank">
-                            <ui:repeat value="#{billingModel.attributes}" var="attribute">
+                            <f:facet name="header">
+                                <h:outputText value="${billingModel.packageName}"/>
+                            </f:facet>
+
+                            <h:outputText value="Type"/>
+                            <h:outputText value="${billingModel.packageType}"/>
+                            <c:forEach  items="${billingModel.getAttributes()}" var="attribute">
                                 <h:outputText value="#{attribute.displayName}:"/>
                                 <h:outputText value="#{attribute.value}"/>
-                            </ui:repeat>
+                            </c:forEach>
+                            <f:facet name="footer">
+                                <p:commandButton id="Subscribe_${status.index}" immediate="true" action="#{planService.subscribe(request.remoteUser, billingModel.id)}"
+                                                 value="Subscribe"/>
+                            </f:facet>
                         </p:panelGrid>
-                        <f:facet name="footer">
-                        </f:facet>
-                    </p:carousel>
+                    </c:forEach>
                 </h:panelGrid>
 
                 <p:commandButton id="backToHome" action="backToHome" immediate="true"

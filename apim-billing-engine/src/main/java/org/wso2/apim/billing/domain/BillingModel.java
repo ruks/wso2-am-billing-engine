@@ -20,6 +20,8 @@ public class BillingModel extends BaseEntity {
     private BillingPlan plan;
     private String packageName;
     private String packageType;
+    @Transient
+    private boolean subscription = false;
 
     public BillingModel() {
     }
@@ -57,5 +59,13 @@ public class BillingModel extends BaseEntity {
 
     public void setPackageType(String packageType) {
         this.packageType = packageType;
+    }
+
+    public boolean getSubscription() {
+        return subscription;
+    }
+
+    public void setSubscription(boolean subscription) {
+        this.subscription = subscription;
     }
 }
