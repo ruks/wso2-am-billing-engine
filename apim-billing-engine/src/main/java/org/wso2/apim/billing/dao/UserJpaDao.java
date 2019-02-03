@@ -1,12 +1,11 @@
 package org.wso2.apim.billing.dao;
 
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
-
 import org.springframework.util.Assert;
-
 import org.wso2.apim.billing.commons.dao.GenericJpaDao;
 import org.wso2.apim.billing.domain.UserEntity;
+
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
 
 /**
  * Data access object JPA impl to work with User entity database operations.

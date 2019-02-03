@@ -61,13 +61,22 @@ public class BillingPlan extends BaseEntity {
     }
 
     public void addBillingModels(BillingModel billingModel) {
-        for (BillingAttribute billingAttribute: billingModel.getAttributes()) {
+//        billingModel.setId((long) (Math.random() * 100000000000L));
+        for (BillingAttribute billingAttribute : billingModel.getAttributes()) {
             billingAttribute.setBillingModel(billingModel);
         }
         billingModel.setPlan(this);
 
         billingModels.add(billingModel);
         currentBillingModel = new BillingModel();
+    }
+
+    public void removeFromModels(long id) {
+        for (BillingModel billingModel : billingModels) {
+            if (billingModel.getId() == id) {
+                billingModels.remove(billingModel);
+            }
+        }
     }
 
     public BillingModel getCurrentBillingModel() {

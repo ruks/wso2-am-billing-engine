@@ -84,7 +84,7 @@
 
                 <h:panelGrid id="attributesPanel" style="margin: 0 auto; margin-top: 25px; text-align: right"
                              cellspacing="8" columns="2">
-                    <c:forEach items="#{planService.listAttributes(usagePlan)}" var="attribute" varStatus="idx">
+                    <ui:repeat value="#{planService.listAttributes(usagePlan)}" var="attribute" varStatus="idx">
                         <h:panelGroup id="attributes_${idx.index}">
                             <h:outputText value="#{attribute.displayName}:"/>
                             <h:outputText style="color:red" value="*  "/>
@@ -96,7 +96,7 @@
                                      converter="billingModelConverter"
                                      feedback="true">
                         </p:inputText>
-                    </c:forEach>
+                    </ui:repeat>
                     <p:commandButton value="Add Package"
                                      action="#{usagePlan.addBillingModels(usagePlan.currentBillingModel)}"
                                      update="viewPlanGridPanel">
@@ -118,8 +118,8 @@
                                 <h:outputText value="#{attribute.value}"/>
                             </c:forEach>
                             <f:facet name="footer">
-                                <p:commandButton id="Subscribe_${status.index}" immediate="true" action="#{planService.subscribe(request.remoteUser, billingModel.id)}"
-                                                 value="Subscribe"/>
+                                <p:commandButton id="remove_${status.index}" immediate="true" action="#{usagePlan.removeFromModels(billingModel.id)}"
+                                                 value="Remove" update="viewPlanGridPanel"/>
                             </f:facet>
                         </p:panelGrid>
                     </c:forEach>

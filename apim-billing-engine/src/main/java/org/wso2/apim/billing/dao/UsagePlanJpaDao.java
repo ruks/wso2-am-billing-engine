@@ -6,7 +6,6 @@ import org.wso2.apim.billing.domain.BillingModel;
 import org.wso2.apim.billing.domain.BillingPlan;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import java.math.BigInteger;
 import java.util.*;
@@ -64,10 +63,11 @@ public class UsagePlanJpaDao extends GenericJpaDao<BillingPlan, Long> implements
             return Collections.EMPTY_LIST;
         }
         EntityManager entityManager = getEntityManager();
-        String query = "SELECT billing_package.id,packageName,packageType, displayName,name,value FROM "
-                + "package_subscription,billing_package,billing_attribute,plan where plan.id=billing_package.plan_id "
-                + "and billing_package.id=billing_attribute.billing_package_id and "
-                + "package_subscription.packageID=billing_package.id and package_subscription.user=?";
+        String query = "SELECT billing_package.id,packageName,packageType, displayName,name,value,apiName,apiVersion,throttlePolicy \n"
+                + "FROM package_subscription,billing_package,billing_attribute,plan \n" + "where \n"
+                + "plan.id=billing_package.plan_id \n"
+                + "and billing_package.id=billing_attribute.billing_package_id \n"
+                + "and package_subscription.packageID=billing_package.id \n" + "and package_subscription.user=?";
         Query nativeQuery = entityManager.createNativeQuery(query);
         nativeQuery.setParameter(1, userName);
         List<Object[]> result = nativeQuery.getResultList();
@@ -87,6 +87,11 @@ public class UsagePlanJpaDao extends GenericJpaDao<BillingPlan, Long> implements
             }
             List<BillingAttribute> attributes = billingModel.getAttributes();
             attributes.add(new BillingAttribute(1, (String) row[4], (String) row[3], (String) row[5]));
+            BillingPlan billingPlan = new BillingPlan();
+            billingPlan.setApiName((String)row[6]);
+            billingPlan.setApiVersion((String)row[7]);
+            billingPlan.setThrottlePolicy((String)row[8]);
+            billingModel.setPlan(billingPlan);
         }
         return new ArrayList<>(plans.values());
     }

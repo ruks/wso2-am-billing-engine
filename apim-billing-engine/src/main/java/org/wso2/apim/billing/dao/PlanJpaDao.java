@@ -1,8 +1,8 @@
 package org.wso2.apim.billing.dao;
 
+import org.springframework.util.Assert;
 import org.wso2.apim.billing.commons.dao.GenericJpaDao;
 import org.wso2.apim.billing.domain.PlanEntity;
-import org.springframework.util.Assert;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;

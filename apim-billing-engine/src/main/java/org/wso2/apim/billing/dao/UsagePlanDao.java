@@ -3,7 +3,6 @@ package org.wso2.apim.billing.dao;
 import org.wso2.apim.billing.commons.dao.GenericDao;
 import org.wso2.apim.billing.domain.BillingModel;
 import org.wso2.apim.billing.domain.BillingPlan;
-import org.wso2.apim.billing.domain.PlanEntity;
 
 import java.util.List;
 

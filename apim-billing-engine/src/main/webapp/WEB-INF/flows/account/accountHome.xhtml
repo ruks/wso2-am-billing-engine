@@ -4,6 +4,7 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
                 template="/WEB-INF/templates/general.xhtml">
 
     <ui:define name="title"><h:outputText value="My Account Home"/></ui:define>
@@ -33,9 +34,10 @@
                     <p:commandButton id="invoiceButton" action="invoice" update="logPanelGrid,messages"
                                      icon="ui-icon-check" value="Invoice"
                                      rendered="#{request.isUserInRole('ROLE_ADMIN')}"/>
+                    <c:set var="isPowerUser" value="#{request.isUserInRole('ROLE_ADMIN') or request.isUserInRole('ROLE_USER')}" scope="request" />
                     <p:commandButton id="viewInvoiceButtons" action="viewInvoices" update="logPanelGrid,messages"
-                                     icon="ui-icon-check" value="View Invoices"
-                                     rendered="#{request.isUserInRole('ROLE_USER')}"/>
+                                     icon="ui-icon-check" value="View Invoices"/>
+                                     <!--rendered="#{request.isUserInRole('isPowerUser')}"-->
 
                 </h:panelGrid>
             </p:fieldset>

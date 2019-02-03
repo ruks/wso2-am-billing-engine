@@ -16,17 +16,28 @@
     <bean id="usagePlanDao" class="org.wso2.apim.billing.dao.UsagePlanJpaDao"/>
     <bean id="invoiceDao" class="org.wso2.apim.billing.dao.InvoiceJpaDao"/>
     <bean id="subscriptionDao" class="org.wso2.apim.billing.dao.SubscriptionJPADao"/>
-    <bean id="throttleRequestDao" class="org.wso2.apim.billing.dao.ThrottleRequestDao">
-        <property name="apimStoreUrl" value="${apimStoreUrl}"/>
-        <property name="apimUserName" value="${apimUserName}"/>
-        <property name="apimPassword" value="${apimPassword}"/>
-        <property name="dasUrl" value="${dasUrl}"/>
-        <property name="dasUserName" value="${dasUserName}"/>
-        <property name="dasPassword" value="${dasPassword}"/>
-        <property name="spTrustStore" value="${spTrustStore}"/>
-        <property name="spTrustStorePassword" value="${spTrustStorePassword}"/>
-        <property name="planDao" ref="planDao"/>
+    <bean id="spRestClient" class="org.wso2.apim.billing.clients.SPRestClient">
+        <constructor-arg type="java.lang.String" value="${dasUrl}"/>
+        <constructor-arg type="java.lang.String" value="${dasUserName}"/>
+        <constructor-arg type="char[]" value="${dasPassword}"/>
+        <constructor-arg type="java.lang.String" value="${spTrustStore}"/>
+        <constructor-arg type="char[]" value="${spTrustStorePassword}"/>
+    </bean>
+    <bean id="meteredPlanProcessor" class="org.wso2.apim.billing.services.impl.MeteredPlanProcessor">
+        <constructor-arg>
+            <ref bean="spRestClient"/>
+        </constructor-arg>
+    </bean>
+    <bean id="quotaPlanProcessor" class="org.wso2.apim.billing.services.impl.QuotaPlanProcessor">
+        <constructor-arg>
+            <ref bean="spRestClient"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="invoiceGenerator" class="org.wso2.apim.billing.services.impl.InvoiceGenerator">
         <property name="usagePlanDao" ref="usagePlanDao"/>
+        <property name="meteredPlanProcessor" ref="meteredPlanProcessor"/>
+        <property name="quotaPlanProcessor" ref="quotaPlanProcessor"/>
     </bean>
 
     <bean id="planConverter" class="org.wso2.apim.billing.bean.PlanConverter">
@@ -41,9 +52,13 @@
         <property name="introspectUrl" value="${introspectUrl}"/>
         <property name="apimTrustStore" value="${apimTrustStore}"/>
         <property name="apimTrustStorePassword" value="${apimTrustStorePassword}"/>
+        <constructor-arg type="java.lang.String" value="${apimTrustStore}"/>
+        <constructor-arg type="java.lang.String" value="${apimTrustStorePassword}"/>
     </bean>
     <bean id="apirestClient" class="org.wso2.apim.billing.clients.APIRESTClient">
-        <property name="publisherUrl" value="${publisherUrl}" />
+        <constructor-arg type="java.lang.String" value="${publisherUrl}"/>
+        <constructor-arg type="java.lang.String" value="${apimTrustStore}"/>
+        <constructor-arg type="java.lang.String" value="${apimTrustStorePassword}"/>
     </bean>
     <bean id="apiInfoService" class="org.wso2.apim.billing.services.impl.APIInfoServiceImpl">
         <property name="publisherUrl" value="${publisherUrl}"/>
@@ -63,7 +78,7 @@
         <property name="subscriptionDao" ref="subscriptionDao"/>
     </bean>
     <bean id="invoiceService" class="org.wso2.apim.billing.services.impl.InvoiceServiceImpl">
-        <property name="throttleRequestDao" ref="throttleRequestDao"/>
+        <property name="invoiceGenerator" ref="invoiceGenerator"/>
         <property name="invoiceDao" ref="invoiceDao"/>
     </bean>
     <bean id="subscriptionService" class="org.wso2.apim.billing.services.impl.SubscriptionServiceImpl">

@@ -31,11 +31,13 @@ public class PlanServiceImpl implements PlanService {
         }
         int i = 0;
         if ("quota".equalsIgnoreCase(billingPlan.getCurrentBillingModel().getPackageType())) {
-            attributes.add(new BillingAttribute(i++, "quota", "Quota", null));
-            attributes.add(new BillingAttribute(i++, "quotaPrice", "Quota Price", null));
-            attributes.add(new BillingAttribute(i++, "excessivePrice", "Excessive Price", null));
+            attributes.add(new BillingAttribute(i++, "subscription", "Subscription Fee", null));
+            attributes.add(new BillingAttribute(i++, "quota", "Allowed Quota", null));
+            attributes.add(new BillingAttribute(i++, "quotaPrice", "Package Price", null));
+            attributes.add(new BillingAttribute(i++, "excessivePrice", "Price per additional Request", null));
         } else if ("metered".equalsIgnoreCase(billingPlan.getCurrentBillingModel().getPackageType())) {
-            attributes.add(new BillingAttribute(i++, "pricePerReq", "Price per a request", null));
+            attributes.add(new BillingAttribute(i++, "subscription", "Subscription Fee", null));
+            attributes.add(new BillingAttribute(i++, "pricePerReq", "Price per a Request", null));
         }
         System.out.println("listAttributes :" + billingPlan.getCurrentBillingModel().getPackageType());
         billingPlan.getCurrentBillingModel().setAttributes(attributes);

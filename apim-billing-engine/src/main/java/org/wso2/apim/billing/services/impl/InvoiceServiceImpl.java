@@ -2,8 +2,6 @@ package org.wso2.apim.billing.services.impl;
 
 import org.wso2.apim.billing.domain.InvoiceEntity;
 import org.wso2.apim.billing.dao.InvoiceDao;
-import org.wso2.apim.billing.dao.ThrottleRequestDao;
-import org.wso2.apim.billing.domain.PlanEntity;
 import org.wso2.apim.billing.domain.UserEntity;
 import org.wso2.apim.billing.services.InvoiceService;
 
@@ -19,16 +17,16 @@ import java.util.ResourceBundle;
  */
 public class InvoiceServiceImpl implements InvoiceService {
 
-    private ThrottleRequestDao throttleRequestDao;
+    private InvoiceGenerator invoiceGenerator;
     private InvoiceDao invoiceDao;
     private String selected;
 
-    public ThrottleRequestDao getThrottleRequestDao() {
-        return throttleRequestDao;
+    public InvoiceGenerator getInvoiceGenerator() {
+        return invoiceGenerator;
     }
 
-    public void setThrottleRequestDao(ThrottleRequestDao throttleRequestDao) {
-        this.throttleRequestDao = throttleRequestDao;
+    public void setInvoiceGenerator(InvoiceGenerator invoiceGenerator) {
+        this.invoiceGenerator = invoiceGenerator;
     }
 
     public InvoiceDao getInvoiceDao() {
@@ -68,7 +66,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     public InvoiceEntity createInvoice(UserEntity user) throws Exception{
-        InvoiceEntity result = throttleRequestDao.GenerateInvoice(user);
+        InvoiceEntity result = invoiceGenerator.process(user);
         if (result != null) {
             invoiceDao.save(result);
             return result;

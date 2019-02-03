@@ -1,6 +1,5 @@
 package org.wso2.apim.billing.dao;
 
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.wso2.apim.billing.domain.UserEntity;
 
 import javax.annotation.PostConstruct;

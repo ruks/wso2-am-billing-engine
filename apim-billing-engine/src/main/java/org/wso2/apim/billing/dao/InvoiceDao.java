@@ -1,7 +1,7 @@
 package org.wso2.apim.billing.dao;
 
-import org.wso2.apim.billing.domain.InvoiceEntity;
 import org.wso2.apim.billing.commons.dao.GenericDao;
+import org.wso2.apim.billing.domain.InvoiceEntity;
 import org.wso2.apim.billing.domain.UserEntity;
 
 import java.util.List;
