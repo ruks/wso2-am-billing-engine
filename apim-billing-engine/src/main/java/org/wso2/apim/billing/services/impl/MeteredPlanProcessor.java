@@ -17,10 +17,10 @@ public class MeteredPlanProcessor extends PlanProcessor {
         super(spRestClient);
     }
 
-    public PackageFeeModel process(String user, BillingModel billingModel) {
+    public PackageFeeModel process(String user, BillingModel billingModel, int selectedMonth) {
         try {
             PackageFeeModel model = new PackageFeeModel();
-            List<APIUsage> apiUsage = spRestClient.getUsagePerPackage(user, billingModel);
+            List<APIUsage> apiUsage = spRestClient.getUsagePerPackage(user, billingModel, selectedMonth);
             APIUsage usage;
             if (!apiUsage.isEmpty()) {
                 usage = apiUsage.get(0);

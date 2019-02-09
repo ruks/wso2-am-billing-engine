@@ -44,14 +44,14 @@ public class InvoiceJpaDao extends GenericJpaDao<InvoiceEntity, Long> implements
      * @param ID
      * @return User entity
      */
-    public InvoiceEntity loadInvoiceByID(UserEntity user, int ID) {
+    public InvoiceEntity loadInvoiceByID(UserEntity user, long ID) {
         Assert.notNull(ID);
 
         InvoiceEntity plan = null;
 
         Query query = getEntityManager().createQuery(
-                "select u from " + getPersistentClass().getSimpleName() + " u where u.invoiceNo = :invoiceNo")
-                .setParameter("invoiceNo", ID);
+                "select u from " + getPersistentClass().getSimpleName() + " u where u.id = :id")
+                .setParameter("id", ID);
 
         try {
             plan = (InvoiceEntity) query.getSingleResult();

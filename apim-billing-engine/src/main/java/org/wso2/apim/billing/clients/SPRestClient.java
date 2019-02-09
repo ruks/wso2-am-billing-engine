@@ -39,6 +39,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class SPRestClient {
@@ -128,11 +130,11 @@ public class SPRestClient {
         return sb.toString();
     }
 
-    public List<APIUsage> getUsagePerPackage(String user, BillingModel billingModel) throws IOException {
+    public List<APIUsage> getUsagePerPackage(String user, BillingModel billingModel, int month) throws IOException {
         String searchQuery = "from throttleInfoBillingAggregate on applicationOwner=='" + user + "' " + "and apiName=='"
                 + billingModel.getPlan().getApiName() + "' and apiVersion=='" + billingModel.getPlan().getApiVersion()
                 + "' " + "and subscriptionTier=='" + billingModel.getPlan().getThrottlePolicy()
-                + "' within 0L, 2543913404000L "
+                + "' within " + getFirstDateOfMonth(month).getTime() + "L, " + getLastDateOfMonth(month).getTime() + "L "
                 + "per 'months' select apiName, apiVersion,subscriptionTier, applicationName, successCount, exceedCount";
         SearchRequestBean request = new SearchRequestBean();
         JSONObject reJsonObject = new JSONObject();
@@ -208,5 +210,17 @@ public class SPRestClient {
         this.spTrustStorePassword = spTrustStorePassword;
     }
 
+    private Date getFirstDateOfMonth(int month) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+        return calendar.getTime();
+    }
 
+    private Date getLastDateOfMonth(int month) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        return calendar.getTime();
+    }
 }

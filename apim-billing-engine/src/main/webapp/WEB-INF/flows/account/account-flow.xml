@@ -33,7 +33,7 @@
 		<transition on="backToHome" to="home" />
 	</view-state>
 
-	<view-state id="invoice" view="invoice.xhtml" model="user">
+	<view-state id="invoice" view="generateInvoice.xhtml" model="user">
 		<transition on="backToHome" to="home" />
 		<transition on="createInvoice" to="generateInvoice"/>
 	</view-state>
@@ -41,24 +41,23 @@
 	<action-state id="generateInvoice">
 		<evaluate expression="invoiceService.createInvoice(user)"
 				  result="flowScope.invoice" />
-		<transition to="invoiceHome" />
+		<transition to="previewInvoice" />
 		<transition on-exception="java.lang.Exception" to="invoice" />
 	</action-state>
 
-	<view-state id="invoiceHome" view="invoiceHome.xhtml">
-		<!--<on-render>-->
-			<!--<evaluate expression="invoiceService.createInvoice(user)"-->
-					  <!--result="viewScope.invoice" />-->
-		<!--</on-render>-->
-		<transition on="backToHome" to="invoice"/>
-	</view-state>
-
 	<view-state id="viewInvoices" view="viewInvoices.xhtml">
 		<transition on="backToHome" to="home" />
-		<transition on="previewInvoice" to="previewInvoice" />
+		<transition on="previewInvoice" to="getInvoice" />
 	</view-state>
 
-	<view-state id="previewInvoice" view="invoicePreview.xhtml" model="user">
+	<action-state id="getInvoice">
+		<evaluate expression="invoiceService.getInvoiceById(user, flowScope.invoiceId)"
+				  result="flowScope.invoice" />
+		<transition to="previewInvoice" />
+		<transition on-exception="java.lang.Exception" to="home" />
+	</action-state>
+
+	<view-state id="previewInvoice" view="previewInvoice.xhtml" model="user">
 		<transition on="backToHome" to="viewInvoices" />
 	</view-state>
 

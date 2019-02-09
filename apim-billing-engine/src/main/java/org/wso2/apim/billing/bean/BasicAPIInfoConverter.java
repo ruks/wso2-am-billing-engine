@@ -1,7 +1,5 @@
 package org.wso2.apim.billing.bean;
 
-import org.primefaces.component.inputtext.InputText;
-import org.wso2.apim.billing.domain.BillingAttribute;
 import org.wso2.apim.billing.domain.BillingPlan;
 import org.wso2.apim.billing.model.BasicAPIInfo;
 

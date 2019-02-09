@@ -80,6 +80,7 @@
     <bean id="invoiceService" class="org.wso2.apim.billing.services.impl.InvoiceServiceImpl">
         <property name="invoiceGenerator" ref="invoiceGenerator"/>
         <property name="invoiceDao" ref="invoiceDao"/>
+        <property name="subscriptionDao" ref="subscriptionDao"/>
     </bean>
     <bean id="subscriptionService" class="org.wso2.apim.billing.services.impl.SubscriptionServiceImpl">
         <property name="subscriptionDao" ref="subscriptionDao"/>

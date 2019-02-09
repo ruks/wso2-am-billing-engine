@@ -27,7 +27,7 @@ public interface InvoiceDao extends GenericDao<InvoiceEntity, Long> {
      * @param ID
      * @return User entity
      */
-    InvoiceEntity loadInvoiceByID(UserEntity user, int ID);
+    InvoiceEntity loadInvoiceByID(UserEntity user, long ID);
 
     List<InvoiceEntity> loadInvoices(UserEntity user);
 }

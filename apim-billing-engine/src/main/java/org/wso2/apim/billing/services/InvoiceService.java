@@ -22,5 +22,7 @@ public interface InvoiceService {
 
     List<InvoiceEntity> listInvoices(UserEntity user);
 
-    InvoiceEntity getInvoiceById(UserEntity user, int id);
+    InvoiceEntity getInvoiceById(UserEntity user, long id);
+
+    List<String> getSubscribers();
 }

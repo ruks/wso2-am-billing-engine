@@ -14,7 +14,7 @@ public abstract class PlanProcessor {
         this.spRestClient = spRestClient;
     }
 
-    abstract public PackageFeeModel process(String user, BillingModel billingModel);
+    abstract public PackageFeeModel process(String user, BillingModel billingModel, int selectedMonth);
 
     protected long getValue(List<BillingAttribute> attributes, String key) {
         for (BillingAttribute billingAttribute : attributes) {

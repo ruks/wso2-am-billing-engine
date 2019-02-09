@@ -43,4 +43,12 @@ public class SubscriptionJPADao extends GenericJpaDao<PackageSubscription, Long>
         nativeQuery.setParameter(2, user);
         nativeQuery.executeUpdate();
     }
+
+    public List<String> getSubscribers() {
+        EntityManager entityManager = getEntityManager();
+        String query = "SELECT DISTINCT USER FROM package_subscription";
+        Query nativeQuery = entityManager.createNativeQuery(query);
+        List<String> result = nativeQuery.getResultList();
+        return result;
+    }
 }

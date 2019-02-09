@@ -33,14 +33,14 @@
 							<f:facet name="header">
 								<h:outputText value="Invoice No" />
 							</f:facet>
-							<h:outputText value="#{thisInvoice.invoiceNo}" />
+							<h:outputText value="#{thisInvoice.id}" />
 						</p:column>
 
 						<p:column>
 							<f:facet name="header">
-								<h:outputText value="Invoice Plan" />
+								<h:outputText value="Invoice Period" />
 							</f:facet>
-							<h:outputText value="#{thisInvoice.planName}" />
+							<h:outputText value="#{thisInvoice.billedMonth}" />
 						</p:column>
 
 						<p:column>
@@ -61,12 +61,12 @@
 							<f:facet name="header">
 								<h:outputText value="Total Cost $" />
 							</f:facet>
-							<h:outputText value="#{thisInvoice.totalFee}" />
+							<h:outputText value="#{thisInvoice.totalCost}" />
 						</p:column>
 
 						<p:column style="width:32px;text-align: center">
 							<p:commandButton action="previewInvoice" icon="ui-icon-search" title="View">
-								<f:setPropertyActionListener value="#{invoice}" target="#{dataExporterView.selectedId}" />
+								<f:setPropertyActionListener value="#{thisInvoice.id}" target="#{flowScope.invoiceId}" />
 							</p:commandButton>
 						</p:column>
 

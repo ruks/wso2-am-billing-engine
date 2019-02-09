@@ -1,5 +1,7 @@
 package org.wso2.apim.billing.services.impl;
 
+import com.google.gson.Gson;
+import org.wso2.apim.billing.dao.SubscriptionDao;
 import org.wso2.apim.billing.domain.InvoiceEntity;
 import org.wso2.apim.billing.dao.InvoiceDao;
 import org.wso2.apim.billing.domain.UserEntity;
@@ -19,7 +21,9 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     private InvoiceGenerator invoiceGenerator;
     private InvoiceDao invoiceDao;
-    private String selected;
+    private SubscriptionDao subscriptionDao;
+    private String selectedSubscriber;
+    private int selectedMonth;
 
     public InvoiceGenerator getInvoiceGenerator() {
         return invoiceGenerator;
@@ -37,12 +41,20 @@ public class InvoiceServiceImpl implements InvoiceService {
         this.invoiceDao = invoiceDao;
     }
 
-    public String getSelected() {
-        return selected;
+    public String getSelectedSubscriber() {
+        return selectedSubscriber;
     }
 
-    public void setSelected(String selected) {
-        this.selected = selected;
+    public void setSelectedSubscriber(String selectedSubscriber) {
+        this.selectedSubscriber = selectedSubscriber;
+    }
+
+    public int getSelectedMonth() {
+        return selectedMonth;
+    }
+
+    public void setSelectedMonth(int selectedMonth) {
+        this.selectedMonth = selectedMonth;
     }
 
     protected FacesMessage constructErrorMessage(String message, String detail) {
@@ -65,11 +77,19 @@ public class InvoiceServiceImpl implements InvoiceService {
         return ResourceBundle.getBundle("message-labels");
     }
 
+    public SubscriptionDao getSubscriptionDao() {
+        return subscriptionDao;
+    }
+
+    public void setSubscriptionDao(SubscriptionDao subscriptionDao) {
+        this.subscriptionDao = subscriptionDao;
+    }
+
     public InvoiceEntity createInvoice(UserEntity user) throws Exception{
-        InvoiceEntity result = invoiceGenerator.process(user);
+        InvoiceEntity result = invoiceGenerator.process(user, selectedSubscriber, selectedMonth);
         if (result != null) {
-            invoiceDao.save(result);
-            return result;
+            InvoiceEntity entity = invoiceDao.save(result);
+            return entity;
         } else {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error occurred when generate invoice", "Sorry!"));
@@ -81,8 +101,14 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceDao.loadInvoices(user);
     }
 
-    public InvoiceEntity getInvoiceById(UserEntity user, int id) {
-        return invoiceDao.loadInvoiceByID(user, id);
+    public InvoiceEntity getInvoiceById(UserEntity user, long id) {
+        InvoiceEntity jsonEntity = invoiceDao.loadInvoiceByID(user, id);
+        InvoiceEntity invoiceEntity = new Gson().fromJson(jsonEntity.getInvoiceJson(), InvoiceEntity.class);
+        invoiceEntity.setId(jsonEntity.getId());
+        return invoiceEntity;
     }
 
+    public List<String> getSubscribers() {
+        return subscriptionDao.getSubscribers();
+    }
 }

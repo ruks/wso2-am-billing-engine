@@ -18,6 +18,7 @@
  */
 package org.wso2.apim.billing.services.impl;
 
+import com.google.gson.Gson;
 import org.wso2.apim.billing.dao.UsagePlanDao;
 import org.wso2.apim.billing.domain.BillingModel;
 import org.wso2.apim.billing.domain.InvoiceEntity;
@@ -64,38 +65,41 @@ public class InvoiceGenerator {
         this.quotaPlanProcessor = quotaPlanProcessor;
     }
 
-    public InvoiceEntity process(UserEntity user) {
+    public InvoiceEntity process(UserEntity user, String selectedSubscriber, int selectedMonth) {
         List<PackageFeeModel> packageFeeModels = new ArrayList<>();
-        List<BillingModel> packages = usagePlanDao.loadBillingPlansOfUser(user.getUserName());
+        List<BillingModel> packages = usagePlanDao.loadBillingPlansOfUser(selectedSubscriber);
         for (BillingModel aPackage : packages) {
             PackageFeeModel model = null;
             if ("metered".equals(aPackage.getPackageType())) {
-                model = meteredPlanProcessor.process(user.getUserName(), aPackage);
+                model = meteredPlanProcessor.process(user.getUserName(), aPackage, selectedMonth);
             } else if ("quota".equals(aPackage.getPackageType())) {
-                model = quotaPlanProcessor.process(user.getUserName(), aPackage);
+                model = quotaPlanProcessor.process(user.getUserName(), aPackage, selectedMonth);
             }
             if (model != null) {
                 packageFeeModels.add(model);
             }
         }
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        DateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
         Calendar calendar = Calendar.getInstance();
         String billDate = dateFormat.format(calendar.getTime());
         calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + 1);
         String dueDate = dateFormat.format(calendar.getTime());
 
+        calendar.set(Calendar.MONTH, selectedMonth);
+        DateFormat dateFormat2 = new SimpleDateFormat("MMMM yyyy");
+        String billedMonth = dateFormat2.format(calendar.getTime());
+
         InvoiceEntity invoiceEntity = new InvoiceEntity();
         invoiceEntity.setUserID(user.getUserName());
         invoiceEntity.setCreatedDate(billDate);
         invoiceEntity.setDueDate(dueDate);
-        invoiceEntity.setInvoiceNo(123);
+        invoiceEntity.setBilledMonth(billedMonth);
 
         long totalCost = 0;
         for (PackageFeeModel model : packageFeeModels) {
             totalCost+=model.getTotalCost();
         }
-        invoiceEntity.setInvoiceNo(123);
         invoiceEntity.setTotalCost(totalCost);
         invoiceEntity.setPackageFeeModels(packageFeeModels);
         UserInfo userInfo = new UserInfo();
@@ -107,6 +111,8 @@ public class InvoiceGenerator {
         userInfo.setPaymentMethod(user.getCardType());
         invoiceEntity.setUserInfo(userInfo);
 
+        String json = new Gson().toJson(invoiceEntity);
+        invoiceEntity.setInvoiceJson(json);
         return invoiceEntity;
     }
 

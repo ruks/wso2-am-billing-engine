@@ -21,9 +21,7 @@ package org.wso2.apim.billing.domain;
 import org.wso2.apim.billing.commons.domain.BaseEntity;
 import org.wso2.apim.billing.model.PackageFeeModel;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -33,7 +31,8 @@ public class InvoiceEntity extends BaseEntity {
     private String userID;
     private String createdDate;
     private String dueDate;
-    private int invoiceNo;
+    private String billedMonth;
+    @Column(columnDefinition = "TEXT")
     private String invoiceJson;
     private long totalCost;
 
@@ -66,14 +65,6 @@ public class InvoiceEntity extends BaseEntity {
         this.dueDate = dueDate;
     }
 
-    public int getInvoiceNo() {
-        return invoiceNo;
-    }
-
-    public void setInvoiceNo(int invoiceNo) {
-        this.invoiceNo = invoiceNo;
-    }
-
     public String getInvoiceJson() {
         return invoiceJson;
     }
@@ -104,5 +95,13 @@ public class InvoiceEntity extends BaseEntity {
 
     public void setPackageFeeModels(List<PackageFeeModel> packageFeeModels) {
         this.packageFeeModels = packageFeeModels;
+    }
+
+    public String getBilledMonth() {
+        return billedMonth;
+    }
+
+    public void setBilledMonth(String billedMonth) {
+        this.billedMonth = billedMonth;
     }
 }
