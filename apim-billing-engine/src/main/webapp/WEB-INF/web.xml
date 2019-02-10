@@ -87,6 +87,17 @@
 		<url-pattern>/apis/*</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>Workflow REST API Servlet</servlet-name>
+		<servlet-class>org.wso2.apim.billing.servlet.WorkflowRestAPIServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Workflow REST API Servlet</servlet-name>
+		<url-pattern>/workflow/*</url-pattern>
+	</servlet-mapping>
+
 	<filter>
 		<filter-name>charEncodingFilter</filter-name>
 		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>

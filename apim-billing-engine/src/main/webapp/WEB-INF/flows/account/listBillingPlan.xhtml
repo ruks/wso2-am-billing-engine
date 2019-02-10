@@ -67,6 +67,7 @@
                 </h:panelGrid>
 
                 <h:panelGrid id="plansPanel" columns="4">
+                    <p:growl id="growl" showDetail="true" sticky="true" life="13000"/>
                     <c:forEach items="${planService.listBillingPlan(request.remoteUser, usagePlan)}" var="billingModel" varStatus="status">
                         <p:panelGrid columns="2" style="width:100%;margin:10px 0px" columnClasses="label,value"
                                      layout="grid" styleClass="ui-panelgrid-blank">

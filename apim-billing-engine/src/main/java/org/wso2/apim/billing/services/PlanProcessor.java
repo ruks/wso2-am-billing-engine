@@ -16,10 +16,10 @@ public abstract class PlanProcessor {
 
     abstract public PackageFeeModel process(String user, BillingModel billingModel, int selectedMonth);
 
-    protected long getValue(List<BillingAttribute> attributes, String key) {
+    protected double getValue(List<BillingAttribute> attributes, String key) {
         for (BillingAttribute billingAttribute : attributes) {
             if (key.equals(billingAttribute.getKey())) {
-                return Long.parseLong(billingAttribute.getValue());
+                return Double.parseDouble(billingAttribute.getValue());
             }
         }
         return 0;

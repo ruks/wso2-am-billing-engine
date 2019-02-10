@@ -28,6 +28,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.wso2.apim.billing.bean.RedirectBean;
+import org.wso2.apim.billing.domain.SubsWorkflowDTO;
 import org.wso2.apim.billing.domain.UserEntity;
 import org.wso2.apim.billing.services.WorkflowClient;
 
@@ -75,28 +76,28 @@ public class WorkflowClientImpl implements WorkflowClient {
         this.apimTrustStorePassword = apimTrustStorePassword;
     }
 
-    public boolean activateSubscription(RedirectBean bean, UserEntity userEntity) throws Exception {
-
-        System.out.println("activateSubscription  " + bean.getReDirectUrl());
-        if (bean == null || bean.getReDirectUrl() == null || "account".equals(bean.getReDirectUrl())) {
+    @Override
+    public boolean activateSubscription(SubsWorkflowDTO workflowDTO) throws Exception {
+        System.out.println("activateSubscription  " + workflowDTO.getCallbackUrl());
+        if (workflowDTO == null) {
             System.out.println("Skipping activateSubscription ");
             return false;
         }
         System.setProperty("javax.net.ssl.trustStore", apimTrustStore);
         System.setProperty("javax.net.ssl.trustStorePassword", apimTrustStorePassword);
 
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        urlParameters.add(new BasicNameValuePair("workflowReference", bean.getWorkflowRefId()));
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("workflowReference", workflowDTO.getWorkflowRefId()));
         urlParameters.add(new BasicNameValuePair("status", "APPROVED"));
         urlParameters.add(new BasicNameValuePair("description", "DESCRIPTION"));
 
-        List<NameValuePair> headers = new ArrayList<NameValuePair>();
+        List<NameValuePair> headers = new ArrayList<>();
         String encodedCredentials = encodeCredentials(apimUserName, apimPassword.toCharArray());
         headers.add(new BasicNameValuePair("Authorization", "Basic " + encodedCredentials));
-        HttpResponse response = sendPOSTMessage(bean.getCallbackUrl(), headers, urlParameters);
+        HttpResponse response = sendPOSTMessage(workflowDTO.getCallbackUrl(), headers, urlParameters);
         String msg = getResponseBody(response);
         System.out.println(msg);
-        return msg.contains("\"error\" : \"false\"");
+        return msg.contains("\"error\" : \"false\"") && (response.getStatusLine().getStatusCode() == 200);
     }
 
     private HttpResponse sendPOSTMessage(String url, List<NameValuePair> headers, List<NameValuePair> urlParameters)

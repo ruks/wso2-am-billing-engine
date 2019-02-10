@@ -1,13 +1,9 @@
 package org.wso2.apim.billing.ui.utils;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
+import java.io.Serializable;
 
 /**
  * Helper util to assist in user interface
@@ -21,7 +17,6 @@ public class UIUtils implements Serializable {
 	
 	public void greetOnViewLoad(ComponentSystemEvent event) {
 		FacesContext context = FacesContext.getCurrentInstance();
-		
 		if (viewLoadCount < 1 && !context.isPostback()) {
 			String firstName = (String) event.getComponent().getAttributes().get("firstName");
 			String lastName = (String) event.getComponent().getAttributes().get("lastName");
@@ -31,6 +26,10 @@ public class UIUtils implements Serializable {
 			
 			viewLoadCount++;
 		}
+	}
+
+	protected FacesMessage constructErrorMessage(String message, String detail) {
+		return new FacesMessage(FacesMessage.SEVERITY_ERROR, message, detail);
 	}
 
 }

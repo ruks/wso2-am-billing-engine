@@ -1,11 +1,14 @@
 package org.wso2.apim.billing.services.impl;
 
 import org.primefaces.component.inputtext.InputText;
+import org.wso2.apim.billing.Util;
 import org.wso2.apim.billing.dao.PlanDao;
 import org.wso2.apim.billing.dao.SubscriptionDao;
 import org.wso2.apim.billing.dao.UsagePlanDao;
+import org.wso2.apim.billing.dao.WorkflowDao;
 import org.wso2.apim.billing.domain.*;
 import org.wso2.apim.billing.services.PlanService;
+import org.wso2.apim.billing.services.WorkflowClient;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -23,7 +26,8 @@ public class PlanServiceImpl implements PlanService {
     private UsagePlanDao usagePlanDao;
     private List<BillingAttribute> attributes;
     private SubscriptionDao subscriptionDao;
-
+    private WorkflowDao workflowDao;
+    private WorkflowClient workflowClient;
     public List<BillingAttribute> listAttributes(BillingPlan billingPlan) {
         attributes = new ArrayList<>();
         if (billingPlan == null || billingPlan.getCurrentBillingModel() == null) {
@@ -129,7 +133,7 @@ public class PlanServiceImpl implements PlanService {
     }
 
     public void subscribe(String user, String id, BillingPlan billingPlan) {
-        if(subscriptionDao.getSubscriptions(user, billingPlan.getApiID(), billingPlan.getThrottlePolicy())) {
+        if (subscriptionDao.getSubscriptions(user, billingPlan.getApiID(), billingPlan.getThrottlePolicy())) {
             FacesMessage message = constructErrorMessage("Already subscribed", "Package subscription already exist.");
             getFacesContext().addMessage(null, message);
             return;
@@ -138,16 +142,32 @@ public class PlanServiceImpl implements PlanService {
         packageSubscription.setPackageID(id);
         packageSubscription.setUser(user);
         subscriptionDao.save(packageSubscription);
-//        long lid = Long.parseLong(id);
-//        String status = subscriptionDao.getSubscriptionsToModel(user, lid) + "";
-//        return status;
+
+        SubsWorkflowDTO workflowDTO = workflowDao
+                .getWorkflowOfSubscription(user, billingPlan.getApiName(), billingPlan.getApiVersion(),
+                        billingPlan.getThrottlePolicy());
+        try {
+            if(workflowDTO !=null && workflowClient.activateSubscription(workflowDTO)) {
+                workflowDao.delete(workflowDTO);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        FacesMessage message = constructInfoMessage("Successfully Subscribed", "");
+        getFacesContext().addMessage(null, message);
+        //        long lid = Long.parseLong(id);
+        //        String status = subscriptionDao.getSubscriptionsToModel(user, lid) + "";
+        //        return status;
     }
 
     public void unSubscribe(String user, String id) {
         long lid = Long.parseLong(id);
         subscriptionDao.removeSubscriptionsToModel(user, lid);
-//        String status = subscriptionDao.getSubscriptionsToModel(user, lid) + "";
-//        return status;
+        //        String status = subscriptionDao.getSubscriptionsToModel(user, lid) + "";
+        //        return status;
+        FacesMessage message = constructInfoMessage("Successfully UnSubscribed", "");
+        getFacesContext().addMessage(null, message);
     }
 
     protected FacesMessage constructErrorMessage(String message, String detail) {
@@ -192,5 +212,21 @@ public class PlanServiceImpl implements PlanService {
 
     public void setSubscriptionDao(SubscriptionDao subscriptionDao) {
         this.subscriptionDao = subscriptionDao;
+    }
+
+    public WorkflowDao getWorkflowDao() {
+        return workflowDao;
+    }
+
+    public void setWorkflowDao(WorkflowDao workflowDao) {
+        this.workflowDao = workflowDao;
+    }
+
+    public WorkflowClient getWorkflowClient() {
+        return workflowClient;
+    }
+
+    public void setWorkflowClient(WorkflowClient workflowClient) {
+        this.workflowClient = workflowClient;
     }
 }

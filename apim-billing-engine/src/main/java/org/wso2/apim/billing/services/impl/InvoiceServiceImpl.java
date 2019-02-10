@@ -2,6 +2,8 @@ package org.wso2.apim.billing.services.impl;
 
 import com.google.gson.Gson;
 import org.wso2.apim.billing.dao.SubscriptionDao;
+import org.wso2.apim.billing.dao.UserDao;
+import org.wso2.apim.billing.dao.UserJpaDao;
 import org.wso2.apim.billing.domain.InvoiceEntity;
 import org.wso2.apim.billing.dao.InvoiceDao;
 import org.wso2.apim.billing.domain.UserEntity;
@@ -24,6 +26,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     private SubscriptionDao subscriptionDao;
     private String selectedSubscriber;
     private int selectedMonth;
+    private UserDao userDao;
 
     public InvoiceGenerator getInvoiceGenerator() {
         return invoiceGenerator;
@@ -85,8 +88,17 @@ public class InvoiceServiceImpl implements InvoiceService {
         this.subscriptionDao = subscriptionDao;
     }
 
-    public InvoiceEntity createInvoice(UserEntity user) throws Exception{
-        InvoiceEntity result = invoiceGenerator.process(user, selectedSubscriber, selectedMonth);
+    public UserDao getUserDao() {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    public InvoiceEntity createInvoice() throws Exception{
+        UserEntity user = userDao.loadUserByUserName(selectedSubscriber);
+        InvoiceEntity result = invoiceGenerator.process(user, selectedMonth);
         if (result != null) {
             InvoiceEntity entity = invoiceDao.save(result);
             return entity;

@@ -75,13 +75,19 @@ public class SubscriptionBillingWorkflow extends WorkflowExecutor {
         }
 
         if (!isValid) {
-            String apimStoreUrl = WorkflowConfiguration.getInstance().getBillingEngineUrl();
+            String apimStoreUrl = WorkflowConfiguration.getInstance().getApimStoreUrl();
             HttpWorkflowResponse httpworkflowResponse = new HttpWorkflowResponse();
             httpworkflowResponse.setRedirectUrl(WorkflowConfiguration.getInstance().getBillingEngineUrl());
-            httpworkflowResponse.setAdditionalParameters("CallbackUrl",
+            httpworkflowResponse.setAdditionalParameters("callbackUrl",
                     apimStoreUrl + "/site/blocks/workflow/workflow-listener/ajax/workflow-listener.jag");
             httpworkflowResponse.setAdditionalParameters("workflowRefId", workflowDTO.getExternalWorkflowReference());
-            httpworkflowResponse.setAdditionalParameters("reDirectUrl", apimStoreUrl);
+            httpworkflowResponse.setAdditionalParameters("apiName", subsWorkflowDTO.getApiName());
+            httpworkflowResponse.setAdditionalParameters("apiVersion", subsWorkflowDTO.getApiVersion());
+            httpworkflowResponse.setAdditionalParameters("apiId", workflowDTO.getExternalWorkflowReference());
+            httpworkflowResponse.setAdditionalParameters("subscriptionTier", subsWorkflowDTO.getTierName());
+//            httpworkflowResponse.setAdditionalParameters("reDirectUrl", apimStoreUrl);
+            httpworkflowResponse.setAdditionalParameters("application", subsWorkflowDTO.getApplicationName());
+            httpworkflowResponse.setAdditionalParameters("subscriber", subsWorkflowDTO.getSubscriber());
             httpworkflowResponse.setRedirectConfirmationMsg(
                     "You will be redirected to a page to setup your billing " + "account Information");
             return httpworkflowResponse;

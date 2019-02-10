@@ -37,10 +37,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 
 public class Util {
-    public static void setErrorMessage(String msg){
-        FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, "Sorry!"));
-    }
+
     public static CloseableHttpClient initHttpClient(String spTrustStore, char[] spTrustStorePassword) {
         try {
             KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
@@ -55,8 +52,9 @@ public class Util {
             SSLContext sslcontext =
                     SSLContexts.custom().loadTrustMaterial(trustStore, new TrustSelfSignedStrategy()).build();
             // Allow TLSv1 protocol only
-            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslcontext, new String[] { "TLSv1" }, null,
-                    SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+            SSLConnectionSocketFactory sslsf =
+                    new SSLConnectionSocketFactory(sslcontext, new String[] { "TLSv1" }, null,
+                            SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
             return HttpClients.custom().setSSLSocketFactory(sslsf).build();
 
         } catch (FileNotFoundException e) {

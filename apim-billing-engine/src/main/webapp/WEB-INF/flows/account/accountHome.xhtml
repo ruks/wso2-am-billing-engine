@@ -30,14 +30,14 @@
                     <p:commandButton id="definePlan" action="definePlan" immediate="true" icon="ui-icon-plus"
                                      value="Define Billing Plan" rendered="#{request.isUserInRole('ROLE_ADMIN')}"/>
                     <p:commandButton id="listUsagePlan" action="listUsagePlan" immediate="true" icon="ui-icon-plus"
-                                     value="List Billing Plan" rendered="#{request.isUserInRole('ROLE_ADMIN')}"/>
+                                     value="List Billing Plan"
+                                     rendered="#{request.isUserInRole('ROLE_ADMIN') or request.isUserInRole('ROLE_USER')}"/>
                     <p:commandButton id="invoiceButton" action="invoice" update="logPanelGrid,messages"
                                      icon="ui-icon-check" value="Invoice"
                                      rendered="#{request.isUserInRole('ROLE_ADMIN')}"/>
-                    <c:set var="isPowerUser" value="#{request.isUserInRole('ROLE_ADMIN') or request.isUserInRole('ROLE_USER')}" scope="request" />
                     <p:commandButton id="viewInvoiceButtons" action="viewInvoices" update="logPanelGrid,messages"
-                                     icon="ui-icon-check" value="View Invoices"/>
-                                     <!--rendered="#{request.isUserInRole('isPowerUser')}"-->
+                                     icon="ui-icon-check" value="View Invoices"
+                                     rendered="#{request.isUserInRole('ROLE_ADMIN') or request.isUserInRole('ROLE_USER')}"/>
 
                 </h:panelGrid>
             </p:fieldset>

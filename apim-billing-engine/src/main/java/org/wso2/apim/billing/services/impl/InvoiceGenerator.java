@@ -65,9 +65,9 @@ public class InvoiceGenerator {
         this.quotaPlanProcessor = quotaPlanProcessor;
     }
 
-    public InvoiceEntity process(UserEntity user, String selectedSubscriber, int selectedMonth) {
+    public InvoiceEntity process(UserEntity user, int selectedMonth) {
         List<PackageFeeModel> packageFeeModels = new ArrayList<>();
-        List<BillingModel> packages = usagePlanDao.loadBillingPlansOfUser(selectedSubscriber);
+        List<BillingModel> packages = usagePlanDao.loadBillingPlansOfUser(user.getUserName());
         for (BillingModel aPackage : packages) {
             PackageFeeModel model = null;
             if ("metered".equals(aPackage.getPackageType())) {

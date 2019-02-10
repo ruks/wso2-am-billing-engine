@@ -27,7 +27,6 @@
         <transition on="backToSignIn" to="welcome"/>
         <transition on="confirmSignUp" to="redirect">
             <evaluate expression="userService.createUser(user)"/>
-            <evaluate expression="workflowClient.activateSubscription(redirectBean, user)"/>
         </transition>
     </view-state>
 

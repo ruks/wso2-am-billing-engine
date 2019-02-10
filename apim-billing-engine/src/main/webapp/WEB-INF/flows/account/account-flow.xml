@@ -39,7 +39,7 @@
 	</view-state>
 
 	<action-state id="generateInvoice">
-		<evaluate expression="invoiceService.createInvoice(user)"
+		<evaluate expression="invoiceService.createInvoice()"
 				  result="flowScope.invoice" />
 		<transition to="previewInvoice" />
 		<transition on-exception="java.lang.Exception" to="invoice" />

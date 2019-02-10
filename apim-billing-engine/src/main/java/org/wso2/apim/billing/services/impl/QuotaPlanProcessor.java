@@ -28,10 +28,10 @@ public class QuotaPlanProcessor extends PlanProcessor {
                 return null;
             }
             long totalRequestCount = usage.getSuccessCount() + usage.getExceedCount();
-            long pricePerReq = getValue(billingModel.getAttributes(), "pricePerReq");
-            long subscriptionFee = getValue(billingModel.getAttributes(), "subscriptionFee");
-            long usageFee = totalRequestCount * pricePerReq;
-            long totalCost = subscriptionFee + usageFee;
+            double pricePerReq = getValue(billingModel.getAttributes(), "pricePerReq");
+            double subscriptionFee = getValue(billingModel.getAttributes(), "subscriptionFee");
+            double usageFee = totalRequestCount * pricePerReq;
+            double totalCost = subscriptionFee + usageFee;
             model.setTotalCost(totalCost);
             List<BillingAttribute> attributes = new ArrayList<>();
             attributes.add(new BillingAttribute(0, "usageFee", "Usage Fee", String.valueOf(usageFee)));

@@ -16,6 +16,7 @@
     <bean id="usagePlanDao" class="org.wso2.apim.billing.dao.UsagePlanJpaDao"/>
     <bean id="invoiceDao" class="org.wso2.apim.billing.dao.InvoiceJpaDao"/>
     <bean id="subscriptionDao" class="org.wso2.apim.billing.dao.SubscriptionJPADao"/>
+    <bean id="workflowDao" class="org.wso2.apim.billing.dao.WorkflowJpaDao"/>
     <bean id="spRestClient" class="org.wso2.apim.billing.clients.SPRestClient">
         <constructor-arg type="java.lang.String" value="${dasUrl}"/>
         <constructor-arg type="java.lang.String" value="${dasUserName}"/>
@@ -76,11 +77,14 @@
         <property name="planDao" ref="planDao"/>
         <property name="usagePlanDao" ref="usagePlanDao"/>
         <property name="subscriptionDao" ref="subscriptionDao"/>
+        <property name="workflowDao" ref="workflowDao"/>
+        <property name="workflowClient" ref="workflowClient"/>
     </bean>
     <bean id="invoiceService" class="org.wso2.apim.billing.services.impl.InvoiceServiceImpl">
         <property name="invoiceGenerator" ref="invoiceGenerator"/>
         <property name="invoiceDao" ref="invoiceDao"/>
         <property name="subscriptionDao" ref="subscriptionDao"/>
+        <property name="userDao" ref="userDao"/>
     </bean>
     <bean id="subscriptionService" class="org.wso2.apim.billing.services.impl.SubscriptionServiceImpl">
         <property name="subscriptionDao" ref="subscriptionDao"/>

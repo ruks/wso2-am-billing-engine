@@ -6,14 +6,14 @@ import java.io.Serializable;
 import java.util.List;
 
 public class PackageFeeModel implements Serializable {
-    protected long totalCost;
+    protected double totalCost;
     protected List<BillingAttribute> attributes;
 
-    public long getTotalCost() {
+    public double getTotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(long totalCost) {
+    public void setTotalCost(double totalCost) {
         this.totalCost = totalCost;
     }
 

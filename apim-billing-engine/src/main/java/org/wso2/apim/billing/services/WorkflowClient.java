@@ -19,8 +19,9 @@
 package org.wso2.apim.billing.services;
 
 import org.wso2.apim.billing.bean.RedirectBean;
+import org.wso2.apim.billing.domain.SubsWorkflowDTO;
 import org.wso2.apim.billing.domain.UserEntity;
 
 public interface WorkflowClient {
-    boolean activateSubscription(RedirectBean bean, UserEntity userEntity) throws Exception;
+    boolean activateSubscription(SubsWorkflowDTO workflowDTO) throws Exception;
 }
