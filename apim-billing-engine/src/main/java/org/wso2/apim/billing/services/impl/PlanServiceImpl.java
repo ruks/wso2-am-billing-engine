@@ -148,12 +148,16 @@ public class PlanServiceImpl implements PlanService {
         packageSubscription.setUser(user);
         subscriptionDao.save(packageSubscription);
 
-        SubsWorkflowDTO workflowDTO = workflowDao
+        List<SubsWorkflowDTO> workflowDTOs = workflowDao
                 .getWorkflowOfSubscription(user, billingPlan.getApiName(), billingPlan.getApiVersion(),
                         billingPlan.getThrottlePolicy());
         try {
-            if (workflowDTO != null && workflowClient.activateSubscription(workflowDTO)) {
-                workflowDao.delete(workflowDTO);
+            if (workflowDTOs != null) {
+                for (SubsWorkflowDTO workflowDTO : workflowDTOs) {
+                    if (workflowClient.activateSubscription(workflowDTO)) {
+                        workflowDao.delete(workflowDTO);
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

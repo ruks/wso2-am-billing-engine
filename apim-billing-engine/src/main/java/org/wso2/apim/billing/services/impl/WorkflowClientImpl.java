@@ -27,6 +27,7 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.wso2.apim.billing.Util;
 import org.wso2.apim.billing.bean.RedirectBean;
 import org.wso2.apim.billing.domain.SubsWorkflowDTO;
 import org.wso2.apim.billing.domain.UserEntity;
@@ -83,8 +84,6 @@ public class WorkflowClientImpl implements WorkflowClient {
             System.out.println("Skipping activateSubscription ");
             return false;
         }
-        System.setProperty("javax.net.ssl.trustStore", apimTrustStore);
-        System.setProperty("javax.net.ssl.trustStorePassword", apimTrustStorePassword);
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("workflowReference", workflowDTO.getWorkflowRefId()));
@@ -102,8 +101,7 @@ public class WorkflowClientImpl implements WorkflowClient {
 
     private HttpResponse sendPOSTMessage(String url, List<NameValuePair> headers, List<NameValuePair> urlParameters)
             throws Exception {
-        CloseableHttpClient httpClient = HttpClients.custom()
-                .setHostnameVerifier(SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER).build();
+        CloseableHttpClient httpClient = Util.initHttpClient(this.apimTrustStore, this.apimTrustStorePassword.toCharArray());
         HttpPost post = new HttpPost(url);
         if (headers != null) {
             for (NameValuePair nameValuePair : headers) {

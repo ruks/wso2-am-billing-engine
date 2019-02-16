@@ -13,8 +13,8 @@ public class WorkflowJpaDao extends GenericJpaDao<SubsWorkflowDTO, Long> impleme
     }
 
     @Override
-    public SubsWorkflowDTO getWorkflowOfSubscription(String subscriber, String apiName, String apiVersion, String subscriptionTier) {
-        SubsWorkflowDTO workflow = null;
+    public List<SubsWorkflowDTO> getWorkflowOfSubscription(String subscriber, String apiName, String apiVersion, String subscriptionTier) {
+        List<SubsWorkflowDTO> workflow = null;
 
         Query query = getEntityManager().createQuery(
                 "select u from " + getPersistentClass().getSimpleName() + " u where "
@@ -28,7 +28,7 @@ public class WorkflowJpaDao extends GenericJpaDao<SubsWorkflowDTO, Long> impleme
                 .setParameter("subscriber", subscriber);
 
         try {
-            workflow = (SubsWorkflowDTO) query.getSingleResult();
+            workflow = (List<SubsWorkflowDTO>) query.getResultList();
         } catch (NoResultException e) {
             //do nothing
         }
