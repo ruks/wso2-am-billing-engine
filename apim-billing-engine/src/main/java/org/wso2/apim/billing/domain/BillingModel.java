@@ -22,6 +22,8 @@ public class BillingModel extends BaseEntity {
     private String packageType;
     @Transient
     private boolean subscription = false;
+    @Transient
+    private Long tempID;
 
     public BillingModel() {
     }
@@ -67,5 +69,13 @@ public class BillingModel extends BaseEntity {
 
     public void setSubscription(boolean subscription) {
         this.subscription = subscription;
+    }
+
+    public Long getTempID() {
+        return tempID;
+    }
+
+    public void setTempID(Long tempID) {
+        this.tempID = tempID;
     }
 }

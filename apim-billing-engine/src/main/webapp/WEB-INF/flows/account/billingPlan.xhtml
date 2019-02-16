@@ -17,8 +17,12 @@
         }
     </style>
 
-    <ui:define name="title"><h:outputText value="Define New Billing Plan"/></ui:define>
-    <ui:define name="header"><h:outputText value="Define New Billing Plan"/></ui:define>
+    <ui:define name="title">
+        <h:outputText value="Define New Billing Plan"/>
+    </ui:define>
+    <ui:define name="header">
+        <h:outputText value="Define New Billing Plan"/>
+    </ui:define>
 
     <ui:define name="content">
 
@@ -29,8 +33,8 @@
                 <p:focus/>
                 <p:messages id="messages" globalOnly="true"/>
 
-                <h:panelGrid id="regPanelGrid" style="margin: 0 auto; margin-top: 25px; text-align: right"
-                             cellspacing="8" columns="3">
+                <h:panelGrid id="regPanelGrid" style="margin: 0 auto; margin-top: 25px;"
+                             cellspacing="8" columns="2">
 
                     <p:outputLabel for="apiName" value="Select API:"/>
                     <p:selectOneMenu id="apiName" style="width:200px" defaultLabel="Select a API.."
@@ -39,7 +43,6 @@
                         <f:selectItems value="#{apiInfoService.listApis()}"/>
                         <f:ajax render="apiVersion"/>
                     </p:selectOneMenu>
-                    <h:panelGroup></h:panelGroup>
 
                     <p:outputLabel for="apiVersion" value="Select Version:"/>
                     <p:selectOneMenu id="apiVersion" style="width:200px" defaultLabel="Select a Version.."
@@ -50,7 +53,6 @@
                                        itemValue="#{info.id}"/>
                         <f:ajax render="policy"/>
                     </p:selectOneMenu>
-                    <h:panelGroup></h:panelGroup>
 
                     <p:outputLabel for="policy" value="Select Policy:"/>
                     <p:selectOneMenu id="policy" style="width:200px" defaultLabel="Select a policy.."
@@ -61,7 +63,6 @@
                                        itemLabel="#{info}"
                                        itemValue="#{info}"/>
                     </p:selectOneMenu>
-                    <h:panelGroup></h:panelGroup>
 
                     <p:outputLabel for="packageName" value="Package Name:"/>
                     <p:inputText id="packageName" label="Package Name"
@@ -69,7 +70,6 @@
                                  title="Enter Package Name!">
                         <f:validateLength minimum="2"/>
                     </p:inputText>
-                    <h:panelGroup></h:panelGroup>
 
                     <p:outputLabel for="type" value="Package Type:"/>
                     <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
@@ -79,28 +79,39 @@
                             <f:ajax render="attributesPanel"/>
                         </p:selectOneRadio>
                     </h:panelGrid>
-                    <h:panelGroup></h:panelGroup>
                 </h:panelGrid>
 
-                <h:panelGrid id="attributesPanel" style="margin: 0 auto; margin-top: 25px; text-align: right"
+                <h:panelGrid id="attributesPanel" style="margin: 0 auto; margin-top: 25px;"
                              cellspacing="8" columns="2">
-                    <ui:repeat value="#{planService.listAttributes(usagePlan)}" var="attribute" varStatus="idx">
-                        <h:panelGroup id="attributes_${idx.index}">
-                            <h:outputText value="#{attribute.displayName}:"/>
-                            <h:outputText style="color:red" value="*  "/>
-                        </h:panelGroup>
-                        <p:inputText required="true"
-                                     value="#{usagePlan.currentBillingModel.attributes[attribute.index]}"
-                                     title="#{attribute.displayName}"
-                                     label="#{attribute.key}"
-                                     converter="billingModelConverter"
-                                     feedback="true">
-                        </p:inputText>
-                    </ui:repeat>
-                    <p:commandButton value="Add Package"
-                                     action="#{usagePlan.addBillingModels(usagePlan.currentBillingModel)}"
-                                     update="viewPlanGridPanel">
-                    </p:commandButton>
+                    <table>
+                        <tbody>
+                        <ui:repeat value="#{planService.listAttributes(usagePlan)}" var="attribute" varStatus="idx">
+                            <tr>
+                                <td style="text-align: right">
+                                    <h:outputText value="#{attribute.displayName}:"/>
+                                    <h:outputText style="color:red" value="*  "/>
+                                </td>
+                                <td>
+                                    <p:inputText required="true"
+                                                 value="#{usagePlan.currentBillingModel.attributes[attribute.index]}"
+                                                 title="#{attribute.displayName}"
+                                                 label="#{attribute.key}"
+                                                 converter="billingModelConverter"
+                                                 feedback="true">
+                                    </p:inputText>
+                                </td>
+                            </tr>
+                        </ui:repeat>
+                        <tr>
+                            <td>
+                                <p:commandButton value="Add Package"
+                                                 action="#{usagePlan.addBillingModels(usagePlan.currentBillingModel)}"
+                                                 update="viewPlanGridPanel">
+                                </p:commandButton>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </h:panelGrid>
 
                 <h:panelGrid id="viewPlanGridPanel" columns="4">
@@ -113,12 +124,13 @@
 
                             <h:outputText value="Type"/>
                             <h:outputText value="${billingModel.packageType}"/>
-                            <c:forEach  items="${billingModel.getAttributes()}" var="attribute">
+                            <c:forEach items="${billingModel.getAttributes()}" var="attribute">
                                 <h:outputText value="#{attribute.displayName}:"/>
                                 <h:outputText value="#{attribute.value}"/>
                             </c:forEach>
                             <f:facet name="footer">
-                                <p:commandButton id="remove_${status.index}" immediate="true" action="#{usagePlan.removeFromModels(billingModel.id)}"
+                                <p:commandButton id="remove_${status.index}" immediate="true"
+                                                 action="#{usagePlan.removeFromModels(billingModel.id)}"
                                                  value="Remove" update="viewPlanGridPanel"/>
                             </f:facet>
                         </p:panelGrid>

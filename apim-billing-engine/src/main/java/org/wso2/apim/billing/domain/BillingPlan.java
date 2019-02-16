@@ -5,6 +5,8 @@ import org.wso2.apim.billing.commons.domain.BaseEntity;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 @Entity
 @Table(name = "plan")
@@ -61,7 +63,7 @@ public class BillingPlan extends BaseEntity {
     }
 
     public void addBillingModels(BillingModel billingModel) {
-//        billingModel.setId((long) (Math.random() * 100000000000L));
+        billingModel.setTempID(new Random().nextLong());
         for (BillingAttribute billingAttribute : billingModel.getAttributes()) {
             billingAttribute.setBillingModel(billingModel);
         }
@@ -72,10 +74,15 @@ public class BillingPlan extends BaseEntity {
     }
 
     public void removeFromModels(long id) {
+        BillingModel toRemove = null;
         for (BillingModel billingModel : billingModels) {
-            if (billingModel.getId() == id) {
-                billingModels.remove(billingModel);
+            if (billingModel.getTempID() != null && billingModel.getTempID() == id) {
+                toRemove = billingModel;
+                break;
             }
+        }
+        if(toRemove != null) {
+            billingModels.remove(toRemove);
         }
     }
 
