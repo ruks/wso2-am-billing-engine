@@ -18,6 +18,7 @@
 		<transition on="viewInvoices" to="viewInvoices" />
 		<transition on="definePlan" to="definePlan" />
 		<transition on="listUsagePlan" to="listUsagePlan" />
+		<transition on="viewPendingWorkflowAction" to="viewPendingWorkflowView" />
 	</view-state>
 
 	<view-state id="definePlan" view="billingPlan.xhtml" model="usagePlan">
@@ -61,4 +62,7 @@
 		<transition on="backToHome" to="viewInvoices" />
 	</view-state>
 
+	<view-state id="viewPendingWorkflowView" view="viewPendingSubscription.xhtml" model="usagePlan">
+		<transition on="backToHome" to="home" />
+	</view-state>
 </flow>

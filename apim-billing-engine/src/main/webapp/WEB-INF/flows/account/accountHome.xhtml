@@ -38,7 +38,9 @@
                     <p:commandButton id="viewInvoiceButtons" action="viewInvoices" update="logPanelGrid,messages"
                                      icon="ui-icon-check" value="View Invoices"
                                      rendered="#{request.isUserInRole('ROLE_ADMIN') or request.isUserInRole('ROLE_USER')}"/>
-
+                    <p:commandButton id="viewPendingWorkflowButton" action="viewPendingWorkflowAction" update="logPanelGrid,messages"
+                                     icon="ui-icon-check" value="View Pending Subscriptions"
+                                     rendered="#{request.isUserInRole('ROLE_ADMIN') or request.isUserInRole('ROLE_USER')}"/>
                 </h:panelGrid>
             </p:fieldset>
         </h:form>

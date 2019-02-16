@@ -5,6 +5,7 @@ import org.wso2.apim.billing.domain.SubsWorkflowDTO;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import java.util.List;
 
 public class WorkflowJpaDao extends GenericJpaDao<SubsWorkflowDTO, Long> implements WorkflowDao {
     public WorkflowJpaDao() {
@@ -28,6 +29,24 @@ public class WorkflowJpaDao extends GenericJpaDao<SubsWorkflowDTO, Long> impleme
 
         try {
             workflow = (SubsWorkflowDTO) query.getSingleResult();
+        } catch (NoResultException e) {
+            //do nothing
+        }
+
+        return workflow;
+    }
+
+    @Override
+    public List<SubsWorkflowDTO> getPendingWorkflowOfSubscription(String subscriber) {
+        List<SubsWorkflowDTO> workflow = null;
+
+        Query query = getEntityManager().createQuery(
+                "select u from " + getPersistentClass().getSimpleName() + " u where "
+                        + " u.subscriber = :subscriber ")
+                .setParameter("subscriber", subscriber);
+
+        try {
+            workflow = (List<SubsWorkflowDTO>) query.getResultList();
         } catch (NoResultException e) {
             //do nothing
         }

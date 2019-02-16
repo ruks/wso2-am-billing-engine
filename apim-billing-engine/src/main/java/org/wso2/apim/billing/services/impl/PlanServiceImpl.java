@@ -1,7 +1,6 @@
 package org.wso2.apim.billing.services.impl;
 
 import org.primefaces.component.inputtext.InputText;
-import org.wso2.apim.billing.Util;
 import org.wso2.apim.billing.dao.PlanDao;
 import org.wso2.apim.billing.dao.SubscriptionDao;
 import org.wso2.apim.billing.dao.UsagePlanDao;
@@ -13,7 +12,12 @@ import org.wso2.apim.billing.services.WorkflowClient;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * Service providing service methods to work with user data and entity.
@@ -28,6 +32,7 @@ public class PlanServiceImpl implements PlanService {
     private SubscriptionDao subscriptionDao;
     private WorkflowDao workflowDao;
     private WorkflowClient workflowClient;
+
     public List<BillingAttribute> listAttributes(BillingPlan billingPlan) {
         attributes = new ArrayList<>();
         if (billingPlan == null || billingPlan.getCurrentBillingModel() == null) {
@@ -147,7 +152,7 @@ public class PlanServiceImpl implements PlanService {
                 .getWorkflowOfSubscription(user, billingPlan.getApiName(), billingPlan.getApiVersion(),
                         billingPlan.getThrottlePolicy());
         try {
-            if(workflowDTO !=null && workflowClient.activateSubscription(workflowDTO)) {
+            if (workflowDTO != null && workflowClient.activateSubscription(workflowDTO)) {
                 workflowDao.delete(workflowDTO);
             }
         } catch (Exception e) {
@@ -168,6 +173,11 @@ public class PlanServiceImpl implements PlanService {
         //        return status;
         FacesMessage message = constructInfoMessage("Successfully UnSubscribed", "");
         getFacesContext().addMessage(null, message);
+    }
+
+    @Override
+    public List<SubsWorkflowDTO> getPendingWorkflowOfSubscription(UserEntity user) {
+        return workflowDao.getPendingWorkflowOfSubscription(user.getUserName());
     }
 
     protected FacesMessage constructErrorMessage(String message, String detail) {

@@ -6,6 +6,8 @@ import org.wso2.apim.billing.domain.BillingAttribute;
 import org.wso2.apim.billing.domain.BillingModel;
 import org.wso2.apim.billing.domain.BillingPlan;
 import org.wso2.apim.billing.domain.PlanEntity;
+import org.wso2.apim.billing.domain.SubsWorkflowDTO;
+import org.wso2.apim.billing.domain.UserEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -44,5 +46,9 @@ public interface PlanService {
     List<BillingModel> listBillingPlan(String user, BillingPlan billingPlan);
 
     void subscribe(String user, String id, BillingPlan billingPlan);
+
     void unSubscribe(String user, String id);
+
+    List<SubsWorkflowDTO> getPendingWorkflowOfSubscription(UserEntity user);
+
 }

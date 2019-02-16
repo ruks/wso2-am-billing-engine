@@ -77,7 +77,7 @@ public class SubscriptionBillingWorkflow extends WorkflowExecutor {
         if (!isValid) {
             String apimStoreUrl = WorkflowConfiguration.getInstance().getApimStoreUrl();
             HttpWorkflowResponse httpworkflowResponse = new HttpWorkflowResponse();
-            httpworkflowResponse.setRedirectUrl(WorkflowConfiguration.getInstance().getBillingEngineUrl());
+            httpworkflowResponse.setRedirectUrl(WorkflowConfiguration.getInstance().getBillingEngineUrl() + "/workflow");
             httpworkflowResponse.setAdditionalParameters("callbackUrl",
                     apimStoreUrl + "/site/blocks/workflow/workflow-listener/ajax/workflow-listener.jag");
             httpworkflowResponse.setAdditionalParameters("workflowRefId", workflowDTO.getExternalWorkflowReference());
