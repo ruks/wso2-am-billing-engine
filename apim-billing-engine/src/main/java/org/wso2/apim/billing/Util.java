@@ -20,11 +20,10 @@ package org.wso2.apim.billing;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.net.ssl.SSLContext;
 import java.io.File;
 import java.io.FileInputStream;
@@ -52,9 +51,16 @@ public class Util {
             SSLContext sslcontext =
                     SSLContexts.custom().loadTrustMaterial(trustStore, new TrustSelfSignedStrategy()).build();
             // Allow TLSv1 protocol only
+            X509HostnameVerifier hostnameVerifier;
+
+            if ("true".equals(System.getenv("disable.hostname.verification"))) {
+                hostnameVerifier = SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
+            } else {
+                hostnameVerifier = SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER;
+            }
             SSLConnectionSocketFactory sslsf =
-                    new SSLConnectionSocketFactory(sslcontext, new String[] { "TLSv1" }, null,
-                            SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+                new SSLConnectionSocketFactory(sslcontext, new String[]{ "TLSv1" }, null,
+                    hostnameVerifier);
             return HttpClients.custom().setSSLSocketFactory(sslsf).build();
 
         } catch (FileNotFoundException e) {
