@@ -53,7 +53,7 @@ public class Util {
             // Allow TLSv1 protocol only
             X509HostnameVerifier hostnameVerifier;
 
-            if ("true".equals(System.getenv("disable.hostname.verification"))) {
+            if ("false".equals(System.getenv("VerifyHostname"))) {
                 hostnameVerifier = SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
             } else {
                 hostnameVerifier = SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER;
